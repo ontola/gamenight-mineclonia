@@ -21,8 +21,7 @@ if a.shot=="bounce":
     result=command(a.world_root,"set",{"bounce":0.5})
     if not result.get("ok"):raise RuntimeError(result)
 controls()
-(a.capture_root/"capture.txt").write_text(str(output.resolve())+"
-"+("0" if a.shot in ("mine","build") else "1"))
+(a.capture_root/"capture.txt").write_text(str(output.resolve())+"\n"+("0" if a.shot in ("mine","build") else "1"))
 try:
     time.sleep(.3)
     if a.shot=="mine":controls(5,32767)

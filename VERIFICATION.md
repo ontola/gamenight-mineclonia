@@ -1,36 +1,35 @@
-# Windows candidate verification — 3 October 2026
+# Windows candidate verification — 4 October 2026
 
-Engine: dd6057695478ff562b5d409f3f5254e2bde0cac6.
-Adapter used by local candidate: d8e41fd.
+Engine: 528e03c03ce1a33c8586a96aeda2e4cbe28e9945.
 Mineclonia: 0.123.1. Embedded Python: 3.13.7.
 
-## Passed
+## Observed
 
-- 31 adapter unit tests.
-- Native controller binding, stale-frame and directional-focus tests.
-- Clean Windows engine CI build:
-  https://github.com/ontola/luanti/actions/runs/37150848986
-- Packaged embedded Python launch self-test.
-- Real server plus two rendered clients, driven through the adapter with scripted host frames.
-- The former fixed prototype seed now selects dry ground at (0,17,65) and
-  (2,17,65). Both players remained standing at y=17.5 after joining.
-- Test process completed with exit code zero and save-aware shutdown.
+- 31 adapter unit tests passed.
+- Native controller binding, stale-frame and directional-focus tests passed.
+- Actual native package entrypoint completed authenticated preparation, two rendered
+  views, separate scripted input, world pause/resume, and host-disconnect cleanup.
+  The release includes a package-specific report; these are synthetic host checks.
+- Reopening a saved world passed after moving spawn validation to the first server tick.
+- The former fixed prototype seed selected dry ground at (0,17,65) and (2,17,65).
+  New players stood at y=17.5; existing player positions are preserved.
+- Visually inspected two-player menu and inventory at a 3840×2160 desktop.
+  D-pad and left stick move focus directly. A selects; B closes.
+- Selecting Steady look speed persisted in the per-player config.
+- Inventory X split and A placement produced two server-side stacks of 32.
+  Y transferred the selected stack into the hotbar; item totals remained 64.
+- The test worlds use scripted host controller frames, not physical controllers.
 
-The local candidate archive is 54,986,492 bytes (about 55 MB).
-SHA-256: cdb828a20a01622265755ba4841ca02c1d67af67789474f8bb067d2e4f895d43.
+## Remaining hardware checks
 
-## Required before store publication
+Physical controller camera feel, reconnect, drift, and comfortable couch-distance
+readability need a hands-on playtest. Audio audibility and cross-game switching
+have not been certified. The initial store listing must retain experimental status.
 
-- Visually inspect focus navigation, A/B actions, inventory movement and crafting
-  at two-player screen size. Computer Use app approval timed out, so no screenshot
-  or visual pass is claimed.
-- Physical controller check: each player independent; reconnect; menus; inventory;
-  camera feel; controller drift and neutral input on resume.
-- Verify the final CI package through the installer and current host contract.
-- Capture and review the required gameplay montage and store artwork.
-- Publish a checksummed release, add package-matched catalog evidence, and verify
-  the live listing.
+## Gameplay capture
 
-The source repositories exist and the package builds. The public store listing
-is not published. Scripted input and a successful build do not establish the
-quality of a physical controller playtest.
+The optional renderer recorder and capture/mod stage a separate scratch world.
+Recording uses actual Mineclonia rendering, input, mining, building, TNT and
+the integration's bounce-pad physics. The staging mod is excluded from packages.
+See capture/SHOTS.md for the shot plan and the release media provenance for the
+final frame ranges, checksums and encoding checks.
