@@ -61,7 +61,7 @@ local function apply_world(changed)
 end
 core.register_node("gamenight_bridge:bounce_pad", {
     description = "GameNight bounce pad",
-    tiles = {"mcl_core_iron_block.png^[colorize:#ad6cfa:150"},
+    tiles = {"default_steel_block.png^[colorize:#ad6cfa:150"},
     groups = {cracky=1, pickaxey=1}, _mcl_hardness=1, _mcl_blast_resistance=1,
 })
 local cooldown, elapsed, bounce_events = {}, 0, 0

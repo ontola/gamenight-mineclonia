@@ -13,9 +13,18 @@ def main():
     p.add_argument("--root",type=Path,required=True)
     p.add_argument("--engine",type=Path,required=True)
     p.add_argument("--seconds",type=int,default=600)
+    p.add_argument("--resume",action="store_true",help="Reuse this explicitly selected test world")
+    p.add_argument("--capture-root",type=Path)
+    p.add_argument("--capture-mod",type=Path)
     a=p.parse_args()
-    if a.root.exists():raise RuntimeError("Use a fresh playtest directory")
-    a.root.mkdir(parents=True)
+    if a.root.exists() and not a.resume:raise RuntimeError("Use a fresh playtest directory or --resume")
+    a.root.mkdir(parents=True,exist_ok=True)
+    if a.capture_root:
+        a.capture_root.mkdir(parents=True,exist_ok=True)
+        os.environ["GAMENIGHT_CAPTURE_ROOT"]=str(a.capture_root.resolve())
+    if a.capture_mod:
+        import shutil
+        shutil.copytree(a.capture_mod,a.root/"world/worldmods/gamenight_capture",dirs_exist_ok=True)
     os.environ["GAMENIGHT_MINECLONIA_ENGINE"]=str(a.engine.resolve())
     prepare_data(a.root)
     # Reproduce the old seed while requiring a verified dry spawn.

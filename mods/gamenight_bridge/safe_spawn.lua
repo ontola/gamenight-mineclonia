@@ -63,7 +63,8 @@ local function search()
     end)
 end
 core.register_on_mods_loaded(function()
-    local saved = core.parse_json(storage:get_string("safe_spawn_ground"))
+    local encoded = storage:get_string("safe_spawn_ground")
+    local saved = encoded ~= "" and core.parse_json(encoded) or nil
     if type(saved) == "table" and #saved == 2 then
         core.load_area(vector.subtract(saved[1],4),vector.add(saved[1],4))
         if safe(saved[1]) and safe(saved[2]) then accept(saved); return end

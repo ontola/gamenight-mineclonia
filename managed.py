@@ -114,7 +114,7 @@ class Adapter:
                 publish(frame, False)
                 self.frames.append(frame)
                 conf = self.directory / f"view-{index}.conf"
-                conf.write_text("fullscreen = false\nwindow_maximized = false\npause_on_lost_focus = false\nfps_max = 60\nfps_max_unfocused = 30\nviewing_range = 60\nkeymap_pause = GAMEPAD_BUTTON_6\nkeymap_minimap = \nkeymap_drop = \nkeymap_freemove = \nkeymap_screenshot = \ndebug_log_level = info\nsound_volume = " + ("0.5" if index == 0 else "0") + "\n")
+                if not conf.exists(): conf.write_text("fullscreen = false\nwindow_maximized = false\npause_on_lost_focus = false\nfps_max = 60\nfps_max_unfocused = 30\nviewing_range = 60\nkeymap_pause = GAMEPAD_BUTTON_6\nkeymap_minimap = \nkeymap_drop = \nkeymap_freemove = \nkeymap_screenshot = \ndebug_log_level = info\nsound_volume = " + ("0.5" if index == 0 else "0") + "\n")
                 env = dict(os.environ, GAMENIGHT_CONTROLLER_FRAME=str(frame), GAMENIGHT_COUCH_SEAT=str(index))
                 env["GAMENIGHT_COUCH_GROUP"] = str(self.directory / "view-pids.txt")
                 env.pop("GAMENIGHT_CONTROLLER_PATH", None)
