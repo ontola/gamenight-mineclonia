@@ -61,7 +61,7 @@ def main():
         pths[0].write_text(content+"\n../adapter\n",encoding="ascii")
         adapter=package/"adapter";adapter.mkdir()
         for item in ROOT.glob("*.py"):
-            if not item.name.startswith("test_") and item.name not in ("package.py","playtest.py"):
+            if not item.name.startswith("test_") and item.name not in ("package.py","playtest.py","build_release.py"):
                 shutil.copy2(item,adapter/item.name)
         for name in ("mods",):shutil.copytree(ROOT/name,adapter/name)
         shutil.copy2(ROOT/"capabilities.json",adapter/"capabilities.json")

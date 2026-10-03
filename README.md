@@ -34,6 +34,9 @@ Run `python -m unittest discover`. Engine navigation tests live in the fork.
 `playtest.py` uses a separate fresh world and real clients with scripted host
 frames. It is not evidence of physical controller usability.
 
+The clean CI package build runs `python3 build_release.py NEW_BUILD_DIRECTORY`.
+See [VERIFICATION.md](VERIFICATION.md) for observed results and remaining checks.
+
 ## Historical prototype notes
 
 The material below records prior checks and limitations. A successful old

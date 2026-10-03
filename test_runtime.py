@@ -22,10 +22,12 @@ class InstalledRuntime(unittest.TestCase):
         with tempfile.TemporaryDirectory() as folder:
             root = Path(folder)
             prepare_data(root)
+            password = connection(root)["password"]
             seed = (root/"world-seed.txt").read_text()
             (root/"world/world.mt").write_text("existing world configuration")
             (root/"world/map.sqlite").write_bytes(b"saved map")
             prepare_data(root)
+            self.assertEqual(connection(root)["password"], password)
             self.assertEqual((root/"world-seed.txt").read_text(), seed)
             self.assertEqual((root/"world/world.mt").read_text(), "existing world configuration")
             self.assertEqual((root/"world/map.sqlite").read_bytes(), b"saved map")

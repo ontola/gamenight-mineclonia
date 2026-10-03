@@ -1,0 +1,26 @@
+name: Windows package
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['**.py', 'launcher.c', 'mods/**', 'sources.lock.json', '.github/workflows/package.yml']
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ gettext unzip wget xz-utils
+      - name: Test adapter
+        run: python3 -m unittest discover
+      - name: Build pinned Windows package
+        run: python3 build_release.py "$RUNNER_TEMP/mineclonia-build"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mineclonia-windows-candidate
+          path: |
+            ${{ runner.temp }}/mineclonia-build/mineclonia-windows.zip
+            ${{ runner.temp }}/mineclonia-build/mineclonia-windows.sha256
