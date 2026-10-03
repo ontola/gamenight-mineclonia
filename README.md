@@ -37,6 +37,20 @@ frames. It is not evidence of physical controller usability.
 The clean CI package build runs `python3 build_release.py NEW_BUILD_DIRECTORY`.
 See [VERIFICATION.md](VERIFICATION.md) for observed results and remaining checks.
 
+
+## Try a candidate through the local lobby
+
+Use a separate test world and pass the extracted package directory:
+
+```powershell
+python lobby_test.py --package E:/gamenight-host/mineclonia-release-candidate-1 --root E:/gamenight-host/mineclonia-controller-playtest --gamenight-source ../gamenight-public
+```
+
+This uses the installed GameNight Preview runtime by default. Pass `--runtime`
+for another runtime. The test launcher refuses a port already used by another
+test host. The candidate skips Luanti's standalone title screen when GameNight
+launches it; its in-game menus use the new directional focus navigation.
+
 ## Historical prototype notes
 
 The material below records prior checks and limitations. A successful old
