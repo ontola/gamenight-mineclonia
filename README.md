@@ -1,3 +1,44 @@
+# Mineclonia for GameNight
+
+This repository owns the GameNight adapter, live-settings mod, package builder
+and tests for two-player Windows couch play. Its history was extracted from
+`ontola/gamenight/examples/mineclonia`.
+
+The native engine changes are maintained in
+[ontola/luanti](https://github.com/ontola/luanti/tree/gamenight-couch).
+Mineclonia stays pinned to its upstream archive, with one explicit guard for a
+player disconnect race; `package.py` records that change. `sources.lock.json`
+pins the engine source, Mineclonia archive, and embedded Python runtime.
+
+## Current release work
+
+- Menus use D-pad/left-stick focus, A selection, B back, and a visible focus border.
+- Inventory uses slot focus, A pick/place, X split/place one, Y quick transfer.
+- New players share verified dry ground; existing player positions are preserved.
+- Installed game files and saved worlds are separate. The package includes Python.
+- Initial support: Windows x64, two controllers, two side-by-side engine views.
+- The package is still being validated. A store listing is not yet published.
+
+Saves are stored under the user's local application data in
+`GameNight/games/mineclonia`. A new world gets a random seed that is retained
+for subsequent launches. The local server uses a private loopback connection.
+There is no automatic conversion of the old developer playtest world.
+
+The adapter is MIT licensed. Engine patches retain Luanti's LGPL-2.1-or-later;
+Mineclonia and Python retain their bundled upstream licenses. Corresponding
+engine and game source references are recorded in every package's `BUILD.json`.
+
+## Verification
+
+Run `python -m unittest discover`. Engine navigation tests live in the fork.
+`playtest.py` uses a separate fresh world and real clients with scripted host
+frames. It is not evidence of physical controller usability.
+
+## Historical prototype notes
+
+The material below records prior checks and limitations. A successful old
+playtest is not certification of a new release package.
+
 # Mineclonia couch prototype
 
 This is an isolated experiment, not a catalog game. A patched Luanti 5.17.0

@@ -8,6 +8,8 @@ import shutil
 import subprocess
 import time
 import uuid
+import socket
+from runtime import engine_path
 
 
 def generate(values):
@@ -77,11 +79,14 @@ def validate(root, staged):
 end)
 ''')
     config = world / "test.conf"
-    config.write_text("bind_address = 127.0.0.1\nport = 30124\nserver_announce = false\nmg_name = singlenode\n")
+    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+        probe.bind(("127.0.0.1", 0))
+        port = probe.getsockname()[1]
+    config.write_text(f"bind_address = 127.0.0.1\nport = {port}\nserver_announce = false\nmg_name = singlenode\n")
     env = {k:v for k,v in os.environ.items() if k not in ("GAMENIGHT_CONTROLLER_FRAME", "GAMENIGHT_CONTROLLER_PATH")}
     env["LUANTI_USER_PATH"] = str(world / "user")
     with (world / "test.log").open("w") as log:
-        proc = subprocess.Popen([str(root / "controller-engine-managed/bin/luanti.exe"), "--server",
+        proc = subprocess.Popen([str(engine_path(root) / "bin/luanti.exe"), "--server",
             "--world", str(world), "--config", str(config)], cwd=root, env=env,
             stdin=subprocess.DEVNULL, stdout=log, stderr=log)
         try: code = proc.wait(timeout=35)

@@ -20,6 +20,7 @@ from host import Host
 from couch import singleton
 from server import Server, preserve_world
 from prototype import command
+from runtime import engine_path, connection, prepare_data
 
 
 def routed(seats, controllers):
@@ -120,8 +121,8 @@ class Adapter:
                 userdir = self.directory / f"client-{index}"
                 userdir.mkdir(exist_ok=True)
                 env["LUANTI_USER_PATH"] = str(userdir)
-                args = [str(self.root/"controller-engine-managed/bin/luanti.exe"), "--go", "--address", "127.0.0.1", "--port", "30123",
-                    "--name", f"Couch{index+1}", "--password", "local-isolated-test", "--config", str(conf),
+                args = [str(engine_path(self.root)/"bin/luanti.exe"), "--go", "--address", "127.0.0.1", "--port", str(connection(self.root)["port"]),
+                    "--name", f"Couch{index+1}", "--password", connection(self.root)["password"], "--config", str(conf),
                     "--logfile", str(self.directory/f"view-{index}.log")]
                 self.children.append(subprocess.Popen(args, cwd=self.root, env=env,
                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
@@ -250,11 +251,15 @@ class Adapter:
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument("--root", type=Path, default=Path("E:/gamenight-host/prototypes/mineclonia"))
+    p.add_argument("--installed", action="store_true")
     a=p.parse_args()
+    a.root = a.root.resolve()
+    a.root.mkdir(parents=True, exist_ok=True)
     if not os.environ.get("GAMENIGHT_TOKEN"):
         raise SystemExit("Launch through the GameNight test shelf, not directly.")
     host, port=os.environ["GAMENIGHT_ADDR"].rsplit(":",1)
     with singleton(a.root), socket.create_connection((host,int(port))) as sock:
+        if a.installed: prepare_data(a.root)
         def send(msg): sock.sendall((json.dumps(msg)+"\n").encode())
         send({"type":"hello", "role":"game", "game":os.environ["GAMENIGHT_GAME_ID"], "token":os.environ["GAMENIGHT_TOKEN"]})
         adapter=Adapter(a.root,send)

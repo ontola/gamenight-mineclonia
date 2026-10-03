@@ -1,6 +1,7 @@
 -- Local-only mailbox in this isolated world's directory. No remote evaluation.
 -- Use Mineclonia's multiplicative physics API so sprint, potions and equipment
 -- retain their factors. Removing OUR factor restores those effects, too.
+local safe_spawn = dofile(core.get_modpath("gamenight_bridge") .. "/safe_spawn.lua")
 local store = core.get_mod_storage()
 local saved = store:get_string("state")
 local state = (saved ~= "" and core.parse_json(saved)) or {
@@ -92,6 +93,7 @@ local function snapshot()
         })
     end
     return {revision = state.revision, values = state.values, players = players,
+        spawn_ready = safe_spawn.ready, spawn_error = safe_spawn.error, spawn_ground = safe_spawn.positions,
         bounce_events = bounce_events, time_of_day = core.get_timeofday() * 24,
         time_speed = tonumber(core.settings:get("time_speed")) or 72,
         mod_values = state.mod_values or {}, can_undo_mod = state.can_undo_mod or false, can_undo = type(state.previous) == "table", game = "mineclonia", game_time = core.get_gametime()}

@@ -1,0 +1,16 @@
+{
+  "engine": {
+    "repository": "https://github.com/ontola/luanti.git",
+    "revision": "dd6057695478ff562b5d409f3f5254e2bde0cac6"
+  },
+  "mineclonia": {
+    "version": "0.123.1",
+    "url": "https://cdn.content.luanti.org/uploads/0e17a07e64.zip",
+    "sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59"
+  },
+  "python": {
+    "version": "3.13.7",
+    "url": "https://www.python.org/ftp/python/3.13.7/python-3.13.7-embed-amd64.zip",
+    "sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65"
+  }
+}

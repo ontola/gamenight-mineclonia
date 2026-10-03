@@ -7,6 +7,7 @@ import subprocess
 import time
 from pathlib import Path
 from prototype import command
+from runtime import engine_path, connection
 
 
 def preserve_world(root, name):
@@ -35,24 +36,27 @@ class Server:
         if self.process is not None:
             self.check()
             return
-        with socket.socket() as probe:
-            if probe.connect_ex(("127.0.0.1", 30123)) == 0:
-                raise RuntimeError("World port is already in use; stop the old isolated server first")
+        with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
+            try: probe.bind(("127.0.0.1", connection(self.root)["port"]))
+            except OSError: raise RuntimeError("World port is already in use; close the other session first")
         root = self.root
-        engine = root / "controller-engine-managed"
+        engine = engine_path(root)
         # Mineclonia's join notification races a client disconnect. A missing
         # peer must not crash the world. Keep this tiny upstream guard reproducible.
         warning = engine / "games/mineclonia/mods/CORE/mcl_init/outdated_warning.lua"
         source = warning.read_text(encoding="utf8")
         source = source.replace("local current_protocol = core.get_player_information(pn).protocol_version",
             "local info = core.get_player_information(pn)\n\tif not info then return end\n\tlocal current_protocol = info.protocol_version")
-        warning.write_text(source, encoding="utf8")
+        if source != warning.read_text(encoding="utf8"):
+            if os.environ.get("GAMENIGHT_MINECLONIA_ENGINE"):
+                raise RuntimeError("Installed game lacks the pinned join-race patch; reinstall it")
+            warning.write_text(source, encoding="utf8")
         shutil.copytree(Path(__file__).parent / "mods/gamenight_bridge",
                         root / "world/worldmods/gamenight_bridge", dirs_exist_ok=True)
         folder = root / "managed"
         folder.mkdir(exist_ok=True)
         frame = folder / "server.frame"
-        frame.write_text(f"{time.monotonic_ns()} 0 0 0 0 0 0 0 0 0")
+        frame.write_text(f"{time.monotonic_ns()} 1 0 0 0 0 0 0 0 0")
         env = dict(os.environ, GAMENIGHT_CONTROLLER_FRAME=str(frame))
         env.pop("GAMENIGHT_CONTROLLER_PATH", None)
         user = folder / "server-user"
@@ -65,13 +69,21 @@ class Server:
                 "--logfile", str(folder / "server.log")], cwd=root, env=env,
                 stdin=subprocess.DEVNULL, stdout=log, stderr=log)
         (folder / "server.pid").write_text(str(self.process.pid))
-        deadline = time.monotonic()+45
+        deadline = time.monotonic()+90
         while time.monotonic() < deadline:
             if self.process.poll() is not None:
                 raise RuntimeError("Mineclonia server failed; inspect managed/server-output.log")
             status = root / "world/gamenight/status.json"
+            frame.write_text(f"{time.monotonic_ns()} 1 0 0 0 0 0 0 0 0")
             if status.exists() and status.stat().st_mtime >= started:
-                return
+                try: state = json.loads(status.read_text())
+                except (OSError, json.JSONDecodeError): state = {}
+                if state.get("spawn_error"):
+                    self.stop()
+                    raise RuntimeError(state["spawn_error"])
+                if state.get("spawn_ready", False):
+                    frame.write_text(f"{time.monotonic_ns()} 0 0 0 0 0 0 0 0 0")
+                    return
             time.sleep(.1)
         self.stop()
         raise TimeoutError("World did not become ready")
