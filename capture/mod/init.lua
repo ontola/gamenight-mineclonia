@@ -6,6 +6,9 @@ local function report(value)
     core.safe_file_write(folder .. "/capture-status.json",core.write_json(value))
 end
 local function stage(shot)
+    for _,obj in ipairs(core.get_objects_inside_radius({x=0,y=20,z=68},24)) do
+        if not obj:is_player() then obj:remove() end
+    end
     for x=-10,10 do for z=59,77 do for y=16,27 do
         node(x,y,z,y<=17 and (shot=="mine" or shot=="blast") and "mcl_core:stone"
             or y<=17 and "mcl_core:dirt_with_grass" or "air")
@@ -22,10 +25,8 @@ local function stage(shot)
     assert(p1 and p2,"Both players must be connected")
     for _,p in ipairs({p1,p2}) do
         p:get_inventory():set_list("main",{})
-        p:set_wield_index(1)
         p:set_look_vertical(0.06)
         p:set_look_horizontal(0)
-        p:set_hp(20)
     end
     p1:set_pos({x=0,y=17.6,z=66})
     p2:set_pos({x=4,y=17.6,z=65})
@@ -71,6 +72,16 @@ core.register_globalstep(function(dt)
                 if not ok then busy=false;report({ok=false,error=tostring(err)}) end
             end
         end)
+    elseif c.action=="inventory" then
+        local inventories={}
+        for _,p in ipairs(core.get_connected_players()) do
+            local items={}
+            for _,stack in ipairs(p:get_inventory():get_list("main")) do
+                table.insert(items,stack:to_string())
+            end
+            inventories[p:get_player_name()]=items
+        end
+        report({ok=true,inventories=inventories})
     elseif c.action=="ignite" then
         mcl_tnt.ignite({x=0,y=18,z=70})
         report({ok=true,action="ignite"})
