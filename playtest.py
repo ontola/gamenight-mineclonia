@@ -19,6 +19,8 @@ def main():
     a=p.parse_args()
     if a.root.exists() and not a.resume:raise RuntimeError("Use a fresh playtest directory or --resume")
     a.root.mkdir(parents=True,exist_ok=True)
+    for marker in ("stop","ready"):
+        (a.root/marker).unlink(missing_ok=True)
     if a.capture_root:
         a.capture_root.mkdir(parents=True,exist_ok=True)
         os.environ["GAMENIGHT_CAPTURE_ROOT"]=str(a.capture_root.resolve())

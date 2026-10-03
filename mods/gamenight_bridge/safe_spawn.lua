@@ -63,13 +63,16 @@ local function search()
     end)
 end
 core.register_on_mods_loaded(function()
-    local encoded = storage:get_string("safe_spawn_ground")
-    local saved = encoded ~= "" and core.parse_json(encoded) or nil
-    if type(saved) == "table" and #saved == 2 then
-        core.load_area(vector.subtract(saved[1],4),vector.add(saved[1],4))
-        if safe(saved[1]) and safe(saved[2]) then accept(saved); return end
-    end
-    core.after(0,search)
+    -- World access is only legal after script initialization has finished.
+    core.after(0,function()
+        local encoded = storage:get_string("safe_spawn_ground")
+        local saved = encoded ~= "" and core.parse_json(encoded) or nil
+        if type(saved) == "table" and #saved == 2 then
+            core.load_area(vector.subtract(saved[1],4),vector.add(saved[1],4))
+            if safe(saved[1]) and safe(saved[2]) then accept(saved); return end
+        end
+        search()
+    end)
 end)
 core.register_on_newplayer(function(player)
     player:get_meta():set_int("gamenight:first_spawn_pending",1)
