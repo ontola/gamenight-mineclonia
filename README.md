@@ -20,7 +20,7 @@ pins the engine source, Mineclonia archive, and embedded Python runtime.
 - Solo fills the screen; two players share side-by-side views; three use a large left view and two stacked right views; four use a 2×2 grid.
 - Choose the player count in the lobby before launch. Adding or removing a viewport requires preparing the game again.
 - Four views run four clients and one server. Physical-controller feel and performance on lower-powered PCs still need hands-on testing.
-- [Download v0.1.0](https://github.com/ontola/gamenight-mineclonia/releases/tag/v0.1.0): about 55 MB, about 116 MB installed. The release is experimental.
+- [Download releases](https://github.com/ontola/gamenight-mineclonia/releases/latest): about 55 MB, about 116 MB installed. The release is experimental.
 
 Saves are stored under the user's local application data in
 `GameNight/games/mineclonia`. A new world gets a random seed that is retained
@@ -30,6 +30,21 @@ There is no automatic conversion of the old developer playtest world.
 The adapter is MIT licensed. Engine patches retain Luanti's LGPL-2.1-or-later;
 Mineclonia and Python retain their bundled upstream licenses. Corresponding
 engine and game source references are recorded in every package's `BUILD.json`.
+
+## Player profiles
+
+GameNight profile names appear above characters and in each viewport. Profile clothing
+colors, personal skin colors and pixel-art faces carry into the character skin; the
+viewport badge retains the full face artwork. Changes from the lobby or phone update
+connected players, including while paused, without restarting the world.
+
+Profiles are matched by `occupant.player_id`, never by player-list order. Missing or
+malformed artwork gets a friendly fallback. The adapter follows the v1 and legacy
+`gamenight-protocol` avatar formats and shared head anchors. Generated PNG textures
+use only embedded local pixels. Armor and invisibility keep their Mineclonia layers.
+World inventories and positions still belong to the existing Couch1–Couch4 save slots;
+profile cosmetics do not yet migrate those saves between seats. Upstream chat and
+death messages may still show those internal account names.
 
 ## Verification
 

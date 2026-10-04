@@ -13,9 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install build tools
-        run: sudo apt-get update && sudo apt-get install -y cmake g++ gettext unzip wget xz-utils
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ gettext unzip wget xz-utils luajit
       - name: Test adapter
-        run: python3 -m unittest discover
+        run: |
+          python3 -m unittest discover
+          luajit test_profiles.lua mods/gamenight_bridge/profiles.lua
+          luajit test_safe_spawn.lua mods/gamenight_bridge/safe_spawn.lua
       - name: Build pinned Windows package
         run: python3 build_release.py "$RUNNER_TEMP/mineclonia-build"
       - uses: actions/upload-artifact@v4

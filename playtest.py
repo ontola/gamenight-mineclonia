@@ -16,6 +16,7 @@ def main():
     p.add_argument("--resume",action="store_true",help="Reuse this explicitly selected test world")
     p.add_argument("--capture-root",type=Path)
     p.add_argument("--capture-mod",type=Path)
+    p.add_argument("--profiles",action="store_true",help="Use synthetic GameNight profile fixtures")
     p.add_argument("--players",type=int,choices=range(1,5),default=2)
     a=p.parse_args()
     if a.root.exists() and not a.resume:raise RuntimeError("Use a fresh playtest directory or --resume")
@@ -36,9 +37,11 @@ def main():
     events=[]
     adapter=Adapter(a.root,lambda event:events.append(event))
     session=str(uuid.uuid4())
-    seats=[{"index":i,"controller":f"test-{i}","occupant":{"kind":"local","player":f"test-player-{i}"}} for i in range(a.players)]
+    seats=[{"index":i,"controller":f"test-{i}","occupant":{"kind":"local","player_id":f"test-player-{i}"}} for i in range(a.players)]
+    from test_profiles import sample_players
+    players=sample_players(a.players) if a.profiles else []
     adapter.receive({"type":"welcome"})
-    adapter.receive({"type":"prepare","session":session,"seats":seats})
+    adapter.receive({"type":"prepare","session":session,"seats":seats,"players":players})
     control=a.root/"test-input.json"
     control.write_text(json.dumps({"buttons":[0]*a.players,"axes":[[0]*6 for _ in range(a.players)]}))
     started=False
@@ -48,6 +51,10 @@ def main():
             try: payload=json.loads(control.read_text())
             except (OSError,json.JSONDecodeError):payload={"buttons":[0]*a.players,"axes":[[0]*6 for _ in range(a.players)]}
             adapter.receive({"type":"controller_frame","controllers":[{"controller":f"test-{i}","buttons":payload["buttons"][i],"axes":payload["axes"][i]} for i in range(a.players)]})
+            update=a.root/"profile-input.json"
+            if update.exists():
+                players=json.loads(update.read_text(encoding="utf8"));update.unlink()
+                adapter.receive({"type":"party_updated","session":session,"seats":seats,"players":players})
             adapter.tick()
             if adapter.ready and not started:
                 adapter.receive({"type":"start","session":session})

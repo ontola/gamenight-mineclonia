@@ -2,6 +2,7 @@
 -- Use Mineclonia's multiplicative physics API so sprint, potions and equipment
 -- retain their factors. Removing OUR factor restores those effects, too.
 local safe_spawn = dofile(core.get_modpath("gamenight_bridge") .. "/safe_spawn.lua")
+local profiles = dofile(core.get_modpath("gamenight_bridge") .. "/profiles.lua")
 local store = core.get_mod_storage()
 local saved = store:get_string("state")
 local state = (saved ~= "" and core.parse_json(saved)) or {
@@ -87,7 +88,7 @@ local function snapshot()
     local players = {}
     for _, player in ipairs(core.get_connected_players()) do
         table.insert(players, {
-            name = player:get_player_name(), position = player:get_pos(),
+            name = player:get_player_name(), profile = profiles.describe(player), position = player:get_pos(),
             physics = player:get_physics_override(), velocity = player:get_velocity(),
             bounce_pads = player:get_inventory():contains_item("main", "gamenight_bridge:bounce_pad"),
         })
@@ -158,7 +159,7 @@ local function run(request)
         -- Remove old peers before replacement views reuse their saved identity.
         for _, player in ipairs(core.get_connected_players()) do
             local name = player:get_player_name()
-            if name == "Couch1" or name == "Couch2" then
+            if name:match("^Couch[1-4]$") then
                 core.kick_player(name, "Reconnecting GameNight view")
             end
         end
@@ -191,6 +192,7 @@ local function poll()
     end
     if now - last_poll < 200000 then return end
     last_poll = now
+    profiles.poll()
     core.safe_file_write(dir .. "/status.json", core.write_json(snapshot()))
     local path = dir .. "/request.json"
     local file = io.open(path, "rb")

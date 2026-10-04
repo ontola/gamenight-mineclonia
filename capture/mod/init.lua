@@ -44,6 +44,19 @@ local function stage(shot)
         p1:set_pos({x=0,y=17.6,z=63})
         p2:set_pos({x=5,y=17.6,z=64})
         p2:set_look_horizontal(0.69)
+    elseif shot=="profiles" then
+        p1:set_pos({x=0,y=17.6,z=72})
+        p1:set_look_horizontal(math.pi)
+        p1:set_look_vertical(0.02)
+        for i=2,4 do
+            local p=core.get_player_by_name("Couch"..i)
+            if p then
+                p:set_pos({x=(i-3)*1.6,y=17.6,z=68})
+                p:set_look_horizontal(math.pi)
+                mcl_player.players[p].vel_yaw=180
+                p:set_look_vertical(0.02)
+            end
+        end
     elseif shot=="bounce" then
         node(0,18,69,"gamenight_bridge:bounce_pad")
         p2:set_look_vertical(-0.2)

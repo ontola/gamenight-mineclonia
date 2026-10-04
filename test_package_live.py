@@ -17,6 +17,10 @@ def main():
     a.root.mkdir(parents=True,exist_ok=True)
     if not a.resume:(a.root/"world-seed.txt").write_text("gamenight-couch-prototype")
     results={}
+    from test_profiles import sample_players
+    profiles=sample_players(a.players)
+    roster=[{"index":i,"controller":"test-"+str(i),"occupant":{"kind":"local","player_id":profiles[i]["id"]}} for i in range(a.players)]+[
+        {"index":i,"occupant":{"kind":"ai" if i==3 else "empty"}} for i in range(a.players,4)]
     token=str(uuid.uuid4());session=str(uuid.uuid4())
     listener=socket.socket();listener.bind(("127.0.0.1",0));listener.listen()
     listener.settimeout(20)
@@ -49,20 +53,21 @@ def main():
                                 raise RuntimeError("Invalid package handshake")
                             results["authenticated_handshake"]=True
                             send({"type":"welcome","protocol_version":1,"party":{}})
-                            send({"type":"prepare","session":session,"seats":[
-                                {"index":i,"controller":"test-"+str(i),
-                                 "occupant":{"kind":"local","player":str(uuid.uuid4())}} for i in range(a.players)]+[
-                                {"index":i,"occupant":{"kind":"ai" if i==3 else "empty"}} for i in range(a.players,4)]})
+                            send({"type":"prepare","session":session,"seats":roster,"players":profiles})
                         events.append({k:v for k,v in message.items() if k!="token"})
                 if until and until():return
             if until:raise TimeoutError("Expected lifecycle event was not observed")
         def state():
-            return json.loads((a.root/"world/gamenight/status.json").read_text())
+            return json.loads((a.root/"world/gamenight/status.json").read_text(encoding="utf8"))
         pump(300,lambda:any(e.get("type")=="ready" for e in events))
         results["prepare_rendered_views"]=all((a.root/f"managed/view-{i}.frame.ready").exists() for i in range(a.players))
         send({"type":"start","session":session})
         pump(4)
         before=state()
+        results["profile_identity_and_skin_applied"] = all(
+            p.get("profile",{}).get("name")==profiles[int(p["name"][-1])-1]["name"]
+            and p["profile"]["color"]==profiles[int(p["name"][-1])-1]["color"]
+            and p["profile"]["skin_applied"] and p["profile"]["hud"] for p in before["players"])
         results["correct_player_count"] = len(before["players"]) == a.players
         ground=before["spawn_ground"]
         results["four_distinct_dry_spawns"]=(before["spawn_ready"] and len(ground)==4
@@ -95,6 +100,13 @@ def main():
         send({"type":"pause","session":session});pump(1)
         paused=state();pump(2)
         results["pause_freezes_world"]=state()["game_time"]==paused["game_time"]
+        profiles[0]["name"]="Alex ★";profiles[0]["color"]="#aa66dd"
+        profiles[0]["avatar"]=profiles[-1]["avatar"]
+        send({"type":"party_updated","session":session,"seats":roster,"players":list(reversed(profiles))});pump(1)
+        updated=next(p["profile"] for p in state()["players"] if p["name"]=="Couch1")
+        results["profile_update_while_paused"]=updated["name"]=="Alex ★" and updated["color"]=="#aa66dd" and updated["skin_applied"]
+        profiles=sample_players(a.players)
+        send({"type":"party_updated","session":session,"seats":roster,"players":profiles});pump(1)
         send({"type":"resume","session":session});pump(3)
         results["resume_advances_world"]=state()["game_time"]>paused["game_time"]
         if a.hold:
@@ -112,7 +124,7 @@ def main():
         results["host_disconnect_cleans_children"]=all(not alive(pid) for pid in pids)
         report={"players":a.players,"package_sha256":hashlib.sha256(a.archive.read_bytes()).hexdigest(),
             "input_checks":input_checks,"input_observations":input_observations,"initial_world":before,"final_world":after,"build":json.loads((a.package/"BUILD.json").read_text()),"checks":results,
-            "untested":["physical controllers","audio audibility","player profile appearance","cross-game switching"]}
+            "untested":["physical controllers","audio audibility","cross-game switching"]}
         (a.root/"report.json").write_text(json.dumps(report,indent=2))
         (a.root/"events.json").write_text(json.dumps(events,indent=2))
         print(json.dumps(results))

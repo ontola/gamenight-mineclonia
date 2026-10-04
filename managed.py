@@ -16,6 +16,7 @@ import shutil
 import uuid
 from concurrent.futures import ThreadPoolExecutor
 import modding
+import profiles
 from settings import Settings
 from host import Host
 from couch import singleton
@@ -113,13 +114,15 @@ class Adapter:
             if self.mod_request and self.mod_request.get("instance") != msg["session"]:
                 self.mod_result(False, "Game instance changed during mod validation")
             self.dispose()
-            self.prepare = msg
+            self.prepare = dict(msg)
+            self.players = msg.get("players", [])
             self.session = msg["session"]
             self.seats = local_seats(msg["seats"])
             # An empty preparation may prewarm the game before a player joins.
             # The host prepares the new roster on the next launch.
             if not self.seats:
                 self.seats = [{"index": 0, "occupant": {"kind": "empty"}}]
+            profiles.publish(self.root, self.seats, self.players)
             self.started = time.monotonic()
             self.send({"type":"participation", "session":self.session, "instant_join":False})
             self.send({"type":"progress", "session":self.session, "percent":0, "label":f"Loading {len(self.seats)} player view(s)"})
@@ -152,6 +155,9 @@ class Adapter:
             self.seats = [updates.get(seat["index"],
                 {"index": seat["index"], "occupant": {"kind": "empty"}})
                 for seat in self.seats]
+            self.players = msg.get("players", self.players)
+            self.prepare["players"] = self.players
+            profiles.publish(self.root, self.seats, self.players)
         elif kind in ("start", "resume", "pause", "dispose") and msg.get("session") == self.session:
             if kind == "dispose": self.dispose()
             else:

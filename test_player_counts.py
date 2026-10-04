@@ -7,7 +7,7 @@ from managed import Adapter, local_seats, routed
 
 
 def seat(i, kind="local"):
-    return {"index":i,"occupant":{"kind":kind,"player":f"p{i}"},"controller":f"pad{i}"}
+    return {"index":i,"occupant":{"kind":kind,"player_id":f"p{i}"},"controller":f"pad{i}"}
 
 
 class PlayerCounts(unittest.TestCase):
