@@ -1,0 +1,12 @@
+{
+  "release": "https://github.com/ontola/gamenight-mineclonia/releases/tag/v0.1.3",
+  "store": "https://gamenight.ontola.io/games/mineclonia",
+  "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+  "public_revision": "e4812581decd63bc50e40eec7cef23811637e67a",
+  "deployed_revision": "8bdaf49a32d30a1f4ce1dabc07358d88137e4bc8",
+  "cloud_ci_run": 37219472226,
+  "live_catalog_verified": true,
+  "release_download_hash_verified": true,
+  "desktop_and_390px_store_layout_checked": true,
+  "preview_provenance": "Unchanged v0.1.2 footage"
+}
