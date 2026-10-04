@@ -155,13 +155,6 @@ def main():
                 for player in before["players"]
             )
         measurements = None
-        if a.benchmark_seconds:
-            from benchmark import measure
-
-            measurements = measure(a.root, controls, pump, a.benchmark_seconds)
-            (a.root / "benchmark.json").write_text(
-                json.dumps(measurements, indent=2), encoding="utf8"
-            )
 
         def position(snapshot, name):
             return next(p["position"] for p in snapshot["players"] if p["name"] == name)
@@ -225,9 +218,26 @@ def main():
             }
         )
         pump(1)
-        updated = next(
-            p["profile"] for p in state()["players"] if p["name"] == "Couch1"
+
+        def updated_profile():
+            return next(
+                (
+                    p.get("profile", {})
+                    for p in state()["players"] or []
+                    if p["name"] == "Couch1"
+                ),
+                {},
+            )
+
+        pump(
+            8,
+            lambda: (
+                updated_profile().get("name") == "Alex ★"
+                and updated_profile().get("color") == "#aa66dd"
+                and updated_profile().get("skin_applied")
+            ),
         )
+        updated = updated_profile()
         results["profile_update_while_paused"] = (
             updated["name"] == "Alex ★"
             and updated["color"] == "#aa66dd"
@@ -243,6 +253,17 @@ def main():
             }
         )
         pump(1)
+        if a.benchmark_seconds:
+            from benchmark import measure
+
+            send({"type": "resume", "session": session})
+            pump(3)
+            measurements = measure(a.root, controls, pump, a.benchmark_seconds)
+            (a.root / "benchmark.json").write_text(
+                json.dumps(measurements, indent=2), encoding="utf8"
+            )
+            send({"type": "pause", "session": session})
+            pump(2)
         if a.identity_test:
             import sqlite3
 
