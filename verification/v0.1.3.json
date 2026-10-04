@@ -1,0 +1,2742 @@
+{
+  "release": "v0.1.3",
+  "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+  "build": {
+    "format": 1,
+    "game": "mineclonia",
+    "engine_source": "https://github.com/ontola/luanti",
+    "engine_revision": "956935bea670ef529a80dbe35f37b80271b0ae60",
+    "engine_archive_sha256": "45f35c1edb2b44a6ed873544a89c069bfb2e395f9fd8d3abe80fe0550086ff93",
+    "mineclonia_version": "0.123.1",
+    "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+    "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+    "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+    "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+    "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+    "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+    "adapter_revision": "6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f",
+    "installed_bytes": 115710086
+  },
+  "test_harness_revision": "2e78137",
+  "hardware": {
+    "cpu": {
+      "Name": "AMD Ryzen 9 5900X 12-Core Processor            ",
+      "NumberOfCores": 12,
+      "NumberOfLogicalProcessors": 24
+    },
+    "graphics": [
+      {
+        "Name": "SudoMaker Virtual Display Adapter",
+        "DriverVersion": "1.10.9.289"
+      },
+      {
+        "Name": "NVIDIA GeForce RTX 5070 Ti",
+        "DriverVersion": "32.0.16.1714"
+      }
+    ],
+    "memory_bytes": 68616810496,
+    "note": "Normal desktop workload remained open; an older Luanti process was left untouched."
+  },
+  "matrix": {
+    "1": {
+      "players": 1,
+      "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+      "benchmark": {
+        "cases": [
+          {
+            "scenario": "stationary",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 0.31640625,
+            "cpu_machine_percent": 1.318359375,
+            "combined_working_set_peak_bytes": 897970176,
+            "views": [
+              {
+                "frames": 1070,
+                "mean_fps": 53.52455171187024,
+                "frame_ms_p50": 16.752,
+                "frame_ms_p95": 34.807,
+                "frame_ms_p99": 84.918,
+                "frame_ms_max": 195.804,
+                "frames_over_33ms_percent": 5.794392523364486,
+                "render_sizes": [
+                  [
+                    3840,
+                    2160
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "scenario": "camera_pan",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 0.353125,
+            "cpu_machine_percent": 1.4713541666666667,
+            "combined_working_set_peak_bytes": 1013321728,
+            "views": [
+              {
+                "frames": 1079,
+                "mean_fps": 54.00045262288556,
+                "frame_ms_p50": 16.735,
+                "frame_ms_p95": 34.711,
+                "frame_ms_p99": 78.238,
+                "frame_ms_max": 193.172,
+                "frames_over_33ms_percent": 6.024096385542169,
+                "render_sizes": [
+                  [
+                    3840,
+                    2160
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "logical_processors": 24,
+        "memory_bytes": 68616810496,
+        "os": "Windows-11-10.0.26300-SP0",
+        "method": "Render completion intervals include pacing and CPU/OS work; these are not GPU timings. Combined working sets may count shared pages more than once.",
+        "limits": [
+          "Fixed seed, short stationary and camera-pan scenes",
+          "No mob-heavy or long-session stress",
+          "Other desktop applications remained running",
+          "Physical controller feel not measured"
+        ]
+      },
+      "input_checks": [
+        true
+      ],
+      "input_observations": [
+        [
+          2.7223874244769934
+        ]
+      ],
+      "initial_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 882,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 72
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 10.879105567932129,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 10.879105567932129,
+          "time_speed": 72
+        }
+      },
+      "final_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 951,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -1.562999963760376,
+              "y": 17.5,
+              "z": 69.77100372314453
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 12.253224849700928,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 12.253224849700928,
+          "time_speed": 72
+        }
+      },
+      "build": {
+        "format": 1,
+        "game": "mineclonia",
+        "engine_source": "https://github.com/ontola/luanti",
+        "engine_revision": "956935bea670ef529a80dbe35f37b80271b0ae60",
+        "engine_archive_sha256": "45f35c1edb2b44a6ed873544a89c069bfb2e395f9fd8d3abe80fe0550086ff93",
+        "mineclonia_version": "0.123.1",
+        "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+        "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+        "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+        "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+        "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+        "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+        "adapter_revision": "6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f",
+        "installed_bytes": 115710086
+      },
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "profile_identity_and_skin_applied": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "profile_update_while_paused": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "cross-game switching"
+      ]
+    },
+    "2": {
+      "players": 2,
+      "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+      "benchmark": {
+        "cases": [
+          {
+            "scenario": "stationary",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 0.665625,
+            "cpu_machine_percent": 2.7734375,
+            "combined_working_set_peak_bytes": 1326968832,
+            "views": [
+              {
+                "frames": 1077,
+                "mean_fps": 53.87271273568936,
+                "frame_ms_p50": 16.739,
+                "frame_ms_p95": 31.264,
+                "frame_ms_p99": 91.478,
+                "frame_ms_max": 158.317,
+                "frames_over_33ms_percent": 4.549675023212628,
+                "render_sizes": [
+                  [
+                    1920,
+                    2160
+                  ]
+                ]
+              },
+              {
+                "frames": 1084,
+                "mean_fps": 54.191221022194405,
+                "frame_ms_p50": 16.663,
+                "frame_ms_p95": 30.333,
+                "frame_ms_p99": 85.826,
+                "frame_ms_max": 158.029,
+                "frames_over_33ms_percent": 4.059040590405904,
+                "render_sizes": [
+                  [
+                    1920,
+                    2160
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "scenario": "camera_pan",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 0.63984375,
+            "cpu_machine_percent": 2.666015625,
+            "combined_working_set_peak_bytes": 1381531648,
+            "views": [
+              {
+                "frames": 1081,
+                "mean_fps": 54.07545872596818,
+                "frame_ms_p50": 16.805,
+                "frame_ms_p95": 28.615,
+                "frame_ms_p99": 105.805,
+                "frame_ms_max": 148.044,
+                "frames_over_33ms_percent": 4.162812210915819,
+                "render_sizes": [
+                  [
+                    1920,
+                    2160
+                  ]
+                ]
+              },
+              {
+                "frames": 1079,
+                "mean_fps": 53.987334941478785,
+                "frame_ms_p50": 16.785,
+                "frame_ms_p95": 29.123,
+                "frame_ms_p99": 99.52,
+                "frame_ms_max": 145.073,
+                "frames_over_33ms_percent": 4.541241890639481,
+                "render_sizes": [
+                  [
+                    1920,
+                    2160
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "logical_processors": 24,
+        "memory_bytes": 68616810496,
+        "os": "Windows-11-10.0.26300-SP0",
+        "method": "Render completion intervals include pacing and CPU/OS work; these are not GPU timings. Combined working sets may count shared pages more than once.",
+        "limits": [
+          "Fixed seed, short stationary and camera-pan scenes",
+          "No mob-heavy or long-session stress",
+          "Other desktop applications remained running",
+          "Physical controller feel not measured"
+        ]
+      },
+      "input_checks": [
+        true,
+        true
+      ],
+      "input_observations": [
+        [
+          2.5181175452335403,
+          0.0
+        ],
+        [
+          0.0,
+          2.5899482391225894
+        ]
+      ],
+      "initial_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 882,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 72
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch2",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -1.600000023841858,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#e36c76",
+              "hud": true,
+              "name": "Bo",
+              "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 10.875696659088135,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 10.875696659088135,
+          "time_speed": 72
+        }
+      },
+      "final_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 956,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -0.3330000042915344,
+              "y": 17.5,
+              "z": 69.50399780273438
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch2",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -1.25600004196167,
+              "y": 17.5,
+              "z": 70.56700134277344
+            },
+            "profile": {
+              "color": "#e36c76",
+              "hud": true,
+              "name": "Bo",
+              "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 12.348491191864014,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 12.348491191864014,
+          "time_speed": 72
+        }
+      },
+      "build": {
+        "format": 1,
+        "game": "mineclonia",
+        "engine_source": "https://github.com/ontola/luanti",
+        "engine_revision": "956935bea670ef529a80dbe35f37b80271b0ae60",
+        "engine_archive_sha256": "45f35c1edb2b44a6ed873544a89c069bfb2e395f9fd8d3abe80fe0550086ff93",
+        "mineclonia_version": "0.123.1",
+        "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+        "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+        "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+        "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+        "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+        "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+        "adapter_revision": "6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f",
+        "installed_bytes": 115710086
+      },
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "profile_identity_and_skin_applied": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "profile_update_while_paused": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "cross-game switching"
+      ]
+    },
+    "3": {
+      "players": 3,
+      "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+      "benchmark": {
+        "cases": [
+          {
+            "scenario": "stationary",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 0.95625,
+            "cpu_machine_percent": 3.9843750000000004,
+            "combined_working_set_peak_bytes": 1779257344,
+            "views": [
+              {
+                "frames": 1058,
+                "mean_fps": 52.89711446240607,
+                "frame_ms_p50": 16.681,
+                "frame_ms_p95": 30.673,
+                "frame_ms_p99": 102.129,
+                "frame_ms_max": 148.057,
+                "frames_over_33ms_percent": 4.536862003780718,
+                "render_sizes": [
+                  [
+                    1920,
+                    2160
+                  ]
+                ]
+              },
+              {
+                "frames": 1061,
+                "mean_fps": 53.04916182324319,
+                "frame_ms_p50": 16.682,
+                "frame_ms_p95": 32.317,
+                "frame_ms_p99": 98.609,
+                "frame_ms_max": 147.421,
+                "frames_over_33ms_percent": 4.806786050895382,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 1059,
+                "mean_fps": 52.941579641757976,
+                "frame_ms_p50": 16.687,
+                "frame_ms_p95": 30.412,
+                "frame_ms_p99": 102.226,
+                "frame_ms_max": 147.824,
+                "frames_over_33ms_percent": 4.721435316336166,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "scenario": "camera_pan",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 0.871875,
+            "cpu_machine_percent": 3.6328124999999996,
+            "combined_working_set_peak_bytes": 1944309760,
+            "views": [
+              {
+                "frames": 1021,
+                "mean_fps": 51.12837468555549,
+                "frame_ms_p50": 16.762,
+                "frame_ms_p95": 38.443,
+                "frame_ms_p99": 111.24,
+                "frame_ms_max": 178.828,
+                "frames_over_33ms_percent": 5.680705190989226,
+                "render_sizes": [
+                  [
+                    1920,
+                    2160
+                  ]
+                ]
+              },
+              {
+                "frames": 1018,
+                "mean_fps": 50.96072479967129,
+                "frame_ms_p50": 16.663,
+                "frame_ms_p95": 37.18,
+                "frame_ms_p99": 106.714,
+                "frame_ms_max": 207.679,
+                "frames_over_33ms_percent": 5.893909626719057,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 1014,
+                "mean_fps": 50.755793305791386,
+                "frame_ms_p50": 16.729,
+                "frame_ms_p95": 39.639,
+                "frame_ms_p99": 108.776,
+                "frame_ms_max": 210.923,
+                "frames_over_33ms_percent": 6.804733727810651,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "logical_processors": 24,
+        "memory_bytes": 68616810496,
+        "os": "Windows-11-10.0.26300-SP0",
+        "method": "Render completion intervals include pacing and CPU/OS work; these are not GPU timings. Combined working sets may count shared pages more than once.",
+        "limits": [
+          "Fixed seed, short stationary and camera-pan scenes",
+          "No mob-heavy or long-session stress",
+          "Other desktop applications remained running",
+          "Physical controller feel not measured"
+        ]
+      },
+      "input_checks": [
+        true,
+        true,
+        true
+      ],
+      "input_observations": [
+        [
+          2.687999963760376,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.9850000143051147,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.7659988403320312
+        ]
+      ],
+      "initial_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 882,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 72
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch3",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#648cdd",
+              "hud": true,
+              "name": "Cl\u00e9o",
+              "nametag": "\u001b(c@#648cdd)Cl\u00e9o\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch2",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -1.600000023841858,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#e36c76",
+              "hud": true,
+              "name": "Bo",
+              "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 10.879127025604248,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 10.879127025604248,
+          "time_speed": 72
+        }
+      },
+      "final_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 896,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 2.687999963760376,
+              "y": 17.5,
+              "z": 72
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch3",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 70.76599884033203
+            },
+            "profile": {
+              "color": "#648cdd",
+              "hud": true,
+              "name": "Cl\u00e9o",
+              "nametag": "\u001b(c@#648cdd)Cl\u00e9o\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 3.115999937057495
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch2",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -4.585000038146973,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#e36c76",
+              "hud": true,
+              "name": "Bo",
+              "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 11.145568370819092,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 11.145568370819092,
+          "time_speed": 72
+        }
+      },
+      "build": {
+        "format": 1,
+        "game": "mineclonia",
+        "engine_source": "https://github.com/ontola/luanti",
+        "engine_revision": "956935bea670ef529a80dbe35f37b80271b0ae60",
+        "engine_archive_sha256": "45f35c1edb2b44a6ed873544a89c069bfb2e395f9fd8d3abe80fe0550086ff93",
+        "mineclonia_version": "0.123.1",
+        "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+        "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+        "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+        "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+        "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+        "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+        "adapter_revision": "6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f",
+        "installed_bytes": 115710086
+      },
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "profile_identity_and_skin_applied": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "profile_update_while_paused": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "cross-game switching"
+      ]
+    },
+    "4": {
+      "players": 4,
+      "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+      "benchmark": {
+        "cases": [
+          {
+            "scenario": "stationary",
+            "seconds": 20.01600000000326,
+            "cpu_core_equivalents": 1.1038044564346723,
+            "cpu_machine_percent": 4.599185235144468,
+            "combined_working_set_peak_bytes": 2190483456,
+            "views": [
+              {
+                "frames": 1020,
+                "mean_fps": 50.920431733373434,
+                "frame_ms_p50": 16.692,
+                "frame_ms_p95": 37.682,
+                "frame_ms_p99": 117.274,
+                "frame_ms_max": 231.609,
+                "frames_over_33ms_percent": 5.686274509803922,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 1028,
+                "mean_fps": 51.34245281176594,
+                "frame_ms_p50": 16.719,
+                "frame_ms_p95": 37.252,
+                "frame_ms_p99": 112.283,
+                "frame_ms_max": 235.917,
+                "frames_over_33ms_percent": 5.447470817120623,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 1029,
+                "mean_fps": 51.39211705855695,
+                "frame_ms_p50": 16.728,
+                "frame_ms_p95": 36.771,
+                "frame_ms_p99": 116.257,
+                "frame_ms_max": 236.051,
+                "frames_over_33ms_percent": 5.344995140913508,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 1026,
+                "mean_fps": 51.27857324816826,
+                "frame_ms_p50": 16.703,
+                "frame_ms_p95": 38.248,
+                "frame_ms_p99": 112.615,
+                "frame_ms_max": 241.213,
+                "frames_over_33ms_percent": 5.847953216374269,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              }
+            ]
+          },
+          {
+            "scenario": "camera_pan",
+            "seconds": 20.0,
+            "cpu_core_equivalents": 1.08125,
+            "cpu_machine_percent": 4.505208333333333,
+            "combined_working_set_peak_bytes": 2352291840,
+            "views": [
+              {
+                "frames": 918,
+                "mean_fps": 45.879340532958004,
+                "frame_ms_p50": 16.887,
+                "frame_ms_p95": 57.951,
+                "frame_ms_p99": 140.453,
+                "frame_ms_max": 347.358,
+                "frames_over_33ms_percent": 9.041394335511983,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 958,
+                "mean_fps": 48.24869087653014,
+                "frame_ms_p50": 16.768,
+                "frame_ms_p95": 49.013,
+                "frame_ms_p99": 113.877,
+                "frame_ms_max": 354.45,
+                "frames_over_33ms_percent": 7.202505219206681,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 931,
+                "mean_fps": 46.54073141333903,
+                "frame_ms_p50": 16.83,
+                "frame_ms_p95": 52.244,
+                "frame_ms_p99": 135.511,
+                "frame_ms_max": 354.257,
+                "frames_over_33ms_percent": 8.055853920515574,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              },
+              {
+                "frames": 951,
+                "mean_fps": 47.52616562793759,
+                "frame_ms_p50": 16.842,
+                "frame_ms_p95": 48.805,
+                "frame_ms_p99": 128.151,
+                "frame_ms_max": 353.057,
+                "frames_over_33ms_percent": 7.991587802313354,
+                "render_sizes": [
+                  [
+                    1920,
+                    1080
+                  ]
+                ]
+              }
+            ]
+          }
+        ],
+        "logical_processors": 24,
+        "memory_bytes": 68616810496,
+        "os": "Windows-11-10.0.26300-SP0",
+        "method": "Render completion intervals include pacing and CPU/OS work; these are not GPU timings. Combined working sets may count shared pages more than once.",
+        "limits": [
+          "Fixed seed, short stationary and camera-pan scenes",
+          "No mob-heavy or long-session stress",
+          "Other desktop applications remained running",
+          "Physical controller feel not measured"
+        ]
+      },
+      "input_checks": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "input_observations": [
+        [
+          1.962999939918518,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.9240001440048218,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.3300018310546875,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          2.5189971923828125
+        ]
+      ],
+      "initial_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 882,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch3",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#648cdd",
+              "hud": true,
+              "name": "Cl\u00e9o",
+              "nametag": "\u001b(c@#648cdd)Cl\u00e9o\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 72
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch4",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 1.600000023841858,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#d7ad43",
+              "hud": true,
+              "name": "Dev",
+              "nametag": "\u001b(c@#d7ad43)Dev\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch2",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -1.600000023841858,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#e36c76",
+              "hud": true,
+              "name": "Bo",
+              "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 10.87637186050415,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 10.87637186050415,
+          "time_speed": 72
+        }
+      },
+      "final_world": {
+        "bounce_events": 0,
+        "can_undo": false,
+        "can_undo_mod": false,
+        "game": "mineclonia",
+        "game_time": 901,
+        "mod_values": null,
+        "players": [
+          {
+            "bounce_pads": false,
+            "name": "Couch3",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 0,
+              "y": 17.5,
+              "z": 70.71699523925781
+            },
+            "profile": {
+              "color": "#648cdd",
+              "hud": true,
+              "name": "Cl\u00e9o",
+              "nametag": "\u001b(c@#648cdd)Cl\u00e9o\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch1",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 1.962999939918518,
+              "y": 17.5,
+              "z": 72
+            },
+            "profile": {
+              "color": "#4daf7c",
+              "hud": true,
+              "name": "Alex",
+              "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch4",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": 1.600000023841858,
+              "y": 17.5,
+              "z": 65.48100280761719
+            },
+            "profile": {
+              "color": "#d7ad43",
+              "hud": true,
+              "name": "Dev",
+              "nametag": "\u001b(c@#d7ad43)Dev\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          },
+          {
+            "bounce_pads": false,
+            "name": "Couch2",
+            "physics": {
+              "acceleration_air": 1,
+              "acceleration_default": 1,
+              "acceleration_fast": 1,
+              "gravity": 1,
+              "jump": 1,
+              "liquid_fluidity": 1,
+              "liquid_fluidity_smooth": 1,
+              "liquid_sink": 1,
+              "new_move": true,
+              "sneak": true,
+              "sneak_glitch": false,
+              "speed": 1,
+              "speed_climb": 1,
+              "speed_crouch": 1,
+              "speed_fast": 1,
+              "speed_walk": 1
+            },
+            "position": {
+              "x": -4.52400016784668,
+              "y": 17.5,
+              "z": 68
+            },
+            "profile": {
+              "color": "#e36c76",
+              "hud": true,
+              "name": "Bo",
+              "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+              "skin_applied": true
+            },
+            "velocity": {
+              "x": 0,
+              "y": 0,
+              "z": 0
+            }
+          }
+        ],
+        "revision": 0,
+        "spawn_ground": [
+          {
+            "x": 0,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 65
+          },
+          {
+            "x": 0,
+            "y": 17,
+            "z": 63
+          },
+          {
+            "x": 2,
+            "y": 17,
+            "z": 67
+          }
+        ],
+        "spawn_ready": true,
+        "time_of_day": 11.244145631790161,
+        "time_speed": 72,
+        "values": {
+          "air_acceleration": 1,
+          "bounce": 0,
+          "crouch_speed": 1,
+          "gravity": 1,
+          "jump": 1,
+          "speed": 1,
+          "time_of_day": 11.244145631790161,
+          "time_speed": 72
+        }
+      },
+      "build": {
+        "format": 1,
+        "game": "mineclonia",
+        "engine_source": "https://github.com/ontola/luanti",
+        "engine_revision": "956935bea670ef529a80dbe35f37b80271b0ae60",
+        "engine_archive_sha256": "45f35c1edb2b44a6ed873544a89c069bfb2e395f9fd8d3abe80fe0550086ff93",
+        "mineclonia_version": "0.123.1",
+        "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+        "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+        "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+        "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+        "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+        "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+        "adapter_revision": "6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f",
+        "installed_bytes": 115710086
+      },
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "profile_identity_and_skin_applied": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "profile_update_while_paused": true,
+        "identity_fixture_contains_carried_items": false,
+        "seat_shuffle_keeps_profile_account": true,
+        "seat_shuffle_preserves_inventory_and_position": true,
+        "replacement_profile_gets_own_account": true,
+        "replacement_leaves_previous_inventory_intact": true,
+        "resume_advances_world": true,
+        "mod_install_reconnects": true,
+        "mod_undo_reconnects": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "cross-game switching"
+      ]
+    }
+  },
+  "identity_and_mod_repeat": {
+    "players": 4,
+    "package_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+    "benchmark": null,
+    "input_checks": [
+      true,
+      true,
+      true,
+      true
+    ],
+    "input_observations": [
+      [
+        2.6610000133514404,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        2.590000033378601,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        2.5900039672851562,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.96099853515625
+      ]
+    ],
+    "initial_world": {
+      "bounce_events": 0,
+      "can_undo": false,
+      "can_undo_mod": false,
+      "game": "mineclonia",
+      "game_time": 882,
+      "mod_values": null,
+      "players": [
+        {
+          "bounce_pads": false,
+          "name": "Couch4",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 1.600000023841858,
+            "y": 17.5,
+            "z": 68
+          },
+          "profile": {
+            "color": "#d7ad43",
+            "hud": true,
+            "name": "Dev",
+            "nametag": "\u001b(c@#d7ad43)Dev\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch1",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 0,
+            "y": 17.5,
+            "z": 72
+          },
+          "profile": {
+            "color": "#4daf7c",
+            "hud": true,
+            "name": "Alex",
+            "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch3",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 0,
+            "y": 17.5,
+            "z": 68
+          },
+          "profile": {
+            "color": "#648cdd",
+            "hud": true,
+            "name": "Cl\u00e9o",
+            "nametag": "\u001b(c@#648cdd)Cl\u00e9o\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch2",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": -1.600000023841858,
+            "y": 17.5,
+            "z": 68
+          },
+          "profile": {
+            "color": "#e36c76",
+            "hud": true,
+            "name": "Bo",
+            "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      ],
+      "revision": 0,
+      "spawn_ground": [
+        {
+          "x": 0,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 0,
+          "y": 17,
+          "z": 63
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 67
+        }
+      ],
+      "spawn_ready": true,
+      "time_of_day": 10.860563278198242,
+      "time_speed": 72,
+      "values": {
+        "air_acceleration": 1,
+        "bounce": 0,
+        "crouch_speed": 1,
+        "gravity": 1,
+        "jump": 1,
+        "speed": 1,
+        "time_of_day": 10.860563278198242,
+        "time_speed": 72
+      }
+    },
+    "final_world": {
+      "bounce_events": 0,
+      "can_undo": false,
+      "can_undo_mod": false,
+      "game": "mineclonia",
+      "game_time": 901,
+      "mod_values": null,
+      "players": [
+        {
+          "bounce_pads": false,
+          "name": "Couch4",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 1.600000023841858,
+            "y": 17.5,
+            "z": 66.03900146484375
+          },
+          "profile": {
+            "color": "#d7ad43",
+            "hud": true,
+            "name": "Dev",
+            "nametag": "\u001b(c@#d7ad43)Dev\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch1",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 2.6610000133514404,
+            "y": 17.5,
+            "z": 72
+          },
+          "profile": {
+            "color": "#4daf7c",
+            "hud": true,
+            "name": "Alex",
+            "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch3",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 0,
+            "y": 17.5,
+            "z": 70.59000396728516
+          },
+          "profile": {
+            "color": "#648cdd",
+            "hud": true,
+            "name": "Cl\u00e9o",
+            "nametag": "\u001b(c@#648cdd)Cl\u00e9o\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch2",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": -4.190000057220459,
+            "y": 17.5,
+            "z": 68
+          },
+          "profile": {
+            "color": "#e36c76",
+            "hud": true,
+            "name": "Bo",
+            "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      ],
+      "revision": 0,
+      "spawn_ground": [
+        {
+          "x": 0,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 0,
+          "y": 17,
+          "z": 63
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 67
+        }
+      ],
+      "spawn_ready": true,
+      "time_of_day": 11.24833345413208,
+      "time_speed": 72,
+      "values": {
+        "air_acceleration": 1,
+        "bounce": 0,
+        "crouch_speed": 1,
+        "gravity": 1,
+        "jump": 1,
+        "speed": 1,
+        "time_of_day": 11.24833345413208,
+        "time_speed": 72
+      }
+    },
+    "build": {
+      "format": 1,
+      "game": "mineclonia",
+      "engine_source": "https://github.com/ontola/luanti",
+      "engine_revision": "956935bea670ef529a80dbe35f37b80271b0ae60",
+      "engine_archive_sha256": "45f35c1edb2b44a6ed873544a89c069bfb2e395f9fd8d3abe80fe0550086ff93",
+      "mineclonia_version": "0.123.1",
+      "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+      "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+      "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+      "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+      "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+      "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+      "adapter_revision": "6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f",
+      "installed_bytes": 115710086
+    },
+    "checks": {
+      "authenticated_handshake": true,
+      "prepare_rendered_views": true,
+      "profile_identity_and_skin_applied": true,
+      "correct_player_count": true,
+      "four_distinct_dry_spawns": true,
+      "start_and_separate_scripted_input": true,
+      "pause_freezes_world": true,
+      "profile_update_while_paused": true,
+      "identity_fixture_contains_carried_items": true,
+      "seat_shuffle_keeps_profile_account": true,
+      "seat_shuffle_preserves_inventory_and_position": true,
+      "replacement_profile_gets_own_account": true,
+      "replacement_leaves_previous_inventory_intact": true,
+      "resume_advances_world": true,
+      "mod_install_reconnects": true,
+      "mod_undo_reconnects": true,
+      "host_disconnect_exits_entrypoint": true,
+      "host_disconnect_cleans_children": true
+    },
+    "untested": [
+      "physical controllers",
+      "audio audibility",
+      "cross-game switching"
+    ]
+  },
+  "fixture_note": "The original world had empty main inventories for some players. The four-player ownership test was repeated in a new copy with distinct cobblestone stacks (11,12,13,14) in main slot 0; all ownership, item and position assertions passed. Original evidence is retained.",
+  "baseline_two_players": {
+    "players": 2,
+    "package_sha256": "0cd39a9c62e432b2e3d61db31450e5d96a8eaafde87d65699d3813907fa88809",
+    "benchmark": {
+      "cases": [
+        {
+          "scenario": "stationary",
+          "seconds": 20.01600000000326,
+          "cpu_core_equivalents": 0.44964028776971093,
+          "cpu_machine_percent": 1.8735011990404622,
+          "combined_working_set_peak_bytes": 1311666176,
+          "views": [
+            {
+              "frames": 1080,
+              "mean_fps": 54.227862767957824,
+              "frame_ms_p50": 16.613,
+              "frame_ms_p95": 26.502,
+              "frame_ms_p99": 71.803,
+              "frame_ms_max": 521.18,
+              "frames_over_33ms_percent": 3.3333333333333335,
+              "render_sizes": [
+                [
+                  1920,
+                  2160
+                ]
+              ]
+            },
+            {
+              "frames": 559,
+              "mean_fps": 28.06776391706684,
+              "frame_ms_p50": 33.268,
+              "frame_ms_p95": 47.957,
+              "frame_ms_p99": 102.542,
+              "frame_ms_max": 521.151,
+              "frames_over_33ms_percent": 49.55277280858676,
+              "render_sizes": [
+                [
+                  1920,
+                  2160
+                ]
+              ]
+            }
+          ]
+        },
+        {
+          "scenario": "camera_pan",
+          "seconds": 20.0,
+          "cpu_core_equivalents": 0.496875,
+          "cpu_machine_percent": 2.0703125,
+          "combined_working_set_peak_bytes": 1450868736,
+          "views": [
+            {
+              "frames": 1069,
+              "mean_fps": 53.429565862535874,
+              "frame_ms_p50": 16.577,
+              "frame_ms_p95": 30.828,
+              "frame_ms_p99": 106.405,
+              "frame_ms_max": 176.38,
+              "frames_over_33ms_percent": 4.303086997193639,
+              "render_sizes": [
+                [
+                  1920,
+                  2160
+                ]
+              ]
+            },
+            {
+              "frames": 560,
+              "mean_fps": 28.02456633484913,
+              "frame_ms_p50": 33.314,
+              "frame_ms_p95": 55.477,
+              "frame_ms_p99": 125.487,
+              "frame_ms_max": 180.729,
+              "frames_over_33ms_percent": 49.642857142857146,
+              "render_sizes": [
+                [
+                  1920,
+                  2160
+                ]
+              ]
+            }
+          ]
+        }
+      ],
+      "logical_processors": 24,
+      "memory_bytes": 68616810496,
+      "os": "Windows-11-10.0.26300-SP0",
+      "method": "Render completion intervals include pacing and CPU/OS work; these are not GPU timings. Combined working sets may count shared pages more than once.",
+      "limits": [
+        "Fixed seed, short stationary and camera-pan scenes",
+        "No mob-heavy or long-session stress",
+        "Other desktop applications remained running",
+        "Physical controller feel not measured"
+      ]
+    },
+    "input_checks": [
+      true,
+      true
+    ],
+    "input_observations": [
+      [
+        2.7331906350947666,
+        0.0
+      ],
+      [
+        0.0,
+        2.880026044776751
+      ]
+    ],
+    "initial_world": {
+      "bounce_events": 0,
+      "can_undo": false,
+      "can_undo_mod": false,
+      "game": "mineclonia",
+      "game_time": 882,
+      "mod_values": null,
+      "players": [
+        {
+          "bounce_pads": false,
+          "name": "Couch2",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": -1.600000023841858,
+            "y": 17.5,
+            "z": 68
+          },
+          "profile": {
+            "color": "#e36c76",
+            "hud": true,
+            "name": "Bo",
+            "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch1",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 0,
+            "y": 17.5,
+            "z": 72
+          },
+          "profile": {
+            "color": "#4daf7c",
+            "hud": true,
+            "name": "Alex",
+            "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      ],
+      "revision": 0,
+      "spawn_ground": [
+        {
+          "x": 0,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 0,
+          "y": 17,
+          "z": 63
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 67
+        }
+      ],
+      "spawn_ready": true,
+      "time_of_day": 10.877293109893799,
+      "time_speed": 72,
+      "values": {
+        "air_acceleration": 1,
+        "bounce": 0,
+        "crouch_speed": 1,
+        "gravity": 1,
+        "jump": 1,
+        "speed": 1,
+        "time_of_day": 10.877293109893799,
+        "time_speed": 72
+      }
+    },
+    "final_world": {
+      "bounce_events": 0,
+      "can_undo": false,
+      "can_undo_mod": false,
+      "game": "mineclonia",
+      "game_time": 956,
+      "mod_values": null,
+      "players": [
+        {
+          "bounce_pads": false,
+          "name": "Couch2",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": 0.20899999141693115,
+            "y": 17.5,
+            "z": 65.75900268554688
+          },
+          "profile": {
+            "color": "#e36c76",
+            "hud": true,
+            "name": "Bo",
+            "nametag": "\u001b(c@#e36c76)Bo\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        },
+        {
+          "bounce_pads": false,
+          "name": "Couch1",
+          "physics": {
+            "acceleration_air": 1,
+            "acceleration_default": 1,
+            "acceleration_fast": 1,
+            "gravity": 1,
+            "jump": 1,
+            "liquid_fluidity": 1,
+            "liquid_fluidity_smooth": 1,
+            "liquid_sink": 1,
+            "new_move": true,
+            "sneak": true,
+            "sneak_glitch": false,
+            "speed": 1,
+            "speed_climb": 1,
+            "speed_crouch": 1,
+            "speed_fast": 1,
+            "speed_walk": 1
+          },
+          "position": {
+            "x": -1.6850000619888306,
+            "y": 17.5,
+            "z": 74.1520004272461
+          },
+          "profile": {
+            "color": "#4daf7c",
+            "hud": true,
+            "name": "Alex",
+            "nametag": "\u001b(c@#4daf7c)Alex\u001b(c@#fff)",
+            "skin_applied": true
+          },
+          "velocity": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+          }
+        }
+      ],
+      "revision": 0,
+      "spawn_ground": [
+        {
+          "x": 0,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 65
+        },
+        {
+          "x": 0,
+          "y": 17,
+          "z": 63
+        },
+        {
+          "x": 2,
+          "y": 17,
+          "z": 67
+        }
+      ],
+      "spawn_ready": true,
+      "time_of_day": 12.351840019226074,
+      "time_speed": 72,
+      "values": {
+        "air_acceleration": 1,
+        "bounce": 0,
+        "crouch_speed": 1,
+        "gravity": 1,
+        "jump": 1,
+        "speed": 1,
+        "time_of_day": 12.351840019226074,
+        "time_speed": 72
+      }
+    },
+    "build": {
+      "format": 1,
+      "game": "mineclonia",
+      "engine_source": "https://github.com/ontola/luanti",
+      "engine_revision": "0d789169e4f20e502d096fd347ecd5bd9cc81b71",
+      "engine_archive_sha256": "edc3bd801cc388167490511ca82a4ca07c831cb28be023cb60a3dde2d7cce29b",
+      "mineclonia_version": "0.123.1",
+      "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+      "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+      "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+      "python_archive": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65.zip",
+      "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+      "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+      "adapter_revision": "01bd65a2e6ee7f8493ba46f75c55aa757c740583",
+      "installed_bytes": 115710086
+    },
+    "checks": {
+      "authenticated_handshake": true,
+      "prepare_rendered_views": true,
+      "profile_identity_and_skin_applied": true,
+      "correct_player_count": true,
+      "four_distinct_dry_spawns": true,
+      "start_and_separate_scripted_input": true,
+      "pause_freezes_world": true,
+      "profile_update_while_paused": true,
+      "resume_advances_world": true,
+      "host_disconnect_exits_entrypoint": true,
+      "host_disconnect_cleans_children": true
+    },
+    "untested": [
+      "physical controllers",
+      "audio audibility",
+      "cross-game switching"
+    ]
+  },
+  "build_cache": {
+    "cold_run": 37215658111,
+    "cold_build_seconds": 279,
+    "warm_run": 37216107186,
+    "warm_build_seconds": 10,
+    "warm_engine_cache_hit": true
+  },
+  "automated_checks": {
+    "python_tests": 54,
+    "lua_profiles_safe_spawn": true,
+    "native_bindings_navigation_layout_host_frames": true,
+    "ruff_format_and_check": true
+  },
+  "physical_controller_check": "Not completed. Two 8BitDo Ultimate pads were enumerated earlier; the later read-only observation opened zero devices. Scripted frames do not certify physical controller feel."
+}

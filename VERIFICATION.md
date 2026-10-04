@@ -1,3 +1,41 @@
+# Windows v0.1.3 verification — 4 October 2026
+
+Exact package SHA-256: `f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b`.
+Adapter: `6ccef67fbc19ec5f488dbd0bf177c8f3ef99a51f`.
+Engine: `956935bea670ef529a80dbe35f37b80271b0ae60`.
+Later harness-only commit `2e78137` moves control checks before camera sweeps and
+waits for profile acknowledgements. It changes no packaged runtime files.
+
+- 54 Python tests, Lua profile/paused-reconnect/safe-spawn tests, native binding,
+  navigation, layout and host-frame tests passed. Ruff format/check passed.
+- The exact Windows package passed one-, two-, three- and four-player readiness,
+  dry spawn, independent scripted input, pause/resume, live profile updates and
+  host-disconnect process cleanup checks.
+- Four-player seat shuffle preserved every named carried/crafting/equipment item
+  slot and saved position. A replacement profile received a separate account and
+  left the former owner's save intact. Mineclonia's regenerated virtual hand list
+  is excluded; inventory IDs are compared by stable list name.
+- The first four-player fixture had empty carried inventories for some players.
+  A new copy seeded with distinct stacks (11/12/13/14 cobblestone) passed every
+  ownership assertion. Both reports are retained in `verification/v0.1.3.json`.
+- Live mod install and undo each validated, checkpointed, restarted the server,
+  reconnected all four profiles and returned the expected receipt/settings.
+- Real rendered frame-time and memory observations for all player counts are in
+  [PERFORMANCE.md](PERFORMANCE.md). Active unfocused views now use the same FPS
+  cap as the focused view. Four players still show frame-time spikes.
+- CI engine caching reduced an adapter-only build step from 4m39s to 10s.
+
+**Upgrade:** join the old seats once so legacy Couch1–Couch4 saves are associated
+with the right profiles. Preserve the identity registry with the world and its
+connection settings. Later seat changes retain ownership automatically.
+
+Physical controller feel, audio audibility and cross-game switching remain
+unverified. The read-only physical input observer later found zero devices;
+scripted checks cannot substitute for the [hands-on checklist](CONTROLLER-CHECK.md).
+The existing v0.1.2 store montage is retained with its original provenance.
+
+## Previous releases
+
 # Windows v0.1.2 profile verification — 4 October 2026
 
 Package SHA-256: `b99021db59007c7728100029d8eb2baa92d61d71caa6f255dab7c81090d62657`.
