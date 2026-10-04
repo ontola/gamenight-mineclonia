@@ -22,10 +22,17 @@ def main():
     p.add_argument("--benchmark-seconds", type=int, default=0)
     p.add_argument("--identity-test", action="store_true")
     p.add_argument("--mod-test", action="store_true")
+    p.add_argument("--generated-fixture", type=Path)
     a = p.parse_args()
     if a.root.exists() and not a.resume:
         raise RuntimeError("Use a new probe directory")
     a.root.mkdir(parents=True, exist_ok=True)
+    if a.generated_fixture:
+        if a.players != 2:
+            raise ValueError("The generated-mod gameplay fixture requires two players")
+        from test_generated_live import prepare_probe
+
+        prepare_probe(a.root)
     if not a.resume:
         (a.root / "world-seed.txt").write_text("gamenight-couch-prototype")
     results = {}
@@ -423,6 +430,22 @@ def main():
                 if not result["ok"]:
                     raise RuntimeError(result["message"])
                 pump(3)
+        if a.generated_fixture:
+            from test_generated_live import run
+
+            results.update(
+                run(
+                    a.root,
+                    a.generated_fixture,
+                    session,
+                    roster,
+                    profiles,
+                    controls,
+                    send,
+                    pump,
+                    state,
+                )
+            )
         if a.hold:
             print(f"Holding {a.players} rendered views for inspection", flush=True)
             pump(a.hold)
@@ -447,7 +470,13 @@ def main():
         results["host_disconnect_cleans_children"] = all(not alive(pid) for pid in pids)
         report = {
             "players": a.players,
-            "package_sha256": hashlib.sha256(a.archive.read_bytes()).hexdigest(),
+            "package_sha256": None
+            if a.generated_fixture
+            else hashlib.sha256(a.archive.read_bytes()).hexdigest(),
+            "development_overlay": bool(a.generated_fixture),
+            "base_archive_sha256": hashlib.sha256(a.archive.read_bytes()).hexdigest()
+            if a.generated_fixture
+            else None,
             "benchmark": measurements,
             "input_checks": input_checks,
             "input_observations": input_observations,

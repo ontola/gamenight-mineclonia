@@ -88,11 +88,11 @@ def execute(host, selection):
         raise ValueError("Playlist editing is not supported by this experimental relay")
     command = selection.get("command")
     if not command:
-        game = (
-            "mineclonia-prototype"
-            if selection["game"] == "mineclonia"
-            else selection["game"]
-        )
+        game = selection["game"]
+        if game == "mineclonia" and not any(
+            g["id"] == game for g in party.get("library", [])
+        ):
+            game = "mineclonia-prototype"
         if not any(g["id"] == game for g in party.get("library", [])):
             raise ValueError("Game is not on this host")
         host.request({"type": "queue_next", "game": game})

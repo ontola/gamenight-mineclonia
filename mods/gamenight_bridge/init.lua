@@ -14,7 +14,7 @@ core.mkdir(dir)
 -- A tested mod installation is a new revision, even when physics is unchanged.
 local manifest = io.open(dir .. "/mod-current.json", "rb")
 if manifest then
-    local content = core.parse_json(manifest:read(4096)); manifest:close()
+    local content = core.parse_json(manifest:read(65536)); manifest:close()
     if content and content.request_id ~= state.mod_request_id then
         state.mod_hash = content.sha256
         state.mod_request_id = content.request_id
@@ -98,7 +98,7 @@ local function snapshot()
         spawn_ready = safe_spawn.ready, spawn_error = safe_spawn.error, spawn_ground = safe_spawn.positions,
         bounce_events = bounce_events, time_of_day = core.get_timeofday() * 24,
         time_speed = tonumber(core.settings:get("time_speed")) or 72,
-        mod_values = state.mod_values or {}, can_undo_mod = state.can_undo_mod or false, can_undo = type(state.previous) == "table", game = "mineclonia", game_time = core.get_gametime()}
+        generated_mod = rawget(_G, "gamenight_generated_status") or false, mod_values = state.mod_values or {}, can_undo_mod = state.can_undo_mod or false, can_undo = type(state.previous) == "table", game = "mineclonia", game_time = core.get_gametime()}
 end
 local function run(request)
     if type(request) ~= "table" or type(request.id) ~= "string"

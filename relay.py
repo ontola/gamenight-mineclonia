@@ -1,7 +1,7 @@
 """Experimental local cloud adapter. Uses a real isolated Mineclonia world.
 
 Launches use the real daemon; settings use the isolated world bridge.
-No arbitrary code, shell commands or downloaded executables are accepted.
+Generated Lua uses the public SDK; shell commands and downloaded executables are not accepted.
 """
 
 import argparse
@@ -21,7 +21,7 @@ from capabilities import controls, valid
 def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
     if host:
         session = game_controls.current(host.status())
-        if not session or session.get("game") != GAME:
+        if not session or session.get("game") not in (GAME, "mineclonia"):
             return game_controls.snapshot(host, receipt)
     path = root / "world" / "gamenight" / "status.json"
     if not path.exists() or time.time() - path.stat().st_mtime > 5:
@@ -50,7 +50,7 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
         party = host.status()
         seats = host.seats(party)
         session = party.get("active_session") or party.get("warm_session") or {}
-        if session.get("game") != GAME:
+        if session.get("game") not in (GAME, "mineclonia"):
             if allow_loading:
                 return {
                     "seats": seats,
@@ -89,6 +89,12 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
                 "revision": state["revision"],
                 "can_undo": state["can_undo"],
                 "launch_players": len(seats) if host and 1 <= len(seats) <= 4 else None,
+                "mod_sdk": dict(
+                    modding.sdk_context(root),
+                    error=(state.get("generated_mod") or {}).get("error") or None,
+                )
+                if host
+                else None,
                 "mod_recipes": ["bounce_pad"]
                 if host and "bounce" not in state["values"]
                 else [],

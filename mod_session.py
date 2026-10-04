@@ -1,4 +1,4 @@
-"""Validate, checkpoint, install and recover a session's bounded game mod."""
+"""Validate, checkpoint, install and recover a session's generated game mod."""
 
 from concurrent.futures import ThreadPoolExecutor
 import json
@@ -19,20 +19,63 @@ class ModSession:
         self.request = None
         self.future = None
         self.restart = None
+        self.recovery = None
 
     def close(self):
         self.cancelled.set()
         self.worker.shutdown(wait=True, cancel_futures=True)
 
     def result(self, ok, message):
-        result = {"id": self.request["id"], "ok": ok, "message": message}
+        result = {"id": self.request["id"], "ok": ok, "message": message[:1000]}
+        failure = self.adapter.directory / "mod-failure.json"
+        values = self.request.get("values", {})
+        if not ok and isinstance(values, dict) and "code" in values:
+            temporary = failure.with_suffix(".tmp")
+            temporary.write_text(
+                json.dumps({"program": values, "error": message[:1000]}),
+                encoding="utf8",
+            )
+            temporary.replace(failure)
+        elif ok:
+            failure.unlink(missing_ok=True)
         target = self.adapter.directory / "mod-result.json"
         temp = target.with_suffix(".tmp")
         temp.write_text(json.dumps(result), encoding="utf8")
         temp.replace(target)
         self.request = self.future = self.restart = None
 
+    def recover_restart(self, reason):
+        prepared, active, checkpoint, marker = self.recovery
+        self.adapter.dispose()
+        self.adapter.server.stop()
+        preserve_world(
+            self.adapter.root, "failed-mod-" + str(uuid.UUID(self.request["id"]))
+        )
+        shutil.copytree(checkpoint, self.adapter.root / "world")
+        self.adapter.server.start()
+        self.adapter.receive(prepared)
+        self.adapter.resume_when_ready = active
+        self.result(
+            False,
+            "Generated behavior failed; saved world restored and views reconnecting: "
+            + reason,
+        )
+        marker.unlink(missing_ok=True)
+
     def tick(self):
+        if self.restart is not None:
+            try:
+                state = json.loads(
+                    (self.adapter.root / "world/gamenight/status.json").read_text(
+                        encoding="utf8"
+                    )
+                )
+            except (OSError, json.JSONDecodeError):
+                return
+            generated = state.get("generated_mod") or {}
+            if generated.get("error"):
+                self.recover_restart(str(generated["error"]))
+            return
         if self.adapter.settings.future is not None:
             return
         path = self.adapter.directory / "mod-request.json"
@@ -129,11 +172,19 @@ class ModSession:
                             "request_id": req["id"],
                             "previous_values": None
                             if req.get("undo")
-                            else (state.get("mod_values") or {"bounce": 0}),
+                            else (
+                                state.get("mod_values")
+                                or (
+                                    {"title": "Disabled", "code": ""}
+                                    if "code" in req["values"]
+                                    else {"bounce": 0}
+                                )
+                            ),
                         }
                     ),
                     encoding="utf8",
                 )
+                self.recovery = (prepared, active, checkpoint, marker)
                 self.adapter.server.start()
                 self.adapter.receive(prepared)
                 self.future = None

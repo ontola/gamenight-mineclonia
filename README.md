@@ -53,6 +53,13 @@ Replacing a profile in an occupied view reconnects it under the right account be
 forwarding input. Cosmetic changes still apply live. Empty prewarming uses a separate
 Preview account. Upstream chat/death messages may show internal account names.
 
+## Generated modding
+
+The new [generated Lua mod path](MODDING.md) creates original items, blocks and
+multiplayer behavior from a phone/lobby request, with follow-up edits, isolated
+validation, checkpoint/reconnect and source undo. It is an experimental development
+feature; v0.1.3 remains the published store package until a new package is verified.
+
 ## Verification
 
 Run `python -m unittest discover`. Engine navigation tests live in the fork.
