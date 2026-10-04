@@ -254,7 +254,12 @@ def main():
                         name: {
                             "position": (x, y, z),
                             "items": database.execute(
-                                "SELECT inv_id, slot_id, item FROM player_inventory_items WHERE player=? ORDER BY inv_id, slot_id",
+                                # Join by stable inventory name: Mineclonia reorders database IDs
+                                # and regenerates the virtual mesh-hand/tool metadata at login.
+                                # Carried items, crafting, equipment and every other list remain exact.
+                                "SELECT v.inv_name, i.slot_id, i.item FROM player_inventory_items i "
+                                "JOIN player_inventories v ON v.player=i.player AND v.inv_id=i.inv_id "
+                                "WHERE i.player=? AND v.inv_name != 'hand' ORDER BY v.inv_name,i.slot_id",
                                 (name,),
                             ).fetchall(),
                         }
@@ -283,6 +288,14 @@ def main():
 
             dispose()
             saved = saved_players()
+            results["identity_fixture_contains_carried_items"] = all(
+                any(
+                    item
+                    for name, slot, item in saved[f"Couch{i + 1}"]["items"]
+                    if name == "main"
+                )
+                for i in range(a.players)
+            )
             shuffled = [
                 dict(seat, occupant=roster[a.players - 1 - i]["occupant"])
                 for i, seat in enumerate(roster[: a.players])
@@ -298,6 +311,10 @@ def main():
             )
             dispose()
             changed = saved_players()
+            (a.root / "identity-observations.json").write_text(
+                json.dumps({"before": saved, "after_shuffle": changed}, indent=2),
+                encoding="utf8",
+            )
             results["seat_shuffle_preserves_inventory_and_position"] = all(
                 saved[f"Couch{i + 1}"] == changed[f"Couch{i + 1}"]
                 for i in range(a.players)
@@ -329,6 +346,17 @@ def main():
             )
             dispose()
             preserved = saved_players()
+            (a.root / "identity-observations.json").write_text(
+                json.dumps(
+                    {
+                        "before": saved,
+                        "after_shuffle": changed,
+                        "after_replace": preserved,
+                    },
+                    indent=2,
+                ),
+                encoding="utf8",
+            )
             results["replacement_leaves_previous_inventory_intact"] = all(
                 saved[f"Couch{i + 1}"] == preserved[f"Couch{i + 1}"]
                 for i in range(a.players)
