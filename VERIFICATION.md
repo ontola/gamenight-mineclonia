@@ -1,3 +1,20 @@
+# Windows v0.1.2 profile verification — 4 October 2026
+
+Package SHA-256: `b99021db59007c7728100029d8eb2baa92d61d71caa6f255dab7c81090d62657`.
+Adapter: `dede8113ea45b120bb23cd63b402936025f4dd96`. Engine source remains `b7903f56996069669d14ec1b06246cfef8c1f6a9`.
+
+- 42 Python tests passed, including avatar v1/legacy decoding, transparency, shared head anchors, sparse/reordered profile mapping, invalid input and PNG/skin output.
+- Lua profile tests passed: HUD updates, reconnect, validation and armor-layer preservation. Dry-spawn migration tests also passed.
+- The exact CI package passed native-entrypoint checks with 1 and 4 players: profile names/colors and skin application, independent scripted input, pause/resume, profile updates while paused, and complete child cleanup on host disconnect. Reports: `verification/v0.1.2.json`.
+- Visually inspected four synthetic profiles in the real Windows renderer, including character faces, clothing colors, personal skin colors, overhead names and viewport badges.
+- The release preview uses the final package engine binary and unchanged shipped bridge/game code. Four staged gameplay cuts were reviewed at desktop and 390px phone widths. See `verification/v0.1.2-preview.json` for source, timestamps and hashes.
+
+Current and legacy profile artwork is supported. Oversized/malformed artwork falls back to a simple face. Profile changes use the existing host `party_updated` message, without restarting the world.
+
+Cosmetics follow profile IDs; inventories and saved positions still follow Couch1–Couch4 seat slots. Upstream chat/death messages can still show internal names. Physical pads, audio, cross-game switching and performance on other hardware remain unverified for this release. Two-/three-player layout coverage remains in the adapter/native tests and the prior v0.1.1 package playtests below.
+
+## Previous release
+
 # Windows v0.1.1 verification — 4 October 2026
 
 Engine: b7903f56996069669d14ec1b06246cfef8c1f6a9.
