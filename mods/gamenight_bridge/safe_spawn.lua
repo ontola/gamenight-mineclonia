@@ -94,7 +94,7 @@ core.register_on_joinplayer(function(player)
     core.after(0.1,function()
         local current = core.get_player_by_name(name)
         if not current or not positions then return end
-        local slot = tonumber(name:match("^Couch([1-4])$")) or 1
+        local slot = M.seat and M.seat(name) or tonumber(name:match("^Couch([1-4])$")) or 1
         local p = positions[slot]
         current:set_pos({x=p.x,y=p.y+0.6,z=p.z})
         current:get_meta():set_int("gamenight:first_spawn_pending",0)

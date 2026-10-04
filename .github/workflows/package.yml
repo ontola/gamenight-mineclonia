@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['**.py', 'launcher.c', 'mods/**', 'sources.lock.json', '.github/workflows/package.yml']
+    paths: ['**.py', 'launcher.c', 'mods/**', 'sources.lock.json', 'pyproject.toml', 'requirements-dev.txt', '.github/workflows/package.yml']
 permissions:
   contents: read
 jobs:
@@ -13,17 +13,27 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Install build tools
-        run: sudo apt-get update && sudo apt-get install -y cmake g++ gettext unzip wget xz-utils luajit
+        run: sudo apt-get update && sudo apt-get install -y cmake g++ gettext unzip wget xz-utils luajit gcc-mingw-w64-x86-64
+      - name: Check Python style
+        run: |
+          python3 -m pip install ruff==0.16.10
+          ruff format --check .
+          ruff check .
       - name: Test adapter
         run: |
           python3 -m unittest discover
           luajit test_profiles.lua mods/gamenight_bridge/profiles.lua
           luajit test_safe_spawn.lua mods/gamenight_bridge/safe_spawn.lua
+      - uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/mineclonia-components
+          key: mineclonia-components-${{ runner.os }}-${{ hashFiles('sources.lock.json', 'pyproject.toml', 'requirements-dev.txt', 'build_release.py') }}
       - name: Build pinned Windows package
-        run: python3 build_release.py "$RUNNER_TEMP/mineclonia-build"
+        run: python3 build_release.py "$RUNNER_TEMP/mineclonia-build" --component-cache "$RUNNER_TEMP/mineclonia-components"
       - uses: actions/upload-artifact@v4
         with:
           name: mineclonia-windows-candidate
           path: |
             ${{ runner.temp }}/mineclonia-build/mineclonia-windows.zip
             ${{ runner.temp }}/mineclonia-build/mineclonia-windows.sha256
+            ${{ runner.temp }}/mineclonia-build/build-report.json

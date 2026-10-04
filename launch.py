@@ -1,10 +1,12 @@
 """Installed entrypoint: bundled Python, persistent saves outside the package."""
+
 import argparse
 import json
 import logging
 import os
 from pathlib import Path
 import sys
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -19,22 +21,32 @@ def main():
     if args.self_test:
         from capabilities import SPECS
         import managed
-        print(json.dumps({"ok": True, "settings": sorted(SPECS), "engine": str(engine)}))
+
+        print(
+            json.dumps({"ok": True, "settings": sorted(SPECS), "engine": str(engine)})
+        )
         return 0
     if not os.environ.get("GAMENIGHT_TOKEN"):
         raise RuntimeError("Start Mineclonia from the GameNight game library.")
-    root = args.data_dir or Path(os.environ["LOCALAPPDATA"]) / "GameNight/games/mineclonia"
+    root = (
+        args.data_dir or Path(os.environ["LOCALAPPDATA"]) / "GameNight/games/mineclonia"
+    )
     root = root.resolve()
     import managed
+
     sys.argv = [sys.argv[0], "--root", str(root), "--installed"]
     managed.main()
     return 0
+
 
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
     except Exception:
-        folder = Path(os.environ.get("LOCALAPPDATA", str(Path.home()))) / "GameNight/games/mineclonia"
+        folder = (
+            Path(os.environ.get("LOCALAPPDATA", str(Path.home())))
+            / "GameNight/games/mineclonia"
+        )
         folder.mkdir(parents=True, exist_ok=True)
         logging.basicConfig(filename=folder / "launcher-error.log", level=logging.ERROR)
         logging.exception("Mineclonia could not start")

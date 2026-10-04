@@ -5,6 +5,7 @@ for _,saved_count in ipairs({0,2,4}) do
     for i=1,saved_count do saved[i]={x=(i-1)*2,y=0,z=0} end
     local stored, loaded, newplayer, joined
     core = {
+        get_worldpath=function() return "/nonexistent-gamenight-test" end,
         settings={get_bool=function() return true end, set=function() end},
         registered_nodes={stone={walkable=true},air={walkable=false},water={walkable=false,liquidtype="source"}},
         get_mod_storage=function() return {

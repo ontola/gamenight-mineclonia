@@ -3,6 +3,7 @@
 -- retain their factors. Removing OUR factor restores those effects, too.
 local safe_spawn = dofile(core.get_modpath("gamenight_bridge") .. "/safe_spawn.lua")
 local profiles = dofile(core.get_modpath("gamenight_bridge") .. "/profiles.lua")
+safe_spawn.seat = profiles.seat
 local store = core.get_mod_storage()
 local saved = store:get_string("state")
 local state = (saved ~= "" and core.parse_json(saved)) or {
@@ -159,7 +160,7 @@ local function run(request)
         -- Remove old peers before replacement views reuse their saved identity.
         for _, player in ipairs(core.get_connected_players()) do
             local name = player:get_player_name()
-            if name:match("^Couch[1-4]$") then
+            if name:match("^Couch[1-4]$") or (#name == 27 and name:match("^GN_%x+$")) or name == "Preview" then
                 core.kick_player(name, "Reconnecting GameNight view")
             end
         end

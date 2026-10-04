@@ -1,9 +1,9 @@
 """Generate and validate a bounded Lua mod. Model text is never executable code."""
+
 import hashlib
 import json
 import math
 import os
-from pathlib import Path
 import shutil
 import subprocess
 import time
@@ -16,11 +16,17 @@ def generate(values):
     if not isinstance(values, dict) or set(values) != {"bounce"}:
         raise ValueError("Supported recipe: bounce pad with a bounce strength")
     strength = values["bounce"]
-    if type(strength) not in (int, float) or not math.isfinite(strength) or not 0 <= strength <= 3:
-        raise ValueError("Bounce strength must be between 0 and 3; zero disables the effect")
+    if (
+        type(strength) not in (int, float)
+        or not math.isfinite(strength)
+        or not 0 <= strength <= 3
+    ):
+        raise ValueError(
+            "Bounce strength must be between 0 and 3; zero disables the effect"
+        )
     # Only this validated number enters a fixed Lua program. No paths, URLs,
     # identifiers, Lua source or free-form strings cross the execution boundary.
-    return '''local strength = %s
+    return """local strength = %s
 core.register_node("gamenight_custom:bounce_pad", {
     description = "GameNight bounce pad",
     tiles = {"default_steel_block.png^[colorize:#ad6cfa:180"},
@@ -49,7 +55,7 @@ core.register_on_joinplayer(function(p)
         if remaining:is_empty() then meta:set_int("gamenight_bounce_pad_given",1) end
     end
 end)
-''' % format(strength, ".9g")
+""" % format(strength, ".9g")
 
 
 def stage(root, values):
@@ -58,43 +64,94 @@ def stage(root, values):
     folder = root / "mods-staged" / digest
     folder.mkdir(parents=True, exist_ok=True)
     (folder / "init.lua").write_text(source, encoding="utf8")
-    (folder / "mod.conf").write_text("name = gamenight_custom\ndepends = mcl_core\n", encoding="utf8")
-    (folder / "recipe.json").write_text(json.dumps({"version": 1, "values": values, "sha256": digest}))
+    (folder / "mod.conf").write_text(
+        "name = gamenight_custom\ndepends = mcl_core\n", encoding="utf8"
+    )
+    (folder / "recipe.json").write_text(
+        json.dumps({"version": 1, "values": values, "sha256": digest}), encoding="utf8"
+    )
     return folder, digest
 
 
-def validate(root, staged):
+def validate(root, staged, cancelled=None):
     """Real Mineclonia startup in a fresh test world. No live save is mounted."""
     world = root / "mod-tests" / uuid.uuid4().hex
     world.mkdir(parents=True)
-    (world / "world.mt").write_text("gameid = mineclonia\nbackend = sqlite3\nplayer_backend = sqlite3\nauth_backend = sqlite3\nmod_storage_backend = sqlite3\nload_mod_gamenight_custom = true\nload_mod_gamenight_validation = true\n")
+    (world / "world.mt").write_text(
+        "gameid = mineclonia\nbackend = sqlite3\nplayer_backend = sqlite3\nauth_backend = sqlite3\nmod_storage_backend = sqlite3\nload_mod_gamenight_custom = true\nload_mod_gamenight_validation = true\n",
+        encoding="utf8",
+    )
     shutil.copytree(staged, world / "worldmods/gamenight_custom")
     harness = world / "worldmods/gamenight_validation"
     harness.mkdir()
-    (harness / "mod.conf").write_text("name = gamenight_validation\ndepends = gamenight_custom\n")
-    (harness / "init.lua").write_text('''core.register_on_mods_loaded(function()
+    (harness / "mod.conf").write_text(
+        "name = gamenight_validation\ndepends = gamenight_custom\n", encoding="utf8"
+    )
+    (harness / "init.lua").write_text(
+        """core.register_on_mods_loaded(function()
  assert(core.registered_nodes["gamenight_custom:bounce_pad"], "Missing generated node")
  core.safe_file_write(core.get_worldpath() .. "/validated", "ok")
  core.request_shutdown("Validation complete", false, 0)
 end)
-''')
+""",
+        encoding="utf8",
+    )
     config = world / "test.conf"
     with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as probe:
         probe.bind(("127.0.0.1", 0))
         port = probe.getsockname()[1]
-    config.write_text(f"bind_address = 127.0.0.1\nport = {port}\nserver_announce = false\nmg_name = singlenode\n")
-    env = {k:v for k,v in os.environ.items() if k not in ("GAMENIGHT_CONTROLLER_FRAME", "GAMENIGHT_CONTROLLER_PATH")}
+    config.write_text(
+        f"bind_address = 127.0.0.1\nport = {port}\nserver_announce = false\nmg_name = singlenode\n",
+        encoding="utf8",
+    )
+    env = {
+        k: v
+        for k, v in os.environ.items()
+        if k not in ("GAMENIGHT_CONTROLLER_FRAME", "GAMENIGHT_CONTROLLER_PATH")
+    }
     env["LUANTI_USER_PATH"] = str(world / "user")
     with (world / "test.log").open("w") as log:
-        proc = subprocess.Popen([str(engine_path(root) / "bin/luanti.exe"), "--server",
-            "--world", str(world), "--config", str(config)], cwd=root, env=env,
-            stdin=subprocess.DEVNULL, stdout=log, stderr=log)
-        try: code = proc.wait(timeout=35)
-        except subprocess.TimeoutExpired:
-            proc.terminate(); proc.wait(timeout=10)
-            raise TimeoutError("Generated mod test exceeded 35 seconds")
+        proc = subprocess.Popen(
+            [
+                str(engine_path(root) / "bin/luanti.exe"),
+                "--server",
+                "--world",
+                str(world),
+                "--config",
+                str(config),
+            ],
+            cwd=root,
+            env=env,
+            stdin=subprocess.DEVNULL,
+            stdout=log,
+            stderr=log,
+        )
+        deadline = time.monotonic() + 35
+        try:
+            while True:
+                if cancelled is not None and cancelled.is_set():
+                    raise RuntimeError(
+                        "Mod validation cancelled because the session closed"
+                    )
+                if time.monotonic() >= deadline:
+                    raise TimeoutError("Generated mod test exceeded 35 seconds")
+                try:
+                    code = proc.wait(timeout=0.1)
+                    break
+                except subprocess.TimeoutExpired:
+                    continue
+        finally:
+            if proc.poll() is None:
+                proc.terminate()
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                    proc.wait(timeout=5)
     if code or not (world / "validated").exists():
-        raise RuntimeError("Generated mod failed its isolated engine test; live world unchanged")
+        raise RuntimeError(
+            "Generated mod failed its isolated engine test; live world unchanged"
+        )
     return world
 
 
@@ -102,22 +159,35 @@ def request(root, values, expected, request_id, seat, expires, instance, undo=Fa
     uuid.UUID(request_id)
     # The owned game adapter performs the stop/checkpoint/install/reconnect.
     if undo:
-        if values: raise ValueError("Undo does not take new values")
-        manifest = json.loads((root / "world/gamenight/mod-current.json").read_text())
+        if values:
+            raise ValueError("Undo does not take new values")
+        manifest = json.loads(
+            (root / "world/gamenight/mod-current.json").read_text(encoding="utf8")
+        )
         values = manifest.get("previous_values")
-        if values is None: raise ValueError("No mod to undo")
+        if values is None:
+            raise ValueError("No mod to undo")
     generate(values)
     folder = root / "managed"
-    payload = {"id": request_id, "values": values, "expected_revision": expected, "seat": seat, "expires": expires, "instance": instance, "undo": undo}
+    payload = {
+        "id": request_id,
+        "values": values,
+        "expected_revision": expected,
+        "seat": seat,
+        "expires": expires,
+        "instance": instance,
+        "undo": undo,
+    }
     temp = folder / "mod-request.tmp"
-    temp.write_text(json.dumps(payload))
+    temp.write_text(json.dumps(payload), encoding="utf8")
     temp.replace(folder / "mod-request.json")
-    deadline = time.monotonic()+110
+    deadline = time.monotonic() + 110
     while time.monotonic() < deadline:
         try:
-            result = json.loads((folder / "mod-result.json").read_text())
+            result = json.loads((folder / "mod-result.json").read_text(encoding="utf8"))
             if result.get("id") == request_id:
                 return result
-        except (FileNotFoundError, json.JSONDecodeError): pass
-        time.sleep(.2)
+        except (FileNotFoundError, json.JSONDecodeError):
+            pass
+        time.sleep(0.2)
     raise TimeoutError("Mod restart was not confirmed. Check the host before retrying.")

@@ -39,13 +39,19 @@ function M.poll()
     local value = core.parse_json(text)
     if type(value) ~= "table" then return end
     for name,p in pairs(value) do
-        if not name:match("^Couch[1-4]$") or type(p) ~= "table" or type(p.name) ~= "string"
+        if not (name:match("^Couch[1-4]$") or (#name == 27 and name:match("^GN_%x+$")) or name == "Preview") or type(p) ~= "table" or type(p.name) ~= "string"
             or #p.name > 128 or type(p.color) ~= "string" or not p.color:match("^#%x%x%x%x%x%x$")
             or type(p.skin) ~= "string" or #p.skin > 65536 or not p.skin:match("^%[png:[%w+/=]+$")
             or type(p.face) ~= "string" or #p.face > 32768 or not p.face:match("^%[png:[%w+/=]+$") then return end
     end
     profiles, last_json = value, text
     for _,player in ipairs(core.get_connected_players()) do apply(player) end
+end
+function M.seat(name)
+    M.poll()
+    local seat = profiles[name] and profiles[name].seat
+    if type(seat) == "number" and seat >= 1 and seat <= 4 and seat == math.floor(seat) then return seat end
+    return tonumber(name:match("^Couch([1-4])$")) or 1
 end
 function M.describe(player)
     local p = profiles[player:get_player_name()]
