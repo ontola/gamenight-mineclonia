@@ -37,7 +37,7 @@ local function stage(shot)
         node(0,19,69,"mcl_core:stone_with_coal")
     elseif shot=="build" then
         p1:get_inventory():add_item("main","mcl_core:wood 64")
-        p1:set_look_vertical(0.55)
+        p1:set_look_vertical(0.35)
         node(0,18,69,"mcl_core:wood")
     elseif shot=="blast" then
         node(0,18,70,"mcl_tnt:tnt")

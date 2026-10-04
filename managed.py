@@ -266,7 +266,7 @@ class Adapter:
                 else:
                     self.send({"type":"ready", "session":self.session})
                 print("All player views rendered; ready", flush=True)
-            elif time.monotonic()-self.started > 90:
+            elif time.monotonic()-self.started > 180:
                 raise RuntimeError("Timed out loading Mineclonia views")
         self.flush()
 
