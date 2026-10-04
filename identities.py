@@ -9,7 +9,8 @@ import json
 import os
 import re
 
-ACCOUNT = re.compile(r"(?:Couch[1-4]|GN_[0-9a-f]{24})\Z")
+# Luanti PLAYERNAME_SIZE is 20; keep accounts below the launcher's 20-character truncation threshold.
+ACCOUNT = re.compile(r"(?:Couch[1-4]|GN_[0-9a-f]{16})\Z")
 
 
 def player_id(seat):
@@ -59,7 +60,7 @@ def accounts(root, seats):
             account = (
                 legacy
                 if legacy not in used
-                else "GN_" + hashlib.sha256(profile_id.encode()).hexdigest()[:24]
+                else "GN_" + hashlib.sha256(profile_id.encode()).hexdigest()[:16]
             )
             if account in used:
                 raise ValueError(

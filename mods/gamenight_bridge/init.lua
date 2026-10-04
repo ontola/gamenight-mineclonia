@@ -160,7 +160,7 @@ local function run(request)
         -- Remove old peers before replacement views reuse their saved identity.
         for _, player in ipairs(core.get_connected_players()) do
             local name = player:get_player_name()
-            if name:match("^Couch[1-4]$") or (#name == 27 and name:match("^GN_%x+$")) or name == "Preview" then
+            if name:match("^Couch[1-4]$") or (#name == 19 and name:match("^GN_%x+$")) or name == "Preview" then
                 core.kick_player(name, "Reconnecting GameNight view")
             end
         end

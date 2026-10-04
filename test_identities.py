@@ -30,6 +30,7 @@ class IdentityTests(unittest.TestCase):
             )
             newcomer = accounts(root, [seat(0, "cleo")])[0]
             self.assertTrue(newcomer.startswith("GN_"))
+            self.assertLessEqual(len(newcomer), 19)
             self.assertEqual(accounts(root, [seat(1, "cleo")])[1], newcomer)
             self.assertEqual(accounts(root, [seat(0, "alex")])[0], "Couch1")
 

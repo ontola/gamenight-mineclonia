@@ -39,7 +39,7 @@ function M.poll()
     local value = core.parse_json(text)
     if type(value) ~= "table" then return end
     for name,p in pairs(value) do
-        if not (name:match("^Couch[1-4]$") or (#name == 27 and name:match("^GN_%x+$")) or name == "Preview") or type(p) ~= "table" or type(p.name) ~= "string"
+        if not (name:match("^Couch[1-4]$") or (#name == 19 and name:match("^GN_%x+$")) or name == "Preview") or type(p) ~= "table" or type(p.name) ~= "string"
             or #p.name > 128 or type(p.color) ~= "string" or not p.color:match("^#%x%x%x%x%x%x$")
             or type(p.skin) ~= "string" or #p.skin > 65536 or not p.skin:match("^%[png:[%w+/=]+$")
             or type(p.face) ~= "string" or #p.face > 32768 or not p.face:match("^%[png:[%w+/=]+$") then return end

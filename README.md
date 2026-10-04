@@ -97,7 +97,7 @@ launches it; its in-game menus use the new directional focus navigation.
 - `server.py`: isolated world process and recovery checkpoints.
 - `mod_session.py`: validation, checkpoint/install/reconnect and rollback.
 
-Preparing views never receives active gameplay input. Cleanup still reaps clients
+Preparing views never receive active gameplay input. Cleanup still reaps clients
 if the bridge fails. Closing a session cancels its isolated mod validator. World
 shutdown first attempts a save-aware bridge command; a wedged process is then
 terminated so it cannot keep the private port or world open.
