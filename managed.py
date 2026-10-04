@@ -21,7 +21,7 @@ from settings import Settings
 from couch import singleton
 from server import Server
 from runtime import prepare_data
-from prototype import command
+from prototype import command, read_json
 
 
 class Adapter:
@@ -209,6 +209,17 @@ class Adapter:
             connected, buttons, axes = pads[i] if i < len(pads) else (False, 0, [0] * 6)
             publish(path, self.active, connected, buttons, axes)
 
+    def world_ready(self):
+        state = read_json(self.root / "world/gamenight/status.json")
+        players = state.get("players") or []
+        return {player["name"] for player in players} == set(
+            self.accounts.values()
+        ) and all(
+            player.get("profile", {}).get("hud")
+            and player.get("profile", {}).get("skin_applied")
+            for player in players
+        )
+
     def tick(self):
         self.server.check()
         self.settings.tick(blocked=self.mod.request is not None)
@@ -219,6 +230,7 @@ class Adapter:
             if (
                 all(Path(str(f) + ".ready").exists() for f in self.frames)
                 and 1 <= len(self.frames) <= 4
+                and self.world_ready()
             ):
                 self.state = SessionState.READY
                 if self.resume_when_ready is not None:

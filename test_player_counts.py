@@ -38,6 +38,7 @@ class PlayerCounts(unittest.TestCase):
                 a.resume_when_ready = None
                 a.dispose = Mock()
                 a.send = Mock()
+                a.world_ready = Mock(return_value=True)
                 seats = [
                     seat(i, "local" if i in indices else "empty") for i in range(4)
                 ]
@@ -86,6 +87,7 @@ class PlayerCounts(unittest.TestCase):
                 a.settings = Mock()
                 a.flush = Mock()
                 a.send = Mock()
+                a.world_ready = Mock(return_value=True)
                 a.mod = Mock(request=None, restart=None)
                 a.views = ViewGroup(Path(tmp))
                 a.session = "s"

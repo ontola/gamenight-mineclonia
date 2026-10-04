@@ -1,11 +1,11 @@
 -- Profile appearances are host-owned, transient, and independent of world saves.
 local M = {}
-local profiles, last_json, huds = {}, nil, {}
+local profiles, last_json, huds, pending = {}, nil, {}, {}
 local path = core.get_worldpath() .. "/gamenight/profiles.json"
 local function apply(player)
     local name = player:get_player_name()
     local profile = profiles[name]
-    if not profile then return end
+    if not profile or not mcl_player.players[player] then return end
     -- Use Mineclonia's skin API: armor, invisibility and inventory models retain
     -- their own texture layers. Never write skin metadata back to the world.
     mcl_player.player_set_skin(player, profile.skin)
@@ -35,7 +35,16 @@ function M.poll()
     local f = io.open(path,"rb")
     if not f then return end
     local text = f:read(524289); f:close()
-    if text == last_json or #text > 524288 then return end
+    if #text > 524288 then return end
+    if text == last_json then
+        for _,player in ipairs(core.get_connected_players()) do
+            local name = player:get_player_name()
+            if pending[name] and mcl_player.players[player] then
+                apply(player); pending[name] = nil
+            end
+        end
+        return
+    end
     local value = core.parse_json(text)
     if type(value) ~= "table" then return end
     for name,p in pairs(value) do
@@ -59,7 +68,11 @@ function M.describe(player)
         nametag=player:get_properties().nametag,hud=huds[player:get_player_name()] ~= nil} or nil
 end
 core.register_on_joinplayer(function(player)
+    pending[player:get_player_name()] = true
     core.after(0,function() if player and player:is_player() then M.poll(); apply(player) end end)
 end)
-core.register_on_leaveplayer(function(player) huds[player:get_player_name()] = nil end)
+core.register_on_leaveplayer(function(player)
+    huds[player:get_player_name()] = nil
+    pending[player:get_player_name()] = nil
+end)
 return M

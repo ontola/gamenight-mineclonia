@@ -89,3 +89,38 @@ class CleanupTests(unittest.TestCase):
                     modding.validate(root, staged, cancelled)
             process.terminate.assert_called_once()
             process.wait.assert_called_once()
+
+    def test_world_readiness_requires_all_profiles_and_huds(self):
+        import json
+
+        with tempfile.TemporaryDirectory() as temp:
+            adapter = Adapter.__new__(Adapter)
+            adapter.root = Path(temp)
+            adapter.accounts = {0: "Couch1"}
+            folder = adapter.root / "world/gamenight"
+            folder.mkdir(parents=True)
+            path = folder / "status.json"
+            for players, expected in [
+                (None, False),
+                ([{"name": "Couch1", "profile": {"hud": False}}], False),
+                (
+                    [
+                        {
+                            "name": "Couch1",
+                            "profile": {"hud": True, "skin_applied": True},
+                        }
+                    ],
+                    True,
+                ),
+                (
+                    [
+                        {
+                            "name": "Couch2",
+                            "profile": {"hud": True, "skin_applied": True},
+                        }
+                    ],
+                    False,
+                ),
+            ]:
+                path.write_text(json.dumps({"players": players}))
+                self.assertEqual(adapter.world_ready(), expected)

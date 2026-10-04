@@ -36,3 +36,20 @@ file_text='bad';parsed={Couch4={name='x',color='red',skin='file.png',face='bad'}
 profiles.poll();assert(player.props.nametag=='#654321New name')
 leaves[1](player);joins[1](player);assert(ids==6)
 print('Profile bridge: name, HUD updates, validation, reconnect, armor preservation passed')
+
+-- A paused reconnect must apply the profile without waiting for core.after,
+-- because the simulation and its delayed callbacks are intentionally frozen.
+local account = "GN_0123456789abcdef"
+function player:get_player_name() return account end
+core.after = function() end
+core.get_connected_players = function() return {} end
+file_text = "new account"
+parsed = {[account]={name="New player",seat=3,color="#112233",skin="[png:DDDD",face="[png:EEEE"}}
+profiles.poll()
+core.get_connected_players = function() return {player} end
+joins[1](player)
+profiles.poll()
+assert(profiles.describe(player).name == "New player")
+assert(profiles.describe(player).hud and profiles.describe(player).skin_applied)
+assert(profiles.seat(account) == 3)
+print("Paused profile reconnect and generated account passed")
