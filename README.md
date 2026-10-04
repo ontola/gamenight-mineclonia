@@ -42,9 +42,16 @@ Profiles are matched by `occupant.player_id`, never by player-list order. Missin
 malformed artwork gets a friendly fallback. The adapter follows the v1 and legacy
 `gamenight-protocol` avatar formats and shared head anchors. Generated PNG textures
 use only embedded local pixels. Armor and invisibility keep their Mineclonia layers.
-World inventories and positions still belong to the existing Couch1–Couch4 save slots;
-profile cosmetics do not yet migrate those saves between seats. Upstream chat and
-death messages may still show those internal account names.
+World inventories and positions follow the profile ID across seat changes. On the
+first launch after upgrading, each joined profile claims its seat's old Couch1–Couch4
+account once. Join the seats you previously used for that first launch. Afterwards,
+that account stays with the profile wherever they sit. New people using a claimed
+seat get separate accounts. The adapter does not rewrite player databases or mod
+storage keys. Ownership is saved in `world/gamenight/identities.json` and included
+in world checkpoints; preserve this file along with the world and `connection.json`.
+Replacing a profile in an occupied view reconnects it under the right account before
+forwarding input. Cosmetic changes still apply live. Empty prewarming uses a separate
+Preview account. Upstream chat/death messages may show internal account names.
 
 ## Verification
 
@@ -52,7 +59,19 @@ Run `python -m unittest discover`. Engine navigation tests live in the fork.
 `playtest.py` uses a separate fresh world and real clients with scripted host
 frames. It is not evidence of physical controller usability.
 
-The clean CI package build runs `python3 build_release.py NEW_BUILD_DIRECTORY`.
+The CI package build runs `python3 build_release.py NEW_BUILD_DIRECTORY
+--component-cache CACHE_DIRECTORY`. The launcher requires a MinGW compiler; pass
+`--launcher-compiler PATH` outside CI. Engine caches are keyed by the pinned engine
+repository/revision and recipe, and archive hashes are checked on every reuse.
+Only the explicit `RUNTIME_MODULES` list is shipped. `ruff format --check .` and
+`ruff check .` keep the Python glue readable.
+
+`test_package_live.py --package PACKAGE --archive ZIP --root NEW_SCRATCH
+--players 4 --benchmark-seconds 30 --identity-test --mod-test` exercises the actual
+Windows package. Install `requirements-dev.txt` for the optional performance probe.
+It records stationary and camera-pan render completion intervals after warmup,
+CPU use and combined working sets. Run one player count at a time. Image capture
+must remain disabled while measuring. See [physical controller checks](CONTROLLER-CHECK.md).
 See [VERIFICATION.md](VERIFICATION.md) for observed results and remaining checks.
 
 
@@ -68,6 +87,20 @@ This uses the installed GameNight Preview runtime by default. Pass `--runtime`
 for another runtime. The test launcher refuses a port already used by another
 test host. The candidate skips Luanti's standalone title screen when GameNight
 launches it; its in-game menus use the new directional focus navigation.
+
+## Runtime ownership
+
+- `managed.py`: host messages and explicit session lifecycle.
+- `views.py`: client processes, viewport configurations and readiness files.
+- `input_frames.py`: seat validation, opaque controller routing and stale-input handling.
+- `identities.py` / `profiles.py`: persistent ownership and transient appearance.
+- `server.py`: isolated world process and recovery checkpoints.
+- `mod_session.py`: validation, checkpoint/install/reconnect and rollback.
+
+Preparing views never receives active gameplay input. Cleanup still reaps clients
+if the bridge fails. Closing a session cancels its isolated mod validator. World
+shutdown first attempts a save-aware bridge command; a wedged process is then
+terminated so it cannot keep the private port or world open.
 
 ## Historical prototype notes
 

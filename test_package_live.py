@@ -21,6 +21,7 @@ def main():
     )
     p.add_argument("--benchmark-seconds", type=int, default=0)
     p.add_argument("--identity-test", action="store_true")
+    p.add_argument("--mod-test", action="store_true")
     a = p.parse_args()
     if a.root.exists() and not a.resume:
         raise RuntimeError("Use a new probe directory")
@@ -117,9 +118,9 @@ def main():
                 raise TimeoutError("Expected lifecycle event was not observed")
 
         def state():
-            return json.loads(
-                (a.root / "world/gamenight/status.json").read_text(encoding="utf8")
-            )
+            from prototype import read_json
+
+            return read_json(a.root / "world/gamenight/status.json")
 
         pump(300, lambda: any(e.get("type") == "ready" for e in events))
         results["prepare_rendered_views"] = all(
@@ -336,6 +337,43 @@ def main():
         send({"type": "resume", "session": session})
         pump(3)
         results["resume_advances_world"] = state()["game_time"] > paused["game_time"]
+        if a.mod_test:
+            from host import Host
+            from prototype import read_json
+
+            for undo, values in ((False, {"bounce": 1.5}), (True, {"bounce": 0})):
+                request_id = str(uuid.uuid4())
+                payload = {
+                    "id": request_id,
+                    "instance": session,
+                    "expected_revision": state()["revision"],
+                    "expires": time.time() + 180,
+                    "seat": Host.seats({"seats": roster})[0],
+                    "values": values,
+                    "undo": undo,
+                }
+                pending = a.root / "managed/mod-request.tmp"
+                pending.write_text(json.dumps(payload), encoding="utf8")
+                pending.replace(pending.with_suffix(".json"))
+                result_path = a.root / "managed/mod-result.json"
+
+                def finished():
+                    return (
+                        result_path.exists()
+                        and read_json(result_path).get("id") == request_id
+                    )
+
+                pump(240, finished)
+                result = read_json(result_path)
+                results["mod_undo_reconnects" if undo else "mod_install_reconnects"] = (
+                    result["ok"]
+                    and len(state()["players"]) == a.players
+                    and state()["mod_values"] == values
+                    and not (a.root / "managed/mod-install.json").exists()
+                )
+                if not result["ok"]:
+                    raise RuntimeError(result["message"])
+                pump(3)
         if a.hold:
             print(f"Holding {a.players} rendered views for inspection", flush=True)
             pump(a.hold)
