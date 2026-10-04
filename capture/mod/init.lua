@@ -25,6 +25,7 @@ local function stage(shot)
     assert(p1 and p2,"Both players must be connected")
     for _,p in ipairs({p1,p2}) do
         p:get_inventory():set_list("main",{})
+        p:set_wield_index(1)
         p:set_look_vertical(0.06)
         p:set_look_horizontal(0)
     end
