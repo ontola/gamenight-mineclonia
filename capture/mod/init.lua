@@ -25,7 +25,6 @@ local function stage(shot)
     assert(p1 and p2,"Both players must be connected")
     for _,p in ipairs({p1,p2}) do
         p:get_inventory():set_list("main",{})
-        p:set_wield_index(1)
         p:set_look_vertical(0.06)
         p:set_look_horizontal(0)
     end
@@ -34,10 +33,10 @@ local function stage(shot)
     p2:set_look_horizontal(0.67)
     p2:set_look_vertical(0.05)
     if shot=="mine" then
-        p1:get_inventory():add_item("main","mcl_tools:pick_diamond")
+        p1:set_wielded_item("mcl_tools:pick_diamond")
         node(0,19,69,"mcl_core:stone_with_coal")
     elseif shot=="build" then
-        p1:get_inventory():add_item("main","mcl_core:wood 64")
+        p1:set_wielded_item("mcl_core:wood 64")
         p1:set_look_vertical(0.35)
         node(0,18,69,"mcl_core:wood")
     elseif shot=="blast" then
