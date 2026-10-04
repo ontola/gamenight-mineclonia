@@ -129,7 +129,7 @@ def run(root, fixture, session, roster, profiles, controls, send, pump, state):
             )
         started = time.monotonic()
         last = None
-        while time.monotonic() - started < 1000:
+        while time.monotonic() - started < 1100:
             wait(0.3)
             data = api("/v1/rooms/agent")
             item = next((x for x in data["requests"] if x["id"] == request_id), None)
@@ -194,73 +194,87 @@ def run(root, fixture, session, roster, profiles, controls, send, pump, state):
         pump(1)
         poll()
         api("/v1/pairing/claim", api("/v1/lobbies/ticket", {"index": 0}, room["token"]))
-        prompt = "Create a new Rally Wand item, stable ID rally, cyan color. Give each player one on joining. On use launch OTHER players within 4 blocks straight up with velocity y=12, leaving the wielder alone. Use a 1-second per-wielder cooldown. Persist a counter under key boosts for teammates launched and report it with gn.emit('boosts', count), including at startup. Add a pure logic self-test. This is new Lua content, not a scalar setting."
-        first = request(prompt)
-        for attempt in range(3):
-            if first["result"]["state"] == "complete":
-                code = first["command"]["values"]["code"]
-                assert "gn.tool" in code and len(code) > 200
-                checks["model_generated_new_tool"] = True
-                startup_events = state()["generated_mod"].get("events") or {}
-                arrange()
-                before, samples = use()
-                # A stale probe is a harness/server failure, never a model failure.
-                assert abs(before["players"]["Couch1"]["position"]["x"]) < 0.25, (
-                    "Player arrangement did not reach the server"
-                )
-                generated = state()["generated_mod"]
-                events = generated.get("events") or {}
-                checks["real_controller_use_launches_teammate"] = (
-                    max(s["players"]["Couch2"]["position"]["y"] for s in samples)
-                    > before["players"]["Couch2"]["position"]["y"] + 1
-                )
-                checks["wielder_unchanged"] = (
-                    max(
-                        abs(
-                            s["players"]["Couch1"]["position"]["y"]
-                            - before["players"]["Couch1"]["position"]["y"]
-                        )
-                        for s in samples
-                    )
-                    < 0.25
-                )
-                boosts = events.get("boosts", 0)
-                checks["persistent_counter_recorded"] = boosts >= 1
-                checks["counter_reported_at_startup"] = "boosts" in startup_events
-                if all(checks.values()) and not generated.get("error"):
-                    break
-                diagnosis = str(
-                    generated.get("error") or {k: v for k, v in checks.items() if not v}
-                )
-            else:
-                diagnosis = first["result"].get("result", "Generation failed")
-            assert attempt < 2, diagnosis
-            first = request(
-                "Repair the Rally Wand. Observed failure: "
-                + diagnosis[:500]
-                + ". Register all callbacks once at top level. Use one elapsed clock outside the tool callback for cooldowns. "
-                "Emit the cumulative stored boosts counter at startup and after each use; never reset it. Keep the original mechanics: "
-                + prompt
+        previous = config.get("resume_report")
+        if previous:
+            prior = json.loads(Path(previous).read_text(encoding="utf8"))
+            rows.extend(prior["requests"])
+            checks.update(prior["checks"])
+            first = next(row for row in rows if row["result"]["state"] == "complete")
+            code = first["command"]["values"]["code"]
+            assert state()["mod_values"]["code"] == code, (
+                "Resume requires the original installed program"
             )
-            checks["repair_request_used"] = True
-        assert all(checks.values()), checks
-        pids = (root / "managed/view-pids.txt").read_text()
-        revision = state()["revision"]
-        broken = request(
-            values={
-                "title": "Invalid candidate",
-                "code": code + "\nthis is invalid lua !!",
-            }
-        )
-        checks["validation_failure_preserves_running_game"] = (
-            broken["result"]["state"] == "failed"
-            and (root / "managed/view-pids.txt").read_text() == pids
-            and state()["revision"] == revision
-            and state()["mod_values"]["code"] == code
-        )
-        assert checks["validation_failure_preserves_running_game"], broken
+            boosts = state()["generated_mod"]["events"]["boosts"]
+            checks["resumed_after_provider_truncation"] = True
+        else:
+            prompt = "Create a new Rally Wand item, stable ID rally, cyan color. Give each player one on joining. On use launch OTHER players within 4 blocks straight up with velocity y=12, leaving the wielder alone. Use a 1-second per-wielder cooldown. Persist a counter under key boosts for teammates launched and report it with gn.emit('boosts', count), including at startup. Add a pure logic self-test. This is new Lua content, not a scalar setting."
+            first = request(prompt)
+            for attempt in range(3):
+                if first["result"]["state"] == "complete":
+                    code = first["command"]["values"]["code"]
+                    assert "gn.tool" in code and len(code) > 200
+                    checks["model_generated_new_tool"] = True
+                    startup_events = state()["generated_mod"].get("events") or {}
+                    arrange()
+                    before, samples = use()
+                    # A stale probe is a harness/server failure, never a model failure.
+                    assert abs(before["players"]["Couch1"]["position"]["x"]) < 0.25, (
+                        "Player arrangement did not reach the server"
+                    )
+                    generated = state()["generated_mod"]
+                    events = generated.get("events") or {}
+                    checks["real_controller_use_launches_teammate"] = (
+                        max(s["players"]["Couch2"]["position"]["y"] for s in samples)
+                        > before["players"]["Couch2"]["position"]["y"] + 1
+                    )
+                    checks["wielder_unchanged"] = (
+                        max(
+                            abs(
+                                s["players"]["Couch1"]["position"]["y"]
+                                - before["players"]["Couch1"]["position"]["y"]
+                            )
+                            for s in samples
+                        )
+                        < 0.25
+                    )
+                    boosts = events.get("boosts", 0)
+                    checks["persistent_counter_recorded"] = boosts >= 1
+                    checks["counter_reported_at_startup"] = "boosts" in startup_events
+                    if all(checks.values()) and not generated.get("error"):
+                        break
+                    diagnosis = str(
+                        generated.get("error")
+                        or {k: v for k, v in checks.items() if not v}
+                    )
+                else:
+                    diagnosis = first["result"].get("result", "Generation failed")
+                assert attempt < 2, diagnosis
+                first = request(
+                    "Repair the Rally Wand. Observed failure: "
+                    + diagnosis[:500]
+                    + ". Register all callbacks once at top level. Use one elapsed clock outside the tool callback for cooldowns. "
+                    "Emit the cumulative stored boosts counter at startup and after each use; never reset it. Keep the original mechanics: "
+                    + prompt
+                )
+                checks["repair_request_used"] = True
+            assert all(checks.values()), checks
+            pids = (root / "managed/view-pids.txt").read_text()
+            revision = state()["revision"]
+            broken = request(
+                values={
+                    "title": "Invalid candidate",
+                    "code": code + "\nthis is invalid lua !!",
+                }
+            )
+            checks["validation_failure_preserves_running_game"] = (
+                broken["result"]["state"] == "failed"
+                and (root / "managed/view-pids.txt").read_text() == pids
+                and state()["revision"] == revision
+                and state()["mod_values"]["code"] == code
+            )
+            assert checks["validation_failure_preserves_running_game"], broken
         second = request(
-            "Modify our existing Rally Wand: keep the same item ID rally, cooldown and persistent boosts counter. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup."
+            "Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup."
         )
         assert second["result"]["state"] == "complete", second
         code2 = second["command"]["values"]["code"]

@@ -18,8 +18,8 @@ Text and the existing voice transcription UI use the same session-agent route.
 The phone/lobby assistant explains the reconnect and displays the installed title.
 Only the session owner can apply a shared change. Hosted generation uses the
 existing credit reservation/settlement path; local inference spends no hosted
-credits. Generation is bounded to 4096 output tokens, 240 seconds for hosted
-inference and 600 seconds for the optional local provider. Local generation can
+credits. Hosted generation is bounded to 4096 output tokens and 240 seconds. Optional
+local reasoning gets 8192 tokens including reasoning, with a 900-second timeout. Local generation can
 take several minutes on consumer hardware; the UI shows the shared request state.
 
 ## Apply and recover

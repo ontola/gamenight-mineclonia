@@ -1,5 +1,7 @@
 -- Test-only fixture. Never included in a game package.
 local dir = core.get_worldpath() .. "/gamenight"
+core.set_timeofday(0.5)
+core.settings:set("time_speed", "0")
 local elapsed = 0
 core.register_globalstep(function(dt)
     elapsed = elapsed + dt
