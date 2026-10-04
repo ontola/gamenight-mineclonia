@@ -1,3 +1,21 @@
+# Windows v0.1.1 verification — 4 October 2026
+
+Engine: b7903f56996069669d14ec1b06246cfef8c1f6a9.
+Adapter: 30fea66835fd34f2e752de38528b32ccf21de8fb. Mineclonia: 0.123.1.
+
+- 36 Python tests passed, including occupied-seat filtering, sparse seats, controller isolation and waiting for every renderer.
+- Native viewport tests cover 1–4 players, complete screen coverage, no overlap and odd screen dimensions. Binding, stale-frame and navigation tests also passed in the package build.
+- The exact Windows package passed native-entrypoint checks with 1, 2, 3 and 4 players: authentication, connected player count, rendered views, separate scripted movement for each player, pause/resume and host-disconnect cleanup. See verification/v0.1.1.json.
+- Lua checks cover finding four dry spawn positions, migrating the old two-position record, reusing four positions and preserving returning players.
+- Visually checked full-screen solo, the three-player arrangement and the four-player grid on a 3840×2160 desktop.
+- An idle local four-player run used approximately 2.3 GB of combined client/server working-set memory. This was not a frame-rate benchmark.
+- First-load testing under concurrent activity exceeded the former 90-second client startup timeout. The package now allows 180 seconds. Preloading and cached subsequent launches remain important.
+
+Player count is chosen before launch; the host prepares a changed lobby roster again. This version does not add or remove viewports during active play.
+Physical-controller feel, audio audibility, couch-distance readability and frame rates on other hardware remain unverified. Keep the experimental status.
+
+## Earlier v0.1.0 checks
+
 # Windows candidate verification — 4 October 2026
 
 Engine: 528e03c03ce1a33c8586a96aeda2e4cbe28e9945.

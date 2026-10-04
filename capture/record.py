@@ -21,9 +21,10 @@ if a.shot=="bounce":
     result=command(a.world_root,"set",{"bounce":0.5})
     if not result.get("ok"):raise RuntimeError(result)
 controls()
+time.sleep(1)  # Give the managed controller a neutral frame before recording.
 (a.capture_root/"capture.txt").write_text(str(output.resolve())+"\n"+("0" if a.shot in ("mine","build") else "1"))
 try:
-    time.sleep(.3)
+    time.sleep(1.2)  # Let the first GPU readback finish while input is neutral.
     if a.shot=="mine":controls(5,32767)
     elif a.shot=="build":controls(4,32767)
     elif a.shot=="blast":action("ignite")
@@ -34,5 +35,5 @@ finally:
     time.sleep(.5)
     (a.capture_root/"capture.txt").write_text("")
 (output/"take.json").write_text(json.dumps({"shot":a.shot,"staged":True,
-    "duration":"See per-view timestamp files","action_after_seconds":.3},indent=2))
+    "duration":"See per-view timestamp files","action_after_seconds":1.2},indent=2))
 print(output)

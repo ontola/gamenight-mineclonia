@@ -1,0 +1,160 @@
+{
+  "package_sha256": "a788460cb5e76722582ae9d3a26c045a630b50d331a72a41f996444fd29c07d6",
+  "build": {
+    "format": 1,
+    "game": "mineclonia",
+    "engine_source": "https://github.com/ontola/luanti",
+    "engine_revision": "b7903f56996069669d14ec1b06246cfef8c1f6a9",
+    "engine_archive_sha256": "857305bdf429a899b9ee1bde93d33a34d81266ad18631e8b28ac246fe28e97f1",
+    "mineclonia_version": "0.123.1",
+    "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+    "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+    "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+    "python_archive": "python.zip",
+    "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+    "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+    "adapter_revision": "30fea66835fd34f2e752de38528b32ccf21de8fb",
+    "installed_bytes": 115528251
+  },
+  "fixture": "Separate scratch worlds reuse generated terrain and cached media, with fresh player identities. Three seconds between input probes lets prior movement settle.",
+  "reports": [
+    {
+      "players": 1,
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "input_observations": [
+        [
+          3.0460000038146973
+        ]
+      ],
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "player profile appearance",
+        "cross-game switching"
+      ]
+    },
+    {
+      "players": 2,
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "input_observations": [
+        [
+          2.2719998359680176,
+          0.0
+        ],
+        [
+          0.0,
+          3.0920000076293945
+        ]
+      ],
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "player profile appearance",
+        "cross-game switching"
+      ]
+    },
+    {
+      "players": 3,
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "input_observations": [
+        [
+          3.1449999809265137,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.7340002059936523,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.680999755859375
+        ]
+      ],
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "player profile appearance",
+        "cross-game switching"
+      ]
+    },
+    {
+      "players": 4,
+      "checks": {
+        "authenticated_handshake": true,
+        "prepare_rendered_views": true,
+        "correct_player_count": true,
+        "four_distinct_dry_spawns": true,
+        "start_and_separate_scripted_input": true,
+        "pause_freezes_world": true,
+        "resume_advances_world": true,
+        "host_disconnect_exits_entrypoint": true,
+        "host_disconnect_cleans_children": true
+      },
+      "input_observations": [
+        [
+          1.9129998683929443,
+          0.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          2.501999855041504,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          2.96099853515625,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          0.0,
+          1.1880035400390625
+        ]
+      ],
+      "untested": [
+        "physical controllers",
+        "audio audibility",
+        "player profile appearance",
+        "cross-game switching"
+      ]
+    }
+  ]
+}

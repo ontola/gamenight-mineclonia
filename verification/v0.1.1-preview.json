@@ -1,0 +1,70 @@
+{
+  "frames": 150,
+  "distinct_decoded_frames": 146,
+  "width": 960,
+  "height": 540,
+  "fps": 30,
+  "duration": 5.0,
+  "shots": [
+    {
+      "take": "mine-1",
+      "seat": 0,
+      "start": 1.0,
+      "frames": 38,
+      "source_in_frame": 10,
+      "source_out_frame": 25,
+      "unique_source_frames": 16
+    },
+    {
+      "take": "build-1",
+      "seat": 0,
+      "start": 1.6,
+      "frames": 37,
+      "source_in_frame": 21,
+      "source_out_frame": 38,
+      "unique_source_frames": 18
+    },
+    {
+      "take": "blast-1",
+      "seat": 1,
+      "start": 4.9,
+      "frames": 38,
+      "source_in_frame": 73,
+      "source_out_frame": 87,
+      "unique_source_frames": 15
+    },
+    {
+      "take": "bounce-1",
+      "seat": 1,
+      "start": 1.05,
+      "frames": 37,
+      "source_in_frame": 18,
+      "source_out_frame": 35,
+      "unique_source_frames": 18
+    }
+  ],
+  "files": [
+    {
+      "file": "mineclonia.mp4",
+      "bytes": 454191,
+      "sha256": "9635e6e3df8fe2f0a0b95e142751632607e3dc15afe843939ec178cb9eff4d4b"
+    },
+    {
+      "file": "mineclonia.jpg",
+      "bytes": 118277,
+      "sha256": "077cd79fd59ee22ad1c19a09cb527a206966432a82b72d33ad20e70b17a408b7"
+    }
+  ],
+  "game": "mineclonia",
+  "source": {
+    "repository": "https://github.com/ontola/gamenight-mineclonia",
+    "revision": "30fea66835fd34f2e752de38528b32ccf21de8fb",
+    "engine_revision": "b7903f56996069669d14ec1b06246cfef8c1f6a9",
+    "version": "v0.1.1",
+    "package_sha256": "a788460cb5e76722582ae9d3a26c045a630b50d331a72a41f996444fd29c07d6",
+    "seed": "gamenight-couch-prototype",
+    "capture": "Actual release renderer and simulation. Scratch-world staging provides positions, quarry/meadow scenery and legitimate loadouts. Scripted controller frames mine and place blocks. Upstream TNT ignition and the integration's live bounce-pad setting run their real mechanics. Four natural-speed cuts resample recorded wall-clock timestamps; no accelerated gameplay or fabricated effects. Portrait views are cropped to landscape around the action.",
+    "capture_notes": "Build camera pitch 0.35; one second of neutral input before enabling capture, then 1.2 seconds of neutral input before action. Raw wall-clock samples retained; output is 30 FPS with repeated frames where needed, not a measured 30 FPS gameplay claim."
+  },
+  "base_url": "https://gamenight.ontola.io/games/previews/mineclonia-v0.1.1-montage1/"
+}

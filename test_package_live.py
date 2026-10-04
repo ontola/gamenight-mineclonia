@@ -77,7 +77,9 @@ def main():
         def distance(a,b):
             return sum((a[k]-b[k])**2 for k in ("x","z"))**.5
         input_checks=[]
+        input_observations=[]
         for i in range(a.players):
+            pump(3)  # Let previous movement and any fall finish before testing another seat.
             previous=state()
             axis,value=[(0,-32768),(0,32767),(1,32767),(1,-32768)][i]
             controls[i]["axes"][axis]=value
@@ -85,6 +87,7 @@ def main():
             controls[i]["axes"][axis]=0
             pump(1)
             after=state()
+            input_observations.append([distance(position(previous,f"Couch{j+1}"),position(after,f"Couch{j+1}")) for j in range(a.players)])
             input_checks.append(distance(position(previous,f"Couch{i+1}"),position(after,f"Couch{i+1}"))>.4
                 and all(distance(position(previous,f"Couch{j+1}"),position(after,f"Couch{j+1}"))<.1
                     for j in range(a.players) if j!=i))
@@ -108,7 +111,7 @@ def main():
             return any(len(row)>1 and row[1]==str(pid) for row in csv.reader(output.splitlines()))
         results["host_disconnect_cleans_children"]=all(not alive(pid) for pid in pids)
         report={"players":a.players,"package_sha256":hashlib.sha256(a.archive.read_bytes()).hexdigest(),
-            "input_checks":input_checks,"initial_world":before,"final_world":after,"build":json.loads((a.package/"BUILD.json").read_text()),"checks":results,
+            "input_checks":input_checks,"input_observations":input_observations,"initial_world":before,"final_world":after,"build":json.loads((a.package/"BUILD.json").read_text()),"checks":results,
             "untested":["physical controllers","audio audibility","player profile appearance","cross-game switching"]}
         (a.root/"report.json").write_text(json.dumps(report,indent=2))
         (a.root/"events.json").write_text(json.dumps(events,indent=2))
