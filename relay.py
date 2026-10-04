@@ -32,7 +32,7 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
     state = read_json(path)
     players = {p["name"] for p in state.get("players") or []}
     seats = [{"index": i, "player": f"Couch{i+1}", "revision": 1}
-             for i in range(2) if f"Couch{i+1}" in players]
+             for i in range(4) if f"Couch{i+1}" in players]
     phase = "playing"
     if host:
         party = host.status()
@@ -50,7 +50,7 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
         "acknowledged": receipt["id"] if receipt and receipt.get("ok") else None,
         "controls": {"game": "mineclonia", "instance": instance,
                      "revision": state["revision"], "can_undo": state["can_undo"],
-                     "launch_players": 2 if host else None,
+                     "launch_players": len(seats) if host and 1 <= len(seats) <= 4 else None,
                      "mod_recipes": ["bounce_pad"] if host and "bounce" not in state["values"] else [],
                      "can_undo_mod": bool(state.get("can_undo_mod")),
                      "settings": controls(state["values"])}}}
@@ -75,12 +75,14 @@ def execute(root, instance, selection, host=None):
             raise ValueError("Mods require the supervised lobby host")
         return modding.request(root, c.get("values"), c.get("expected_revision"), selection["id"], selection["seat"], selection["expires"], c["instance"], undo=c["action"] == "undo_mod")
     if c.get("action") == "launch":
-        if not host or c.get("values") != {"players": 2}:
-            raise ValueError("This host requires two joined controllers")
+        values = c.get("values")
+        players = values.get("players") if isinstance(values, dict) else None
+        if not host or type(players) is not int or not 1 <= players <= 4 or set(values) != {"players"}:
+            raise ValueError("Choose one to four joined controllers")
         if c.get("expected_revision") != current["discovery"]["controls"]["revision"]:
             raise ValueError("World changed before launch")
-        host.launch(selection["seat"], 2, timeout=min(85, max(1, selection["expires"]-time.time())))
-        return {"id": selection["id"], "ok": True, "message": "Mineclonia is running for two players."}
+        host.launch(selection["seat"], players, timeout=min(85, max(1, selection["expires"]-time.time())))
+        return {"id": selection["id"], "ok": True, "message": f"Mineclonia is running for {players} player(s)."}
     if c.get("action") not in ("set", "keep", "undo"):
         raise ValueError("Unsupported action")
     values=c.get("values")

@@ -28,6 +28,16 @@ class HostTests(unittest.TestCase):
             self.assertEqual(h.launch(Host.seats(p)[0]),playing)
             send.assert_called_once_with({"type":"next"})
 
+    def test_all_supported_player_counts_launch(self):
+        for count in range(1,5):
+            p=self.party(count); h=Host()
+            playing=dict(p,active_session={"game":GAME,"phase":"running"},overlay_open=False)
+            with self.subTest(count=count), patch.object(h,"status",side_effect=[p,playing]), patch.object(h,"request") as send:
+                self.assertEqual(h.launch(Host.seats(p)[0],players=count),playing)
+                send.assert_called_once_with({"type":"next"})
+        for count in (0,5,True,2.0):
+            with self.assertRaises(ValueError): Host().launch({},players=count)
+
     def test_resume_does_not_start_a_new_session(self):
         p=self.party();p["active_session"]={"game":GAME,"phase":"paused"}
         h=Host();playing=dict(p,active_session={"game":GAME,"phase":"running"},overlay_open=False)

@@ -48,8 +48,8 @@ class Host:
         return result
 
     def launch(self, expected_seat, players=2, timeout=85):
-        if players != 2:
-            raise ValueError("Mineclonia currently supports exactly two local players")
+        if type(players) is not int or not 1 <= players <= 4:
+            raise ValueError("Mineclonia supports one to four local players")
         deadline = time.monotonic()+timeout
         party = self.status()
         self.check_players(party, expected_seat, players)
@@ -62,7 +62,7 @@ class Host:
                 raise RuntimeError("Mineclonia must be in this host's next-game slot")
             while warm.get("phase") != "ready":
                 if time.monotonic() >= deadline:
-                    raise TimeoutError("Both Mineclonia views did not become ready")
+                    raise TimeoutError("Mineclonia player views did not become ready")
                 time.sleep(.2)
                 party = self.status()
                 self.check_players(party, expected_seat, players)

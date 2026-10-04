@@ -1,7 +1,7 @@
 # Mineclonia for GameNight
 
 This repository owns the GameNight adapter, live-settings mod, package builder
-and tests for two-player Windows couch play. Its history was extracted from
+and tests for one to four local players on Windows. Its history was extracted from
 `ontola/gamenight/examples/mineclonia`.
 
 The native engine changes are maintained in
@@ -16,7 +16,10 @@ pins the engine source, Mineclonia archive, and embedded Python runtime.
 - Inventory uses slot focus, A pick/place, X split/place one, Y quick transfer.
 - New players share verified dry ground; existing player positions are preserved.
 - Installed game files and saved worlds are separate. The package includes Python.
-- Initial support: Windows x64, two controllers, two side-by-side engine views.
+- Windows x64: 1–4 local players, with one independently controlled engine view per player.
+- Solo fills the screen; two players share side-by-side views; three use a large left view and two stacked right views; four use a 2×2 grid.
+- Choose the player count in the lobby before launch. Adding or removing a viewport requires preparing the game again.
+- Four views run four clients and one server. Physical-controller feel and performance on lower-powered PCs still need hands-on testing.
 - [Download v0.1.0](https://github.com/ontola/gamenight-mineclonia/releases/tag/v0.1.0): about 55 MB, about 116 MB installed. The release is experimental.
 
 Saves are stored under the user's local application data in
@@ -59,7 +62,7 @@ playtest is not certification of a new release package.
 # Mineclonia couch prototype
 
 This is an isolated experiment, not a catalog game. A patched Luanti 5.17.0
-Windows build adds isolated controller input and two borderless views. The engine
+Windows build adds isolated controller input and one to four borderless views. The engine
 build and routing checks pass; the user confirmed independent controller input in both standalone views.
 See [controller setup and controls](engine/README.md).
 
@@ -195,7 +198,7 @@ status must be fresh before it advertises live controls. Discovery
 includes `controls` with game/instance/revision, setting descriptions, units,
 application timing, numeric bounds, current values, and `can_undo`. A selection's `command` contains `action` (`set`, `undo`,
 `keep`, `launch`, `mod`, `undo_mod`), the exact instance, expected revision, and
-numeric values. `launch` requires `{ "players": 2 }` and two joined controllers.
+numeric values. `launch` accepts `{ "players": 1 }` through `{ "players": 4 }` and requires the matching number of joined controllers.
 It waits for the real daemon to report Running. On older bridges, `mod` takes `{ "bounce": 1.5 }`;
 `undo_mod` takes an empty values object. Its receipt
 reports the actual game result. Ordinary queue acknowledgements cannot confirm
@@ -228,7 +231,7 @@ capture. The cloud/account/voice service remains outside this public adapter.
 `GAMENIGHT_JOIN_URL` remains reachable from phones.
 
 Run `python -m unittest discover -s examples/mineclonia -p 'test_*.py'` for host
-routing, two-player launch boundaries, mod validation failure and checkpoint
+routing, one-to-four-player launch boundaries, mod validation failure and checkpoint
 recovery. Fixtures are not evidence of physical controller operation. The earlier
 three live lifecycle cycles and independent controller test predate this unified
 agent implementation; repeat them before marking this flow verified.

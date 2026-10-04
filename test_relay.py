@@ -27,6 +27,19 @@ class Contract(unittest.TestCase):
    self.assertEqual(state["discovery"]["acknowledged"],"done")
  def request(self):
   return {"id":"request-1","game":"mineclonia","expires":int(time.time())+60,"seat":{"index":0,"player":"Couch1","revision":1},"command":{"action":"set","instance":"world-1","expected_revision":2,"values":{"gravity":.5}}}
+ def test_launch_passes_the_selected_count_to_the_host(self):
+  for count in range(1,5):
+   req=self.request();req["command"].update(action="launch",values={"players":count})
+   current={"seats":[req["seat"]],"discovery":{"controls":{"instance":"world-1","revision":2}}}
+   host=Mock()
+   with patch("relay.snapshot",return_value=current):
+    result=execute(Path("."),"world-1",req,host=host)
+    self.assertTrue(result["ok"])
+    self.assertEqual(host.launch.call_args.args,(req["seat"],count))
+  for count in (0,5,True,2.0):
+   req["command"]["values"]={"players":count}
+   with patch("relay.snapshot",return_value=current),self.assertRaises(ValueError):
+    execute(Path("."),"world-1",req,host=host)
  def test_reject_before_mailbox(self):
   cases=[]
   r=self.request();r["command"]["values"]={"shell":1};cases.append(r)

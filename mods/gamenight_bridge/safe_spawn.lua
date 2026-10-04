@@ -17,11 +17,15 @@ local function safe(p)
         and dry(core.get_node({x=p.x,y=p.y+1,z=p.z}).name, false)
         and dry(core.get_node({x=p.x,y=p.y+2,z=p.z}).name, false)
 end
-local function pair(p)
+local function group(p)
     if not safe(p) then return end
-    for _, d in ipairs({{2,0},{-2,0},{0,2},{0,-2}}) do
+    local found = {p}
+    for _, d in ipairs({{2,0},{-2,0},{0,2},{0,-2},{2,2},{-2,2},{2,-2},{-2,-2}}) do
         local q = {x=p.x+d[1],y=p.y,z=p.z+d[2]}
-        if safe(q) then return {p,q} end
+        if safe(q) then
+            table.insert(found,q)
+            if #found == 4 then return found end
+        end
     end
 end
 local function accept(found)
@@ -56,7 +60,7 @@ local function search()
             return (a.x-x)^2+(a.z-z)^2 < (b.x-x)^2+(b.z-z)^2
         end)
         for _,p in ipairs(candidates) do
-            local found = pair(p)
+            local found = group(p)
             if found then accept(found); return end
         end
         search()
@@ -67,9 +71,16 @@ core.register_on_mods_loaded(function()
     core.after(0,function()
         local encoded = storage:get_string("safe_spawn_ground")
         local saved = encoded ~= "" and core.parse_json(encoded) or nil
-        if type(saved) == "table" and #saved == 2 then
+        if type(saved) == "table" and (#saved == 2 or #saved == 4) then
             core.load_area(vector.subtract(saved[1],4),vector.add(saved[1],4))
-            if safe(saved[1]) and safe(saved[2]) then accept(saved); return end
+            if #saved == 4 then
+                local valid = true
+                for _,p in ipairs(saved) do valid = valid and safe(p) end
+                if valid then accept(saved); return end
+            else
+                local expanded = group(saved[1])
+                if expanded then accept(expanded); return end
+            end
         end
         search()
     end)
@@ -83,7 +94,8 @@ core.register_on_joinplayer(function(player)
     core.after(0.1,function()
         local current = core.get_player_by_name(name)
         if not current or not positions then return end
-        local p = positions[name == "Couch2" and 2 or 1]
+        local slot = tonumber(name:match("^Couch([1-4])$")) or 1
+        local p = positions[slot]
         current:set_pos({x=p.x,y=p.y+0.6,z=p.z})
         current:get_meta():set_int("gamenight:first_spawn_pending",0)
     end)

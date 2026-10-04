@@ -15,6 +15,7 @@ class InstalledRuntime(unittest.TestCase):
             self.assertGreater(len(info["password"]), 20)
             config = (root/"server.conf").read_text()
             self.assertIn("gamenight_safe_spawn = true", config)
+            self.assertIn("max_users = 4", config)
             self.assertIn("bind_address = 127.0.0.1", config)
             self.assertNotIn("gamenight-couch-prototype", config)
 

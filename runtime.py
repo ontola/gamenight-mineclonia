@@ -32,7 +32,7 @@ def prepare_data(root):
     if not seed.exists():
         seed.write_text(str(secrets.randbits(63)), encoding="ascii")
     (root / "server.conf").write_text(
-        "bind_address = 127.0.0.1\nserver_announce = false\nmax_users = 2\n"
+        "bind_address = 127.0.0.1\nserver_announce = false\nmax_users = 4\n"
         "default_privs = interact,shout\ncreative_mode = false\nenable_damage = false\n"
         "mg_name = v7\ngamenight_safe_spawn = true\n"
         + f"port = {port}\nfixed_map_seed = {seed.read_text().strip()}\n", encoding="utf8")

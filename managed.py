@@ -1,11 +1,12 @@
 """Local experimental Mineclonia adapter for the real GameNight lobby.
 
-The resident lobby owns Back and hardware input. We route host tokens to two
+The resident lobby owns Back and hardware input. We route host tokens to one to four
 engine views; native SDL controller events are disabled in managed clients.
 """
 import argparse
 import json
 import os
+import re
 from pathlib import Path
 import select
 import socket
@@ -21,6 +22,17 @@ from couch import singleton
 from server import Server, preserve_world
 from prototype import command
 from runtime import engine_path, connection, prepare_data
+
+
+def local_seats(seats):
+    """Ignore empty/AI seats; keep stable host seat IDs and controller tokens."""
+    result = [s for s in seats if s.get("occupant", {}).get("kind") == "local"]
+    indices = [s["index"] for s in result]
+    if len(result) > 4 or len(indices) != len(set(indices)):
+        raise ValueError("Mineclonia supports at most four distinct local seats")
+    if any(type(i) is not int or not 0 <= i < 4 for i in indices):
+        raise ValueError("Invalid Mineclonia host seat index")
+    return sorted(result, key=lambda s: s["index"])
 
 
 def routed(seats, controllers):
@@ -103,19 +115,27 @@ class Adapter:
             self.dispose()
             self.prepare = msg
             self.session = msg["session"]
-            # Exactly two physical seats for this prototype. Empty views stay neutral.
-            self.seats = sorted(msg["seats"], key=lambda s: s["index"])[:2]
+            self.seats = local_seats(msg["seats"])
+            # An empty preparation may prewarm the game before a player joins.
+            # The host prepares the new roster on the next launch.
+            if not self.seats:
+                self.seats = [{"index": 0, "occupant": {"kind": "empty"}}]
             self.started = time.monotonic()
-            self.send({"type":"participation", "session":self.session, "instant_join":True})
-            self.send({"type":"progress", "session":self.session, "percent":0, "label":"Loading both views"})
-            for index in range(2):
+            self.send({"type":"participation", "session":self.session, "instant_join":False})
+            self.send({"type":"progress", "session":self.session, "percent":0, "label":f"Loading {len(self.seats)} player view(s)"})
+            for view, seat in enumerate(self.seats):
+                index = seat["index"]
                 frame = self.directory / f"view-{index}.frame"
                 frame.with_suffix(".frame.ready").unlink(missing_ok=True)
                 publish(frame, False)
                 self.frames.append(frame)
                 conf = self.directory / f"view-{index}.conf"
-                if not conf.exists(): conf.write_text("fullscreen = false\nwindow_maximized = false\npause_on_lost_focus = false\nfps_max = 60\nfps_max_unfocused = 30\nviewing_range = 60\nkeymap_pause = GAMEPAD_BUTTON_6\nkeymap_minimap = \nkeymap_drop = \nkeymap_freemove = \nkeymap_screenshot = \ndebug_log_level = info\nsound_volume = " + ("0.5" if index == 0 else "0") + "\n")
-                env = dict(os.environ, GAMENIGHT_CONTROLLER_FRAME=str(frame), GAMENIGHT_COUCH_SEAT=str(index))
+                if not conf.exists(): conf.write_text("fullscreen = false\nwindow_maximized = false\npause_on_lost_focus = false\nfps_max = 60\nfps_max_unfocused = 30\nviewing_range = 60\nkeymap_pause = GAMEPAD_BUTTON_6\nkeymap_minimap = \nkeymap_drop = \nkeymap_freemove = \nkeymap_screenshot = \ndebug_log_level = info\nsound_volume = " + ("0.5" if view == 0 else "0") + "\n")
+                config = conf.read_text()
+                config = re.sub(r"(?m)^sound_volume\s*=.*$", "sound_volume = " + ("0.5" if view == 0 else "0"), config)
+                conf.write_text(config)
+                env = dict(os.environ, GAMENIGHT_CONTROLLER_FRAME=str(frame), GAMENIGHT_COUCH_SEAT=str(view),
+                    GAMENIGHT_COUCH_PLAYERS=str(len(self.seats)))
                 env["GAMENIGHT_COUCH_GROUP"] = str(self.directory / "view-pids.txt")
                 env.pop("GAMENIGHT_CONTROLLER_PATH", None)
                 userdir = self.directory / f"client-{index}"
@@ -128,7 +148,10 @@ class Adapter:
                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
                 (self.directory / "view-pids.txt").write_text(" ".join(str(c.pid) for c in self.children))
         elif kind == "party_updated" and msg.get("session") == self.session:
-            self.seats = sorted(msg["seats"], key=lambda s:s["index"])[:2]
+            updates = {seat["index"]: seat for seat in msg["seats"]}
+            self.seats = [updates.get(seat["index"],
+                {"index": seat["index"], "occupant": {"kind": "empty"}})
+                for seat in self.seats]
         elif kind in ("start", "resume", "pause", "dispose") and msg.get("session") == self.session:
             if kind == "dispose": self.dispose()
             else:
@@ -232,17 +255,17 @@ class Adapter:
         self.settings.tick(blocked=self.mod_request is not None)
         self.mods()
         if any(c.poll() is not None for c in self.children):
-            raise RuntimeError("A Mineclonia view closed; ending this pair")
+            raise RuntimeError("A Mineclonia view closed; ending this session")
         if self.session and not self.ready:
-            if all(Path(str(f)+".ready").exists() for f in self.frames) and len(self.frames)==2:
+            if all(Path(str(f)+".ready").exists() for f in self.frames) and 1 <= len(self.frames) <= 4:
                 self.ready = True
                 if self.mod_restart is not None:
                     self.active = self.mod_restart
-                    self.mod_result(True, "Previous mod restored; both views reconnected." if self.mod_request.get("undo") else "Bounce pad installed and both views reconnected. Players receive bounce pads in their inventory when space is available. Set bounce to zero to disable the effect.")
+                    self.mod_result(True, "Previous mod restored; all player views reconnected." if self.mod_request.get("undo") else "Bounce pad installed and all player views reconnected. Players receive bounce pads in their inventory when space is available. Set bounce to zero to disable the effect.")
                     (self.directory / "mod-install.json").unlink(missing_ok=True)
                 else:
                     self.send({"type":"ready", "session":self.session})
-                print("Both world views rendered; ready", flush=True)
+                print("All player views rendered; ready", flush=True)
             elif time.monotonic()-self.started > 90:
                 raise RuntimeError("Timed out loading Mineclonia views")
         self.flush()
