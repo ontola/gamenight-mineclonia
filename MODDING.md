@@ -72,3 +72,13 @@ turning new mechanics into predefined numeric recipes.
 See `verification/` for observed runs. Voice microphone capture, physical pad feel,
 production deployment and arbitrary third-party mod compatibility require their
 own checks; do not infer them from a scripted controller test.
+
+
+## Observed acceptance status
+
+The [4 October engine playtest](verification/generated-mods-2026-10-04/README.md)
+created and used an original generated tool in two real clients. Invalid edits
+were safely rejected. The tested local models did not produce a valid follow-up
+edit even after compiler feedback, so live follow-up/persistence/undo acceptance
+is incomplete. Do not interpret the implemented lifecycle or passing unit tests
+as proof of reliable autonomous mod editing.

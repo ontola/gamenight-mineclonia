@@ -273,10 +273,25 @@ def run(root, fixture, session, roster, profiles, controls, send, pump, state):
                 and state()["mod_values"]["code"] == code
             )
             assert checks["validation_failure_preserves_running_game"], broken
-        second = request(
-            "Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup."
-        )
-        assert second["result"]["state"] == "complete", second
+        edit_prompt = "Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup."
+        diagnosis = rows[-1]["result"].get("result", "") if previous else ""
+        for attempt in range(3):
+            second = request(
+                (
+                    "Repair the rejected edit. Compiler/host feedback: "
+                    + diagnosis[:700]
+                    + ". "
+                    if diagnosis
+                    else ""
+                )
+                + edit_prompt
+            )
+            if second["result"]["state"] == "complete":
+                break
+            diagnosis = second["result"].get("result", "Edit failed")
+            assert attempt < 2, second
+        if diagnosis:
+            checks["followup_repair_uses_validator_feedback"] = True
         code2 = second["command"]["values"]["code"]
         checks["followup_changes_generated_source"] = code2 != code
         checks["counter_survives_followup_restart"] = (
