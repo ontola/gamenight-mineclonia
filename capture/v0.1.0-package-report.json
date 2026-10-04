@@ -1,0 +1,34 @@
+{
+  "package_sha256": "7f837364456b37f125579c0ef5b8f911afb54f69f14eb6a8f3548040d190bc37",
+  "build": {
+    "format": 1,
+    "game": "mineclonia",
+    "engine_source": "https://github.com/ontola/luanti",
+    "engine_revision": "528e03c03ce1a33c8586a96aeda2e4cbe28e9945",
+    "engine_archive_sha256": "2123063183fcefa79f209e749ec96c96265285b19197bf764a563bb0511411aa",
+    "mineclonia_version": "0.123.1",
+    "mineclonia_archive_sha256": "abeacf4e202d6e01a63119a36b46751eb6abfd42948a0b06e1ba8f63fb849e59",
+    "mineclonia_source": "https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1",
+    "mineclonia_patch": "Guard a disconnected player's absent protocol information in mcl_init/outdated_warning.lua.",
+    "python_archive": "python.zip",
+    "python_archive_sha256": "f6cca216a359be84797cabb54149ce5e062afb16cc7567eb7fc51cacb2d86b65",
+    "adapter_source": "https://github.com/ontola/gamenight-mineclonia",
+    "adapter_revision": "20acfc957d2b6ce8994f754e1eb3fd8773f90e3c",
+    "installed_bytes": 115524962
+  },
+  "checks": {
+    "authenticated_handshake": true,
+    "prepare_rendered_both_views": true,
+    "start_and_separate_scripted_input": true,
+    "pause_freezes_world": true,
+    "resume_advances_world": true,
+    "host_disconnect_exits_entrypoint": true,
+    "host_disconnect_cleans_children": true
+  },
+  "untested": [
+    "physical controllers",
+    "audio audibility",
+    "player profile appearance",
+    "cross-game switching"
+  ]
+}

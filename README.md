@@ -17,7 +17,7 @@ pins the engine source, Mineclonia archive, and embedded Python runtime.
 - New players share verified dry ground; existing player positions are preserved.
 - Installed game files and saved worlds are separate. The package includes Python.
 - Initial support: Windows x64, two controllers, two side-by-side engine views.
-- The package is still being validated. A store listing is not yet published.
+- [Download v0.1.0](https://github.com/ontola/gamenight-mineclonia/releases/tag/v0.1.0): about 55 MB, about 116 MB installed. The release is experimental.
 
 Saves are stored under the user's local application data in
 `GameNight/games/mineclonia`. A new world gets a random seed that is retained

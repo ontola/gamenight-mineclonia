@@ -1,0 +1,69 @@
+{
+  "frames": 150,
+  "distinct_decoded_frames": 149,
+  "width": 960,
+  "height": 540,
+  "fps": 30,
+  "duration": 5.0,
+  "shots": [
+    {
+      "take": "mine-1",
+      "seat": 0,
+      "start": 0.6,
+      "frames": 38,
+      "source_in_frame": 10,
+      "source_out_frame": 33,
+      "unique_source_frames": 24
+    },
+    {
+      "take": "build-1",
+      "seat": 0,
+      "start": 0.05,
+      "frames": 37,
+      "source_in_frame": 0,
+      "source_out_frame": 21,
+      "unique_source_frames": 22
+    },
+    {
+      "take": "blast-1",
+      "seat": 1,
+      "start": 3.8,
+      "frames": 38,
+      "source_in_frame": 57,
+      "source_out_frame": 74,
+      "unique_source_frames": 18
+    },
+    {
+      "take": "bounce-1",
+      "seat": 1,
+      "start": 0.65,
+      "frames": 37,
+      "source_in_frame": 6,
+      "source_out_frame": 26,
+      "unique_source_frames": 21
+    }
+  ],
+  "files": [
+    {
+      "file": "mineclonia.mp4",
+      "bytes": 502029,
+      "sha256": "42cffaab9b1536f180b97d98c153f2d36f010eb12c9cfcbc036afad99bedeeff"
+    },
+    {
+      "file": "mineclonia.jpg",
+      "bytes": 116926,
+      "sha256": "febcb29f94ed870bebcdd9808b011ee22513dda673f3b961cf69ea75f30287ca"
+    }
+  ],
+  "game": "mineclonia",
+  "source": {
+    "repository": "https://github.com/ontola/gamenight-mineclonia",
+    "revision": "20acfc957d2b6ce8994f754e1eb3fd8773f90e3c",
+    "engine_revision": "528e03c03ce1a33c8586a96aeda2e4cbe28e9945",
+    "version": "v0.1.0",
+    "package_sha256": "7f837364456b37f125579c0ef5b8f911afb54f69f14eb6a8f3548040d190bc37",
+    "seed": "gamenight-couch-prototype",
+    "capture": "Actual release renderer and simulation. Scratch-world staging provides positions, quarry/meadow scenery and legitimate loadouts. Scripted controller frames mine and place blocks. Upstream TNT ignition and the integration's live bounce-pad setting run their real mechanics. Four natural-speed cuts resample recorded wall-clock timestamps; no accelerated gameplay or fabricated effects. Portrait views are cropped to landscape around the action."
+  },
+  "base_url": "https://gamenight.ontola.io/games/previews/mineclonia-v0.1.0-montage1/"
+}
