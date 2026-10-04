@@ -1,0 +1,72 @@
+{
+  "frames": 150,
+  "distinct_decoded_frames": 150,
+  "width": 960,
+  "height": 540,
+  "fps": 30,
+  "duration": 5.0,
+  "shots": [
+    {
+      "take": "mine-1",
+      "seat": 0,
+      "start": 2.7,
+      "frames": 38,
+      "source_in_frame": 32,
+      "source_out_frame": 43,
+      "unique_source_frames": 12
+    },
+    {
+      "take": "build-1",
+      "seat": 0,
+      "start": 1.3,
+      "frames": 37,
+      "source_in_frame": 14,
+      "source_out_frame": 26,
+      "unique_source_frames": 13
+    },
+    {
+      "take": "blast-1",
+      "seat": 1,
+      "start": 5.9,
+      "frames": 38,
+      "source_in_frame": 62,
+      "source_out_frame": 73,
+      "unique_source_frames": 12
+    },
+    {
+      "take": "bounce-1",
+      "seat": 1,
+      "start": 2.4,
+      "frames": 37,
+      "source_in_frame": 19,
+      "source_out_frame": 35,
+      "unique_source_frames": 17
+    }
+  ],
+  "files": [
+    {
+      "file": "mineclonia.mp4",
+      "bytes": 465559,
+      "sha256": "11f04ad7fa071e90a8e6f1b1d1d80d0b454c4fed319e4623d55ec495e67e2e84"
+    },
+    {
+      "file": "mineclonia.jpg",
+      "bytes": 112871,
+      "sha256": "8c50f81809954c01a92ade2330bc1d4266820145cd214f07ef964ac2ed3048c3"
+    }
+  ],
+  "game": "mineclonia",
+  "base_url": "https://gamenight.ontola.io/games/previews/mineclonia-v0.1.2-montage1/",
+  "source": {
+    "repository": "https://github.com/ontola/gamenight-mineclonia",
+    "revision": "dede8113ea45b120bb23cd63b402936025f4dd96",
+    "engine_revision": "b7903f56996069669d14ec1b06246cfef8c1f6a9",
+    "engine_binary_sha256": "2d37091621d6544baf3a6601072220eeea8b9b320e4eb6555e72eb4644c16ddc",
+    "capture_revision": "37b3953",
+    "version": "v0.1.2",
+    "package_sha256": "b99021db59007c7728100029d8eb2baa92d61d71caa6f255dab7c81090d62657",
+    "seed": "gamenight-couch-prototype",
+    "capture": "Actual final CI package renderer, game and bridge code; staged scratch-world positions, terrain and legitimate loadouts. Synthetic Alex/Bo profile faces. Host trigger input mines and builds; upstream TNT and live bounce pad run actual mechanics. Four cuts retain natural wall-clock timing.",
+    "capture_notes": "Active wield slot receives the staged item. One second neutral before capture plus 1.2 seconds GPU readback warmup. Timestamp resampling repeats source frames where needed; recording overhead is not an FPS benchmark."
+  }
+}
