@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['**.py', 'launcher.c', 'mods/**', 'sources.lock.json', 'pyproject.toml', 'requirements-dev.txt', '.github/workflows/package.yml']
+    paths: ['**.py', 'launcher.c', 'mods/**', 'mod_sdk/**', 'sources.lock.json', 'pyproject.toml', 'requirements-dev.txt', '.github/workflows/package.yml']
 permissions:
   contents: read
 jobs:

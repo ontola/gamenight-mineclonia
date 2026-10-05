@@ -18,6 +18,7 @@ RUNTIME_MODULES = (
     "identities.py",
     "input_frames.py",
     "game_controls.py",
+    "game_functions.py",
     "probe_controllers.py",
     "launch.py",
     "managed.py",
@@ -106,7 +107,7 @@ def main():
         adapter.mkdir()
         for name in RUNTIME_MODULES:
             shutil.copy2(ROOT / name, adapter / name)
-        for name in ("mods",):
+        for name in ("mods", "mod_sdk"):
             shutil.copytree(ROOT / name, adapter / name)
         shutil.copy2(ROOT / "capabilities.json", adapter / "capabilities.json")
         shutil.copy2(a.launcher, package / "Mineclonia.exe")

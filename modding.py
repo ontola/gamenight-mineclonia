@@ -1,4 +1,4 @@
-"""Generate and validate a bounded Lua mod. Model text is never executable code."""
+"""Stage generated Lua behind the public SDK and test it in an isolated engine."""
 
 import hashlib
 import json
@@ -9,6 +9,52 @@ import subprocess
 import time
 import uuid
 import socket
+import re
+from pathlib import Path
+
+SDK = Path(__file__).parent / "mod_sdk"
+SDK_VERSION = "gamenight-lua-v1"
+
+
+def validate_program(values):
+    if not isinstance(values, dict) or set(values) != {"title", "code"}:
+        raise ValueError("Generated mods require title and code")
+    if (
+        not isinstance(values["title"], str)
+        or not 1 <= len(values["title"].encode()) <= 80
+    ):
+        raise ValueError("Mod title must be 1 to 80 UTF-8 bytes")
+    code = values["code"]
+    if (
+        not isinstance(code, str)
+        or len(code.encode()) > 12000
+        or "\x00" in code
+        or "\x1b" in code
+    ):
+        raise ValueError("Mod code must be Lua text of at most 12000 UTF-8 bytes")
+    return code
+
+
+def sdk_context(root):
+    current = None
+    manifest = root / "world/gamenight/mod-current.json"
+    if manifest.exists():
+        values = json.loads(manifest.read_text(encoding="utf8")).get("values", {})
+        if "code" in values:
+            validate_program(values)
+            current = values
+    return {
+        "version": SDK_VERSION,
+        "api": (SDK / "API.txt").read_text(encoding="utf8"),
+        "current": current,
+        "failed": json.loads(
+            (root / "managed/mod-failure.json").read_text(encoding="utf8")
+        )
+        if (root / "managed/mod-failure.json").exists()
+        else None,
+    }
+
+
 from runtime import engine_path
 
 
@@ -59,11 +105,15 @@ end)
 
 
 def stage(root, values):
-    source = generate(values)
-    digest = hashlib.sha256(source.encode()).hexdigest()
+    generated = isinstance(values, dict) and "code" in values
+    source = validate_program(values) if generated else generate(values)
+    runtime = (SDK / "runtime.lua").read_text(encoding="utf8") if generated else ""
+    digest = hashlib.sha256((runtime + "\n" + source).encode()).hexdigest()
     folder = root / "mods-staged" / digest
     folder.mkdir(parents=True, exist_ok=True)
-    (folder / "init.lua").write_text(source, encoding="utf8")
+    (folder / "init.lua").write_text(runtime if generated else source, encoding="utf8")
+    if generated:
+        (folder / "program.lua").write_text(source, encoding="utf8")
     (folder / "mod.conf").write_text(
         "name = gamenight_custom\ndepends = mcl_core\n", encoding="utf8"
     )
@@ -87,9 +137,18 @@ def validate(root, staged, cancelled=None):
     (harness / "mod.conf").write_text(
         "name = gamenight_validation\ndepends = gamenight_custom\n", encoding="utf8"
     )
+    # Validation exercises registration/callbacks, not terrain generation. This
+    # is Mineclonia's supported per-mod switch, read before levelgen initializes.
+    (harness / "mcl_levelgen.conf").write_text(
+        "disable_mcl_levelgen = true\n", encoding="utf8"
+    )
     (harness / "init.lua").write_text(
-        """core.register_on_mods_loaded(function()
- assert(core.registered_nodes["gamenight_custom:bounce_pad"], "Missing generated node")
+        """local validated = false
+core.register_globalstep(function()
+ if validated then return end
+ validated = true
+ if gamenight_generated_validate then gamenight_generated_validate()
+ else assert(core.registered_nodes["gamenight_custom:bounce_pad"], "Missing generated node") end
  core.safe_file_write(core.get_worldpath() .. "/validated", "ok")
  core.request_shutdown("Validation complete", false, 0)
 end)
@@ -101,7 +160,7 @@ end)
         probe.bind(("127.0.0.1", 0))
         port = probe.getsockname()[1]
     config.write_text(
-        f"bind_address = 127.0.0.1\nport = {port}\nserver_announce = false\nmg_name = singlenode\n",
+        f"bind_address = 127.0.0.1\nport = {port}\nserver_announce = false\nmg_name = singlenode\nmcl_singlenode_mapgen = false\nfixed_map_seed = 12345\n",
         encoding="utf8",
     )
     env = {
@@ -126,7 +185,7 @@ end)
             stdout=log,
             stderr=log,
         )
-        deadline = time.monotonic() + 35
+        deadline = time.monotonic() + 90
         try:
             while True:
                 if cancelled is not None and cancelled.is_set():
@@ -134,7 +193,7 @@ end)
                         "Mod validation cancelled because the session closed"
                     )
                 if time.monotonic() >= deadline:
-                    raise TimeoutError("Generated mod test exceeded 35 seconds")
+                    raise TimeoutError("Generated mod test exceeded 90 seconds")
                 try:
                     code = proc.wait(timeout=0.1)
                     break
@@ -149,8 +208,16 @@ end)
                     proc.kill()
                     proc.wait(timeout=5)
     if code or not (world / "validated").exists():
+        log_text = (world / "test.log").read_text(encoding="utf8", errors="replace")
+        messages = re.findall(r"gamenight-generated:[^\n]+", log_text)
+        detail = (
+            messages[0][:700]
+            if messages
+            else "See the isolated validation log for details."
+        )
         raise RuntimeError(
-            "Generated mod failed its isolated engine test; live world unchanged"
+            "Generated mod failed its isolated engine test; live world unchanged. "
+            + detail
         )
     return world
 
@@ -167,7 +234,10 @@ def request(root, values, expected, request_id, seat, expires, instance, undo=Fa
         values = manifest.get("previous_values")
         if values is None:
             raise ValueError("No mod to undo")
-    generate(values)
+    if isinstance(values, dict) and "code" in values:
+        validate_program(values)
+    else:
+        generate(values)
     folder = root / "managed"
     payload = {
         "id": request_id,
@@ -181,7 +251,7 @@ def request(root, values, expected, request_id, seat, expires, instance, undo=Fa
     temp = folder / "mod-request.tmp"
     temp.write_text(json.dumps(payload), encoding="utf8")
     temp.replace(folder / "mod-request.json")
-    deadline = time.monotonic() + 110
+    deadline = time.monotonic() + 350
     while time.monotonic() < deadline:
         try:
             result = json.loads((folder / "mod-result.json").read_text(encoding="utf8"))

@@ -1,0 +1,228 @@
+{
+  "ok": true,
+  "engine_pid_unchanged": true,
+  "two_real_clients": true,
+  "duplicate_grant_did_not_repeat": true,
+  "read_preserves_settings_undo_mutation_clears_it": true,
+  "other_player_inventory_unchanged": true,
+  "observations": [
+    {
+      "function": "players.list",
+      "arguments": {},
+      "result": {
+        "id": "2ce598e4-e940-46b6-a3d7-2a8f9aad92d3",
+        "ok": true,
+        "message": "[{\"hp\":20,\"name\":\"Alex\",\"player\":\"Couch1\",\"position\":{\"x\":0,\"y\":14.5,\"z\":64}},{\"hp\":20,\"name\":\"Bo\",\"player\":\"Couch2\",\"position\":{\"x\":2,\"y\":14.5,\"z\":64}}]",
+        "data": [
+          {
+            "hp": 20,
+            "name": "Alex",
+            "player": "Couch1",
+            "position": {
+              "x": 0,
+              "y": 14.5,
+              "z": 64
+            }
+          },
+          {
+            "hp": 20,
+            "name": "Bo",
+            "player": "Couch2",
+            "position": {
+              "x": 2,
+              "y": 14.5,
+              "z": 64
+            }
+          }
+        ]
+      }
+    },
+    {
+      "function": "items.search",
+      "arguments": {
+        "query": "diamond sword"
+      },
+      "result": {
+        "id": "947c1b45-b2f3-482b-9774-9533a3b34074",
+        "ok": true,
+        "message": "Diamond Sword (mcl_tools:sword_diamond); Diamond Sword (mcl_tools:sword_diamond_enchanted)",
+        "data": {
+          "items": [
+            {
+              "description": "Diamond Sword",
+              "id": "mcl_tools:sword_diamond"
+            },
+            {
+              "description": "Diamond Sword",
+              "id": "mcl_tools:sword_diamond_enchanted"
+            }
+          ],
+          "more": false,
+          "summary": "Diamond Sword (mcl_tools:sword_diamond); Diamond Sword (mcl_tools:sword_diamond_enchanted)"
+        }
+      }
+    },
+    {
+      "function": "inventory.list",
+      "arguments": {
+        "target": "all"
+      },
+      "result": {
+        "id": "a3bc3c71-b751-4b0d-8f8d-59262bd0d074",
+        "ok": true,
+        "message": "{\"players\":[{\"items\":null,\"more\":false,\"player\":\"Couch1\"},{\"items\":null,\"more\":false,\"player\":\"Couch2\"}]}",
+        "data": {
+          "players": [
+            {
+              "items": null,
+              "more": false,
+              "player": "Couch1"
+            },
+            {
+              "items": null,
+              "more": false,
+              "player": "Couch2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "function": "inventory.give",
+      "arguments": {
+        "target": "self",
+        "item": "mcl_tools:sword_diamond",
+        "count": 2
+      },
+      "result": {
+        "id": "937b7e22-51db-45ce-ac9b-93013cc809ad",
+        "ok": true,
+        "message": "Diamond Sword \u2014 Bo: 2 received",
+        "data": {
+          "item": "mcl_tools:sword_diamond",
+          "players": [
+            {
+              "delivered": 2,
+              "leftover": 0,
+              "player": "Couch2"
+            }
+          ],
+          "summary": "Diamond Sword \u2014 Bo: 2 received"
+        }
+      }
+    },
+    {
+      "function": "inventory.list",
+      "arguments": {
+        "target": "all"
+      },
+      "result": {
+        "id": "ba09f008-9446-4bc0-8937-31c9af567d21",
+        "ok": true,
+        "message": "{\"players\":[{\"items\":null,\"more\":false,\"player\":\"Couch1\"},{\"items\":[{\"count\":1,\"item\":\"mcl_tools:sword_diamond\",\"slot\":1},{\"count\":1,\"item\":\"mcl_tools:sword_diamond\",\"slot\":2}],\"more\":false,\"player\":\"Couch2\"}]}",
+        "data": {
+          "players": [
+            {
+              "items": null,
+              "more": false,
+              "player": "Couch1"
+            },
+            {
+              "items": [
+                {
+                  "count": 1,
+                  "item": "mcl_tools:sword_diamond",
+                  "slot": 1
+                },
+                {
+                  "count": 1,
+                  "item": "mcl_tools:sword_diamond",
+                  "slot": 2
+                }
+              ],
+              "more": false,
+              "player": "Couch2"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "function": "players.heal",
+      "arguments": {
+        "target": "self"
+      },
+      "result": {
+        "id": "2ae8b88f-df29-45b0-8fd7-07ca7597dcb2",
+        "ok": true,
+        "message": "[{\"hp\":20,\"player\":\"Couch2\"}]",
+        "data": [
+          {
+            "hp": 20,
+            "player": "Couch2"
+          }
+        ]
+      }
+    },
+    {
+      "function": "players.teleport",
+      "arguments": {
+        "target": "self",
+        "x": 3,
+        "y": 14.5,
+        "z": 64
+      },
+      "result": {
+        "id": "b268c344-172e-4ff3-b2cc-10b226a13619",
+        "ok": true,
+        "message": "{\"players\":[\"Couch2\"],\"position\":{\"x\":3,\"y\":14.5,\"z\":64}}",
+        "data": {
+          "players": [
+            "Couch2"
+          ],
+          "position": {
+            "x": 3,
+            "y": 14.5,
+            "z": 64
+          }
+        }
+      }
+    },
+    {
+      "function": "players.list",
+      "arguments": {},
+      "result": {
+        "id": "68fba946-0fc2-46f8-a66e-f920331384da",
+        "ok": true,
+        "message": "[{\"hp\":20,\"name\":\"Alex\",\"player\":\"Couch1\",\"position\":{\"x\":0,\"y\":14.5,\"z\":64}},{\"hp\":20,\"name\":\"Bo\",\"player\":\"Couch2\",\"position\":{\"x\":3,\"y\":14.5,\"z\":64}}]",
+        "data": [
+          {
+            "hp": 20,
+            "name": "Alex",
+            "player": "Couch1",
+            "position": {
+              "x": 0,
+              "y": 14.5,
+              "z": 64
+            }
+          },
+          {
+            "hp": 20,
+            "name": "Bo",
+            "player": "Couch2",
+            "position": {
+              "x": 3,
+              "y": 14.5,
+              "z": 64
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "limits": [
+    "Scripted host seats and controller frames",
+    "No real model or microphone in this engine check",
+    "No store deployment"
+  ]
+}

@@ -1,0 +1,24 @@
+name: Adapter checks
+on:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  adapter:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install test tools
+        run: |
+          sudo apt-get update && sudo apt-get install -y luajit
+          python3 -m pip install ruff==0.16.10
+      - name: Check Python style
+        run: |
+          ruff format --check .
+          ruff check .
+      - name: Test adapter and Lua execution
+        run: |
+          python3 -m unittest discover
+          luajit test_profiles.lua mods/gamenight_bridge/profiles.lua
+          luajit test_safe_spawn.lua mods/gamenight_bridge/safe_spawn.lua

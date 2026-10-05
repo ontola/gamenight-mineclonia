@@ -242,7 +242,10 @@ class Adapter:
                         True,
                         "Previous mod restored; all player views reconnected."
                         if self.mod.request.get("undo")
-                        else "Bounce pad installed and all player views reconnected. Players receive bounce pads in their inventory when space is available. Set bounce to zero to disable the effect.",
+                        else (
+                            self.mod.request["values"].get("title", "Bounce pad")
+                            + " installed; the world was checkpointed and all player views reconnected. Undo restores the previous behavior; it does not rewind play."
+                        ),
                     )
                     (self.directory / "mod-install.json").unlink(missing_ok=True)
                 else:

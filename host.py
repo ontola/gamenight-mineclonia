@@ -68,11 +68,11 @@ class Host:
         party = self.status()
         self.check_players(party, expected_seat, players)
         current = party.get("active_session") or {}
-        if current.get("game") == GAME:
+        if current.get("game") in (GAME, "mineclonia"):
             self.request({"type": "close_overlay"})
         else:
             warm = party.get("warm_session") or {}
-            if warm.get("game") != GAME:
+            if warm.get("game") not in (GAME, "mineclonia"):
                 raise RuntimeError("Mineclonia must be in this host's next-game slot")
             while warm.get("phase") != "ready":
                 if time.monotonic() >= deadline:
@@ -81,7 +81,7 @@ class Host:
                 party = self.status()
                 self.check_players(party, expected_seat, players)
                 warm = party.get("warm_session") or {}
-                if warm.get("game") != GAME:
+                if warm.get("game") not in (GAME, "mineclonia"):
                     raise RuntimeError("Next game changed while preparing")
             self.request({"type": "next"})
         while time.monotonic() < deadline:
@@ -89,7 +89,7 @@ class Host:
             self.check_players(party, expected_seat, players)
             current = party.get("active_session") or {}
             if (
-                current.get("game") == GAME
+                current.get("game") in (GAME, "mineclonia")
                 and current.get("phase") == "running"
                 and not party.get("overlay_open")
             ):
