@@ -37,7 +37,9 @@ The host validates again, invokes the registered handler, and returns observed
 data in its receipt. Item grants report delivered and leftover counts. A full
 inventory is not reported as a complete delivery. Read calls leave the revision
 unchanged; mutating calls reserve a new persisted revision before executing.
-Retries with the same request ID return the stored receipt. A different payload
+Mutating calls clear the previous settings Undo; their effects need a game-specific
+reverse function if reversibility is required. Retries with the same request ID
+return the stored receipt. A different payload
 cannot reuse the ID. A failed mutating handler may have partial effects; read
 the new state before another call. There is no automatic retry with a new ID.
 

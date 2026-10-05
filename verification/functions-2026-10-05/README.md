@@ -4,7 +4,9 @@ The isolated Windows Mineclonia test connected two real engine clients. It
 observed item lookup, two diamond swords delivered to Bo's mapped world account,
 unchanged inventory for Alex, and a duplicate request returning the original
 receipt without another grant. Healing and teleporting were observed through a
-subsequent player query. The same server process stayed alive throughout.
+subsequent player query. A settings change made Undo available; a read call
+kept it available, and the item grant cleared it because generic function
+effects do not have a settings Undo. The same server process stayed alive throughout.
 
 `engine-report.json` records the returned data and inventory observations.
 `run-engine.py` reproduces this check against a supplied native engine:

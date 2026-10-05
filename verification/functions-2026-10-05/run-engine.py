@@ -123,6 +123,27 @@ try:
                 time.sleep(0.05)
         return selection, result
 
+    # Read calls preserve settings Undo; mutation must not pretend to undo a grant.
+    current = relay.snapshot(root, session, host=host)["discovery"]["controls"]
+    changed = command(
+        root,
+        "set",
+        {"gravity": 0.75},
+        expected=current["revision"],
+        request_id=str(uuid.uuid4()),
+    )
+    assert changed["ok"] and changed["state"]["can_undo"]
+    deadline = time.monotonic() + 5
+    while time.monotonic() < deadline:
+        pump()
+        if (
+            read_json(root / "world/gamenight/status.json")["revision"]
+            > current["revision"]
+        ):
+            break
+        time.sleep(0.05)
+    call("players.list", {})
+    assert relay.snapshot(root, session, host=host)["discovery"]["controls"]["can_undo"]
     _, found = call("items.search", {"query": "diamond sword"})
     item = next(
         i["id"] for i in found["data"]["items"] if i["id"] == "mcl_tools:sword_diamond"
@@ -132,6 +153,9 @@ try:
     selected, given = call(
         "inventory.give", {"target": "self", "item": item, "count": 2}, request_id
     )
+    assert not relay.snapshot(root, session, host=host)["discovery"]["controls"][
+        "can_undo"
+    ]
     assert given["data"]["players"] == [
         {"player": names[1], "delivered": 2, "leftover": 0}
     ], given
@@ -174,6 +198,7 @@ try:
         "engine_pid_unchanged": True,
         "two_real_clients": True,
         "duplicate_grant_did_not_repeat": True,
+        "read_preserves_settings_undo_mutation_clears_it": True,
         "other_player_inventory_unchanged": True,
         "observations": observations,
         "limits": [

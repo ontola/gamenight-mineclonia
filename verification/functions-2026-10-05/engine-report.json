@@ -3,15 +3,47 @@
   "engine_pid_unchanged": true,
   "two_real_clients": true,
   "duplicate_grant_did_not_repeat": true,
+  "read_preserves_settings_undo_mutation_clears_it": true,
   "other_player_inventory_unchanged": true,
   "observations": [
+    {
+      "function": "players.list",
+      "arguments": {},
+      "result": {
+        "id": "2ce598e4-e940-46b6-a3d7-2a8f9aad92d3",
+        "ok": true,
+        "message": "[{\"hp\":20,\"name\":\"Alex\",\"player\":\"Couch1\",\"position\":{\"x\":0,\"y\":14.5,\"z\":64}},{\"hp\":20,\"name\":\"Bo\",\"player\":\"Couch2\",\"position\":{\"x\":2,\"y\":14.5,\"z\":64}}]",
+        "data": [
+          {
+            "hp": 20,
+            "name": "Alex",
+            "player": "Couch1",
+            "position": {
+              "x": 0,
+              "y": 14.5,
+              "z": 64
+            }
+          },
+          {
+            "hp": 20,
+            "name": "Bo",
+            "player": "Couch2",
+            "position": {
+              "x": 2,
+              "y": 14.5,
+              "z": 64
+            }
+          }
+        ]
+      }
+    },
     {
       "function": "items.search",
       "arguments": {
         "query": "diamond sword"
       },
       "result": {
-        "id": "c053b7ee-87a8-4a1b-adfd-783fd8fd70a5",
+        "id": "947c1b45-b2f3-482b-9774-9533a3b34074",
         "ok": true,
         "message": "Diamond Sword (mcl_tools:sword_diamond); Diamond Sword (mcl_tools:sword_diamond_enchanted)",
         "data": {
@@ -36,7 +68,7 @@
         "target": "all"
       },
       "result": {
-        "id": "73289bab-e2ea-4b36-a44e-4b88138d3045",
+        "id": "a3bc3c71-b751-4b0d-8f8d-59262bd0d074",
         "ok": true,
         "message": "{\"players\":[{\"items\":null,\"more\":false,\"player\":\"Couch1\"},{\"items\":null,\"more\":false,\"player\":\"Couch2\"}]}",
         "data": {
@@ -63,7 +95,7 @@
         "count": 2
       },
       "result": {
-        "id": "4b7266ff-15a8-4b89-920a-e2450d6f3e80",
+        "id": "937b7e22-51db-45ce-ac9b-93013cc809ad",
         "ok": true,
         "message": "Diamond Sword \u2014 Bo: 2 received",
         "data": {
@@ -85,7 +117,7 @@
         "target": "all"
       },
       "result": {
-        "id": "3735034a-c466-4d2c-a365-7fe1243af461",
+        "id": "ba09f008-9446-4bc0-8937-31c9af567d21",
         "ok": true,
         "message": "{\"players\":[{\"items\":null,\"more\":false,\"player\":\"Couch1\"},{\"items\":[{\"count\":1,\"item\":\"mcl_tools:sword_diamond\",\"slot\":1},{\"count\":1,\"item\":\"mcl_tools:sword_diamond\",\"slot\":2}],\"more\":false,\"player\":\"Couch2\"}]}",
         "data": {
@@ -121,7 +153,7 @@
         "target": "self"
       },
       "result": {
-        "id": "e969eb3f-0da2-4e0a-adbf-5c347d41ea81",
+        "id": "2ae8b88f-df29-45b0-8fd7-07ca7597dcb2",
         "ok": true,
         "message": "[{\"hp\":20,\"player\":\"Couch2\"}]",
         "data": [
@@ -137,20 +169,20 @@
       "arguments": {
         "target": "self",
         "x": 3,
-        "y": 14.600000381469727,
+        "y": 14.5,
         "z": 64
       },
       "result": {
-        "id": "88f6980a-d2bc-46af-adc3-0b6d99fc15b8",
+        "id": "b268c344-172e-4ff3-b2cc-10b226a13619",
         "ok": true,
-        "message": "{\"players\":[\"Couch2\"],\"position\":{\"x\":3,\"y\":14.600000381469727,\"z\":64}}",
+        "message": "{\"players\":[\"Couch2\"],\"position\":{\"x\":3,\"y\":14.5,\"z\":64}}",
         "data": {
           "players": [
             "Couch2"
           ],
           "position": {
             "x": 3,
-            "y": 14.600000381469727,
+            "y": 14.5,
             "z": 64
           }
         }
@@ -160,7 +192,7 @@
       "function": "players.list",
       "arguments": {},
       "result": {
-        "id": "211aaa09-e1c6-412e-9d21-a4c4307eb6d8",
+        "id": "68fba946-0fc2-46f8-a66e-f920331384da",
         "ok": true,
         "message": "[{\"hp\":20,\"name\":\"Alex\",\"player\":\"Couch1\",\"position\":{\"x\":0,\"y\":14.5,\"z\":64}},{\"hp\":20,\"name\":\"Bo\",\"player\":\"Couch2\",\"position\":{\"x\":3,\"y\":14.5,\"z\":64}}]",
         "data": [

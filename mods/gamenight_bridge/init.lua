@@ -126,6 +126,7 @@ local function run(request)
         local ok, value = pcall(functions.call, request.values, function()
             -- Persist admission before a handler can produce partial effects.
             -- A crash or failed mutating handler cannot replay against this revision.
+            state.previous = false -- Function effects have no generic settings Undo.
             state.revision = state.revision + 1
             persist()
         end)
@@ -180,7 +181,8 @@ local function run(request)
     else
         result.error = "unsupported action or nothing to undo"
     end
-    if result.ok then
+    if result.ok and request.action ~= "call" then
+        -- Calls own their effects; reads must not reapply settings or supply pads.
         persist()
         for _, player in ipairs(core.get_connected_players()) do apply(player) end
     end
