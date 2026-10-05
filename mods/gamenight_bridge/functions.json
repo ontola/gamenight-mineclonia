@@ -1,0 +1,100 @@
+{
+  "version": "gamenight-functions-v1",
+  "functions": {
+    "players.list": {
+      "description": "List connected player accounts, display names, health and positions.",
+      "parameters": {},
+      "returns": "Array of {player, name, hp, position:{x,y,z}}.",
+      "mutates": false
+    },
+    "items.search": {
+      "description": "Find registered item IDs by ID or readable description. Use returned IDs for inventory.give.",
+      "parameters": {
+        "query": {
+          "type": "string",
+          "description": "Case-insensitive words in an item ID or description.",
+          "max_length": 128
+        }
+      },
+      "returns": "Up to 10 {id, description} matches in stable ID order; more indicates additional matches.",
+      "mutates": false
+    },
+    "inventory.give": {
+      "description": "Give an existing item to connected players immediately. Check the returned delivered and leftover counts; a full inventory may receive fewer items.",
+      "parameters": {
+        "target": {
+          "type": "string",
+          "description": "self, all, an exact connected player account, or an unambiguous profile display name.",
+          "max_length": 128
+        },
+        "item": {
+          "type": "string",
+          "description": "Exact registered item ID, for example mcl_tools:sword_diamond, or an unambiguous readable description. An ambiguous description is refused; items.search discovers IDs.",
+          "max_length": 128
+        },
+        "count": {
+          "type": "integer",
+          "description": "Number of items per targeted player.",
+          "min": 1,
+          "max": 256
+        }
+      },
+      "returns": "{item, players:[{player, delivered, leftover}]}",
+      "mutates": true
+    },
+    "players.heal": {
+      "description": "Restore targeted players to their configured maximum health.",
+      "parameters": {
+        "target": {
+          "type": "string",
+          "description": "self, all, an exact connected player account, or an unambiguous profile display name.",
+          "max_length": 128
+        }
+      },
+      "returns": "Array of {player, hp}.",
+      "mutates": true
+    },
+    "players.teleport": {
+      "description": "Teleport connected players immediately to explicit world coordinates.",
+      "parameters": {
+        "target": {
+          "type": "string",
+          "description": "self, all, an exact connected player account, or an unambiguous profile display name.",
+          "max_length": 128
+        },
+        "x": {
+          "type": "number",
+          "description": "World X coordinate.",
+          "min": -30000,
+          "max": 30000
+        },
+        "y": {
+          "type": "number",
+          "description": "World Y coordinate.",
+          "min": -30000,
+          "max": 30000
+        },
+        "z": {
+          "type": "number",
+          "description": "World Z coordinate.",
+          "min": -30000,
+          "max": 30000
+        }
+      },
+      "returns": "{players:[player], position:{x,y,z}}",
+      "mutates": true
+    },
+    "inventory.list": {
+      "description": "Inspect up to eight nonempty inventory slots per targeted player. Use this to check what players actually received.",
+      "parameters": {
+        "target": {
+          "type": "string",
+          "description": "self, all, an exact connected player account, or an unambiguous profile display name.",
+          "max_length": 128
+        }
+      },
+      "returns": "{players:[{player, items:[{slot,item,count}], more}]}",
+      "mutates": false
+    }
+  }
+}

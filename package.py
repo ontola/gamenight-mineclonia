@@ -18,6 +18,7 @@ RUNTIME_MODULES = (
     "identities.py",
     "input_frames.py",
     "game_controls.py",
+    "game_functions.py",
     "probe_controllers.py",
     "launch.py",
     "managed.py",

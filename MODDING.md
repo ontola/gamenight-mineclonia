@@ -6,6 +6,14 @@ combine player queries with timed callbacks, apply velocity, place its own conte
 near players, and retain small amounts of state. This is separate from the
 existing scalar settings and legacy bounce-pad recipe.
 
+## Live game function calls
+
+The assistant can also discover and call [documented game functions](GAME_FUNCTIONS.md)
+through one generic interface. Existing item grants, inventory inspection, healing
+and teleporting use this live path without generating Lua or reconnecting players.
+Installed games add handlers and their documentation to the registry without a
+private service change. New generated content still uses the lifecycle below.
+
 ## Request and edit
 
 The host advertises `controls.mod_sdk` with version `gamenight-lua-v1`, the API,

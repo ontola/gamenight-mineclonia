@@ -4,6 +4,8 @@
 local safe_spawn = dofile(core.get_modpath("gamenight_bridge") .. "/safe_spawn.lua")
 local profiles = dofile(core.get_modpath("gamenight_bridge") .. "/profiles.lua")
 safe_spawn.seat = profiles.seat
+local functions = dofile(core.get_modpath("gamenight_bridge") .. "/functions.lua")
+functions.describe = profiles.describe
 local store = core.get_mod_storage()
 local saved = store:get_string("state")
 local state = (saved ~= "" and core.parse_json(saved)) or {
@@ -94,7 +96,7 @@ local function snapshot()
             bounce_pads = player:get_inventory():contains_item("main", "gamenight_bridge:bounce_pad"),
         })
     end
-    return {revision = state.revision, values = state.values, players = players,
+    return {revision = state.revision, values = state.values, players = players, game_api = functions.contract(),
         spawn_ready = safe_spawn.ready, spawn_error = safe_spawn.error, spawn_ground = safe_spawn.positions,
         bounce_events = bounce_events, time_of_day = core.get_timeofday() * 24,
         time_speed = tonumber(core.settings:get("time_speed")) or 72,
@@ -120,6 +122,16 @@ local function run(request)
         result.ok = true
     elseif request.expected_revision ~= state.revision then
         result.error = "state changed; read status and retry with a new id"
+    elseif request.action == "call" then
+        local ok, value = pcall(functions.call, request.values, function()
+            -- Persist admission before a handler can produce partial effects.
+            -- A crash or failed mutating handler cannot replay against this revision.
+            state.revision = state.revision + 1
+            persist()
+        end)
+        if ok then
+            result.ok, result.result = true, value
+        else result.error = tostring(value):sub(1, 1000) end
     elseif request.action == "set" then
         local v = request.values
         local valid = type(v) == "table" and next(v) ~= nil

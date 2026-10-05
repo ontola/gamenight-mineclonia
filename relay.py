@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from host import Host, GAME
 import modding
 import game_controls
+import game_functions
 from prototype import command, read_json
 from capabilities import controls, valid
 
@@ -89,6 +90,7 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
                 "game": "mineclonia",
                 "instance": instance,
                 "revision": state["revision"],
+                "game_api": game_functions.contract(state.get("game_api")),
                 "can_undo": state["can_undo"],
                 "launch_players": len(seats) if host and 1 <= len(seats) <= 4 else None,
                 "mod_sdk": dict(
@@ -124,6 +126,8 @@ def execute(root, instance, selection, host=None):
     revision = c.get("expected_revision")
     if type(revision) is not int or revision < 0:
         raise ValueError("Missing game revision")
+    if c.get("action") == "call":
+        return game_functions.execute(root, selection, current["discovery"]["controls"])
     if c.get("action") in ("mod", "undo_mod"):
         if not host:
             raise ValueError("Mods require the supervised lobby host")
