@@ -74,10 +74,12 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
             if session.get("phase") in ("paused", "ready")
             else "loading"
         )
+    generic = game_controls.snapshot(host, receipt)["discovery"] if host else {}
     return {
         "seats": seats,
         "discovery": {
-            "games": game_controls.snapshot(host, receipt)["discovery"]["games"]
+            **generic,
+            "games": generic["games"]
             if host
             else [{"id": "mineclonia", "selectable": True, "state": phase}],
             "current": "mineclonia",
