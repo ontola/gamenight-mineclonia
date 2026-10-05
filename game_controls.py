@@ -78,7 +78,7 @@ def snapshot(host, receipt=None):
     public_session = dict(active, game=game_id(active["game"])) if active else None
     games = []
     for game in party.get("library", []):
-        if game["id"] in ("lobby", "gamenight-lobby"):
+        if game["id"] in ("lobby", "gamenight-lobby", "godot-lobby") or any(g["id"] == game_id(game["id"]) for g in games):
             continue
         games.append(
             {

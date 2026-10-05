@@ -55,6 +55,18 @@ class Contract(unittest.TestCase):
             )
             self.assertEqual(state["discovery"]["acknowledged"], "done")
 
+    def test_local_and_installed_mineclonia_are_one_discovery_game(self):
+        import game_controls
+        host = Mock()
+        host.status.return_value = {
+            "library": [{"id": game} for game in (
+                "mineclonia-prototype", "godot-lobby", "mineclonia", "ballkickers"
+            )]
+        }
+        host.seats.return_value = []
+        games = game_controls.snapshot(host)["discovery"]["games"]
+        self.assertEqual([game["id"] for game in games], ["mineclonia", "ballkickers"])
+
     def test_upcoming_settings_use_the_selected_session(self):
         import game_controls
 

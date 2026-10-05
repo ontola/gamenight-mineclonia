@@ -108,7 +108,8 @@ class Server:
                 stderr=log,
             )
         (folder / "server.pid").write_text(str(self.process.pid), encoding="utf8")
-        deadline = time.monotonic() + 90
+        # A cold Windows world can spend over 90 seconds loading Mineclonia mods.
+        deadline = time.monotonic() + 180
         while time.monotonic() < deadline:
             if self.process.poll() is not None:
                 raise RuntimeError(
