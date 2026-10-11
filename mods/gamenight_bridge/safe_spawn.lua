@@ -37,6 +37,19 @@ local function accept(found)
     core.log("action", "[GameNight] Dry shared spawn: " .. core.pos_to_string(found[1]))
 end
 local centers = {{0,0},{64,0},{-64,0},{0,64},{0,-64},{128,128},{-128,-128},{256,0},{0,256}}
+-- Random seeds can put the entire initial neighbourhood in an ocean.
+-- Ask mapgen for land progressively farther away before generating blocks;
+-- keep the existing world and never build an artificial platform over water.
+for radius = 128, 2048, 128 do
+    for offset = -radius, radius, 128 do
+        table.insert(centers, {offset, -radius})
+        table.insert(centers, {offset, radius})
+        if math.abs(offset) ~= radius then
+            table.insert(centers, {-radius, offset})
+            table.insert(centers, {radius, offset})
+        end
+    end
+end
 local index = 0
 local function search()
     local center, height
