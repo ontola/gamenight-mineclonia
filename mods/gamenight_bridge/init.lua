@@ -4,6 +4,8 @@
 local safe_spawn = dofile(core.get_modpath("gamenight_bridge") .. "/safe_spawn.lua")
 local profiles = dofile(core.get_modpath("gamenight_bridge") .. "/profiles.lua")
 safe_spawn.seat = profiles.seat
+local functions = dofile(core.get_modpath("gamenight_bridge") .. "/functions.lua")
+functions.describe = profiles.describe
 local store = core.get_mod_storage()
 local saved = store:get_string("state")
 local state = (saved ~= "" and core.parse_json(saved)) or {
@@ -14,7 +16,7 @@ core.mkdir(dir)
 -- A tested mod installation is a new revision, even when physics is unchanged.
 local manifest = io.open(dir .. "/mod-current.json", "rb")
 if manifest then
-    local content = core.parse_json(manifest:read(4096)); manifest:close()
+    local content = core.parse_json(manifest:read(65536)); manifest:close()
     if content and content.request_id ~= state.mod_request_id then
         state.mod_hash = content.sha256
         state.mod_request_id = content.request_id
@@ -94,11 +96,11 @@ local function snapshot()
             bounce_pads = player:get_inventory():contains_item("main", "gamenight_bridge:bounce_pad"),
         })
     end
-    return {revision = state.revision, values = state.values, players = players,
+    return {revision = state.revision, values = state.values, players = players, game_api = functions.contract(),
         spawn_ready = safe_spawn.ready, spawn_error = safe_spawn.error, spawn_ground = safe_spawn.positions,
         bounce_events = bounce_events, time_of_day = core.get_timeofday() * 24,
         time_speed = tonumber(core.settings:get("time_speed")) or 72,
-        mod_values = state.mod_values or {}, can_undo_mod = state.can_undo_mod or false, can_undo = type(state.previous) == "table", game = "mineclonia", game_time = core.get_gametime()}
+        generated_mod = rawget(_G, "gamenight_generated_status") or false, mod_values = state.mod_values or {}, can_undo_mod = state.can_undo_mod or false, can_undo = type(state.previous) == "table", game = "mineclonia", game_time = core.get_gametime()}
 end
 local function run(request)
     if type(request) ~= "table" or type(request.id) ~= "string"
@@ -120,6 +122,17 @@ local function run(request)
         result.ok = true
     elseif request.expected_revision ~= state.revision then
         result.error = "state changed; read status and retry with a new id"
+    elseif request.action == "call" then
+        local ok, value = pcall(functions.call, request.values, function()
+            -- Persist admission before a handler can produce partial effects.
+            -- A crash or failed mutating handler cannot replay against this revision.
+            state.previous = false -- Function effects have no generic settings Undo.
+            state.revision = state.revision + 1
+            persist()
+        end)
+        if ok then
+            result.ok, result.result = true, value
+        else result.error = tostring(value):sub(1, 1000) end
     elseif request.action == "set" then
         local v = request.values
         local valid = type(v) == "table" and next(v) ~= nil
@@ -168,7 +181,8 @@ local function run(request)
     else
         result.error = "unsupported action or nothing to undo"
     end
-    if result.ok then
+    if result.ok and request.action ~= "call" then
+        -- Calls own their effects; reads must not reapply settings or supply pads.
         persist()
         for _, player in ipairs(core.get_connected_players()) do apply(player) end
     end

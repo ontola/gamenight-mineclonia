@@ -55,6 +55,86 @@ class Contract(unittest.TestCase):
             )
             self.assertEqual(state["discovery"]["acknowledged"], "done")
 
+    def test_local_and_installed_mineclonia_are_one_discovery_game(self):
+        import game_controls
+        host = Mock()
+        host.status.return_value = {
+            "library": [{"id": game} for game in (
+                "mineclonia-prototype", "godot-lobby", "mineclonia", "ballkickers"
+            )]
+        }
+        host.seats.return_value = []
+        games = game_controls.snapshot(host)["discovery"]["games"]
+        self.assertEqual([game["id"] for game in games], ["mineclonia", "ballkickers"])
+
+    def test_upcoming_settings_use_the_selected_session(self):
+        import game_controls
+
+        host = Mock()
+        host.status.return_value = {
+            "active_session": {
+                "id": "current",
+                "game": "neon-siege",
+                "phase": "running",
+            },
+            "warm_session": {"id": "next", "game": "space-racer", "phase": "ready"},
+            "connected_games": ["neon-siege", "space-racer"],
+            "playlist": {
+                "current": 0,
+                "entries": [
+                    {"game": "neon-siege", "title": "Neon Siege"},
+                    {"game": "space-racer", "title": "Space Racer"},
+                ],
+            },
+            "settings": [
+                {
+                    "game": game,
+                    "revision": 0,
+                    "specs": [{"key": "items", "kind": "toggle", "label": "Items"}],
+                    "values": {"items": True},
+                }
+                for game in ("neon-siege", "space-racer")
+            ],
+        }
+        seat = {"index": 0, "player": "guest", "revision": 1}
+        host.seats.return_value = [seat]
+        state = game_controls.snapshot(host)["discovery"]
+        self.assertEqual(state["controls"]["instance"], "current")
+        self.assertEqual(state["next_controls"]["instance"], "next")
+        self.assertEqual(state["playlist"]["entries"][1]["game"], "space-racer")
+
+        def accept(command, receipt=False):
+            self.assertEqual(command["session"], "next")
+            self.assertEqual(command["game"], "space-racer")
+            host.status.return_value["settings"][1]["revision"] += 1
+            return {
+                "type": "settings_accepted",
+                "game": "space-racer",
+                "session": "next",
+                "revision": 1,
+            }
+
+        host.request.side_effect = accept
+        selection = {
+            "id": "request",
+            "game": "space-racer",
+            "seat": seat,
+            "expires": time.time() + 60,
+            "command": {
+                "action": "set",
+                "instance": "next",
+                "expected_revision": 0,
+                "values": {"items": False},
+            },
+        }
+        self.assertTrue(game_controls.execute(host, selection)["ok"])
+        self.assertEqual(host.status.return_value["settings"][0]["revision"], 0)
+        host.status.return_value["warm_session"] = None
+        host.request.reset_mock()
+        with self.assertRaisesRegex(ValueError, "selected game changed"):
+            game_controls.execute(host, selection)
+        host.request.assert_not_called()
+
     def request(self):
         return {
             "id": "request-1",

@@ -53,6 +53,13 @@ Replacing a profile in an occupied view reconnects it under the right account be
 forwarding input. Cosmetic changes still apply live. Empty prewarming uses a separate
 Preview account. Upstream chat/death messages may show internal account names.
 
+## Generated modding
+
+The new [generated Lua mod path](MODDING.md) creates original items, blocks and
+multiplayer behavior from a phone/lobby request, with follow-up edits, isolated
+validation, checkpoint/reconnect and source undo. It is an experimental development
+feature; v0.1.3 remains the published store package until a new package is verified.
+
 ## Verification
 
 Run `python -m unittest discover`. Engine navigation tests live in the fork.
@@ -245,7 +252,7 @@ to its actual lobby player, not a separate diagnostic Couch1 account. World
 status must be fresh before it advertises live controls. Discovery
 includes `controls` with game/instance/revision, setting descriptions, units,
 application timing, numeric bounds, current values, and `can_undo`. A selection's `command` contains `action` (`set`, `undo`,
-`keep`, `launch`, `mod`, `undo_mod`), the exact instance, expected revision, and
+`keep`, `launch`, `mod`, `undo_mod`, `call`), the exact instance, expected revision, and
 numeric values. `launch` accepts `{ "players": 1 }` through `{ "players": 4 }` and requires the matching number of joined controllers.
 It waits for the real daemon to report Running. On older bridges, `mod` takes `{ "bounce": 1.5 }`;
 `undo_mod` takes an empty values object. Its receipt
@@ -294,3 +301,20 @@ The private `deploy/cloud/test-agent-world.py` drives the real model and cloud
 against this world; AI-provider policy and evaluation prompts stay internal.
 Unit checks: `python -m unittest test_settings test_relay test_mod_lifecycle`.
 Physical controller use is not exercised by this live-rules test.
+
+
+## Documented live game functions
+
+The development relay exposes a game-owned function registry through one
+`call_game_function(name, arguments)` route. Read [GAME_FUNCTIONS.md](GAME_FUNCTIONS.md)
+for function documentation, trusted handler registration, identity mapping,
+revision and retry behavior. Mineclonia initially exposes player listing, item
+search, inventory inspection, item grants, healing and teleporting. These calls
+apply live; adding new mod registrations still uses the separate restart workflow.
+Function effects do not have generic settings Undo. Version 1 takes scalar
+arguments and supports one proposed call per assistant request.
+
+The two-client [engine check](verification/functions-2026-10-05/README.md) verifies
+observed inventories and player actions without a server restart. Physical
+controllers, microphones and a real model were not part of this check. This
+function API is development work and is not included in store v0.1.3.

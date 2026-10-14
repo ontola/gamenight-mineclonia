@@ -132,3 +132,17 @@ There is no automatic pause just because another desktop app gains focus.
 GameNight names, skin and face artwork are not yet applied to Mineclonia models.
 Two game processes use more GPU and memory than a shared renderer. None of these
 limits is represented as a verified store integration capability.
+
+## Managed display coordinates
+
+The managed launcher sets `SDL_WINDOWS_DPI_AWARENESS=permonitorv2` and
+`SDL_WINDOWS_DPI_SCALING=0`. Each view uses physical desktop pixels; do not
+apply SDL logical-coordinate scaling again. Windows scaling otherwise makes
+tiled views too small or clips the second view. The host still owns player seats
+and controller tokens. A disconnected pad is neutral; its player seat is retained
+for reconnect, so the number of views is not a fresh count of connected devices.
+
+On 5 October 2026 the local two-player build was checked at 3840 x 2160:
+client rectangles were (0, 0, 1920, 2160) and (1920, 0, 3840, 2160).
+Both frame files reported a connected host controller. This checks layout and
+input delivery, not the user's physical movement test.

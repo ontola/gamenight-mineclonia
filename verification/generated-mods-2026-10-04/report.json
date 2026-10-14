@@ -1,0 +1,182 @@
+{
+  "date": "2026-10-04",
+  "adapter_implementation": "1494269",
+  "cloud_implementation": "b95be85",
+  "development_overlay": true,
+  "base_archive_sha256": "f194308f4ca66fe03ce199cd421718fec7e623d60ee2437348c65e3fca12c30b",
+  "sdk_runtime_sha256": "8e91a39f5b902a4abb1792c7537afcd3550306aa51f5884c26972a94a1a22ed8",
+  "model": "Qwen3.6 35B creation; Gemma4 with reasoning for final repair; failed edits retained",
+  "generation_attempts": [
+    {
+      "stage": "creation",
+      "reasoning": true,
+      "output_limit": 4096
+    },
+    {
+      "stage": "first edit",
+      "reasoning": true,
+      "output_limit": 4096,
+      "outcome": "truncated"
+    },
+    {
+      "stage": "second edit",
+      "reasoning": true,
+      "output_limit": 8192,
+      "outcome": "900-second timeout"
+    },
+    {
+      "stage": "third edit",
+      "model": "qwen3.6:35b-a3b",
+      "reasoning": false,
+      "output_limit": 4096,
+      "outcome": "test request stopped after 535 seconds"
+    },
+    {
+      "stage": "edit and compiler repairs",
+      "model": "gemma4:latest",
+      "reasoning": false,
+      "output_limit": 4096,
+      "outcome": "repeated syntax rejection"
+    },
+    {
+      "stage": "final compiler repair",
+      "model": "gemma4:latest",
+      "reasoning": true,
+      "output_limit": 8192
+    }
+  ],
+  "hardware": "Windows, Ryzen 9 5900X, RTX 5070 Ti; WSL Ollama with 20 GPU layers",
+  "host": "scripted protocol host; real cloud/model/relay/package/server/clients",
+  "acceptance_complete": false,
+  "unverified_checks": [
+    "followup_changes_generated_source",
+    "counter_survives_followup_restart",
+    "followup_changes_real_trajectory",
+    "two_profiles_reconnected",
+    "undo_restores_previous_source",
+    "counter_survives_undo_restart",
+    "undo_restores_vertical_behavior",
+    "generated_runtime_healthy"
+  ],
+  "checks": {
+    "model_generated_new_tool": true,
+    "real_controller_use_launches_teammate": true,
+    "wielder_unchanged": true,
+    "persistent_counter_recorded": true,
+    "counter_reported_at_startup": true,
+    "validation_failure_preserves_running_game": true,
+    "resumed_after_provider_truncation": true
+  },
+  "requests": [
+    {
+      "request": "Create a new Rally Wand item, stable ID rally, cyan color. Give each player one on joining. On use launch OTHER players within 4 blocks straight up with velocity y=12, leaving the wielder alone. Use a 1-second per-wielder cooldown. Persist a counter under key boosts for teammates launched and report it with gn.emit('boosts', count), including at startup. Add a pure logic self-test. This is new Lua content, not a scalar setting.",
+      "state": "complete",
+      "result": "Rally Wand installed; the world was checkpointed and all player views reconnected. Undo restores the previous behavior; it does not rewind play.",
+      "seconds": 427.72,
+      "source": "proposal-1.lua",
+      "sha256": "6831e63420e1dde86956d4574f49cfbf6779829215e6bb156f73cc0c27a82f6a",
+      "origin": "model proposal"
+    },
+    {
+      "request": "mod",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:57: '=' expected near 'is'",
+      "seconds": 3.78,
+      "source": "proposal-2.lua",
+      "sha256": "2f111d311a03ae63813d829e0cef4f071a23dc83813e949d5cee9bb57c79591f",
+      "origin": "deliberate invalid test candidate"
+    },
+    {
+      "request": "Modify our existing Rally Wand: keep the same item ID rally, cooldown and persistent boosts counter. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "The model returned an invalid proposal",
+      "seconds": 378.14
+    },
+    {
+      "request": "Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "The local model did not respond. No game settings were changed; try again.",
+      "seconds": 900.44
+    },
+    {
+      "request": "Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "The local model did not respond. No game settings were changed; try again.",
+      "seconds": 534.78
+    },
+    {
+      "request": "Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 30.12,
+      "source": "proposal-6.lua",
+      "sha256": "7ada873acd7123dbfcf57d555f9955645a28b2247e76f12b1d0ae1d790284f68",
+      "origin": "model proposal"
+    },
+    {
+      "request": "Repair the rejected edit. Compiler/host feedback: Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'. Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 12.39,
+      "source": "proposal-7.lua",
+      "sha256": "6d1a513f9b715ac4ff0f66867408fec542cf8442ef998a71542285f5d49988ff",
+      "origin": "model proposal"
+    },
+    {
+      "request": "Repair the rejected edit. Compiler/host feedback: Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'. Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 11.53,
+      "source": "proposal-8.lua",
+      "sha256": "6d1a513f9b715ac4ff0f66867408fec542cf8442ef998a71542285f5d49988ff",
+      "origin": "model proposal"
+    },
+    {
+      "request": "Repair the rejected edit. Compiler/host feedback: Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'. Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 11.84,
+      "source": "proposal-9.lua",
+      "sha256": "6d1a513f9b715ac4ff0f66867408fec542cf8442ef998a71542285f5d49988ff",
+      "origin": "model proposal"
+    },
+    {
+      "request": "Repair the rejected edit. Compiler/host feedback: Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'. Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 20.12,
+      "source": "proposal-10.lua",
+      "sha256": "6d1a513f9b715ac4ff0f66867408fec542cf8442ef998a71542285f5d49988ff",
+      "origin": "model proposal"
+    },
+    {
+      "request": "Repair the rejected edit. Compiler/host feedback: Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'. Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 23.42,
+      "source": "proposal-11.lua",
+      "sha256": "ef0ae9f656e7aa2a60579f18b702cd2cb44f9ed75ef8cf989a706f4a3cc37c68",
+      "origin": "model proposal"
+    },
+    {
+      "request": "Repair the rejected edit. Compiler/host feedback: Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'. Modify our existing Rally Wand: keep the same item ID rally, one-second cooldown and persistent boosts counter. Keep cooldown timing in memory; only the boosts counter needs persistent storage. Change the color to orange. On use launch nearby teammates with vertical velocity 6 AND horizontal velocity equal to the wielder's look direction x/z times 8. Still leave the wielder alone. Preserve the counter across restarts and report it on startup.",
+      "state": "failed",
+      "result": "Generated mod failed its isolated engine test; live world unchanged. gamenight-generated:65: ')' expected (to close '(' at line 63) near '}'",
+      "seconds": 25.06,
+      "source": "proposal-12.lua",
+      "sha256": "ef0ae9f656e7aa2a60579f18b702cd2cb44f9ed75ef8cf989a706f4a3cc37c68",
+      "origin": "model proposal"
+    }
+  ],
+  "limitations": [
+    "physical controllers",
+    "voice microphone capture",
+    "production deployment",
+    "Initial creation used Qwen reasoning with a 4096-token output limit. Qwen edit attempts were truncated, timed out and stopped after 535 seconds. Gemma4 without reasoning repeated a syntax error; the final repair enabled reasoning.",
+    "A separate retry started an older shared cloud binary and rejected mod_sdk before generation. The final test used a copied executable built from the isolated branch.",
+    "The disposable test probe arranges players, selects an existing wand and fixes daylight; actual use arrives as controller frames.",
+    "Passing this mechanic does not establish reliability for arbitrary generated gameplay.",
+    "The first program persists a clock-based cooldown; this can delay use after restart. Source undo restores that code too.",
+    "The SDK execution boundary is experimental and has not received an independent security audit."
+  ]
+}

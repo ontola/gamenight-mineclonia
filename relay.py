@@ -1,7 +1,7 @@
 """Experimental local cloud adapter. Uses a real isolated Mineclonia world.
 
 Launches use the real daemon; settings use the isolated world bridge.
-No arbitrary code, shell commands or downloaded executables are accepted.
+Generated Lua uses the public SDK; shell commands and downloaded executables are not accepted.
 """
 
 import argparse
@@ -14,6 +14,7 @@ from concurrent.futures import ThreadPoolExecutor
 from host import Host, GAME
 import modding
 import game_controls
+import game_functions
 from prototype import command, read_json
 from capabilities import controls, valid
 
@@ -21,7 +22,7 @@ from capabilities import controls, valid
 def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
     if host:
         session = game_controls.current(host.status())
-        if not session or session.get("game") != GAME:
+        if not session or session.get("game") not in (GAME, "mineclonia"):
             return game_controls.snapshot(host, receipt)
     path = root / "world" / "gamenight" / "status.json"
     if not path.exists() or time.time() - path.stat().st_mtime > 5:
@@ -50,7 +51,7 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
         party = host.status()
         seats = host.seats(party)
         session = party.get("active_session") or party.get("warm_session") or {}
-        if session.get("game") != GAME:
+        if session.get("game") not in (GAME, "mineclonia"):
             if allow_loading:
                 return {
                     "seats": seats,
@@ -74,10 +75,12 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
             if session.get("phase") in ("paused", "ready")
             else "loading"
         )
+    generic = game_controls.snapshot(host, receipt)["discovery"] if host else {}
     return {
         "seats": seats,
         "discovery": {
-            "games": game_controls.snapshot(host, receipt)["discovery"]["games"]
+            **generic,
+            "games": generic["games"]
             if host
             else [{"id": "mineclonia", "selectable": True, "state": phase}],
             "current": "mineclonia",
@@ -87,8 +90,15 @@ def snapshot(root, instance, receipt=None, host=None, allow_loading=False):
                 "game": "mineclonia",
                 "instance": instance,
                 "revision": state["revision"],
+                "game_api": game_functions.contract(state.get("game_api")),
                 "can_undo": state["can_undo"],
                 "launch_players": len(seats) if host and 1 <= len(seats) <= 4 else None,
+                "mod_sdk": dict(
+                    modding.sdk_context(root),
+                    error=(state.get("generated_mod") or {}).get("error") or None,
+                )
+                if host
+                else None,
                 "mod_recipes": ["bounce_pad"]
                 if host and "bounce" not in state["values"]
                 else [],
@@ -116,6 +126,8 @@ def execute(root, instance, selection, host=None):
     revision = c.get("expected_revision")
     if type(revision) is not int or revision < 0:
         raise ValueError("Missing game revision")
+    if c.get("action") == "call":
+        return game_functions.execute(root, selection, current["discovery"]["controls"])
     if c.get("action") in ("mod", "undo_mod"):
         if not host:
             raise ValueError("Mods require the supervised lobby host")

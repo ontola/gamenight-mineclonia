@@ -51,6 +51,11 @@ class ViewGroup:
                 GAMENIGHT_CONTROLLER_FRAME=str(frame),
                 GAMENIGHT_COUCH_SEAT=str(view),
                 GAMENIGHT_COUCH_PLAYERS=str(len(seats)),
+                # The engine tiles in desktop pixels. SDL's DPI scaling converts
+                # those coordinates again on scaled Windows displays, clipping
+                # later views. Keep per-monitor awareness but physical units.
+                SDL_WINDOWS_DPI_AWARENESS="permonitorv2",
+                SDL_WINDOWS_DPI_SCALING="0",
             )
             env["GAMENIGHT_COUCH_GROUP"] = str(self.directory / "view-pids.txt")
             env.pop("GAMENIGHT_CONTROLLER_PATH", None)

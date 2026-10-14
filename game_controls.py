@@ -9,8 +9,19 @@ def current(party):
     return party.get("active_session") or party.get("warm_session")
 
 
-def controls(party):
-    session = current(party)
+def controls(party, instance=None):
+    session = (
+        current(party)
+        if instance is None
+        else next(
+            (
+                s
+                for s in (party.get("active_session"), party.get("warm_session"))
+                if s and s["id"] == instance
+            ),
+            None,
+        )
+    )
     if not session or session["game"] not in party.get("connected_games", []):
         return None
     entry = next(
@@ -32,7 +43,7 @@ def controls(party):
             item["integer"] = True
         settings[spec["key"]] = item
     return {
-        "game": session["game"],
+        "game": game_id(session["game"]),
         "instance": session["id"],
         "revision": entry.get("revision", 0),
         "can_undo": entry.get("can_undo", False),
@@ -48,9 +59,26 @@ def snapshot(host, receipt=None):
     party = host.status()
     session = current(party)
     c = controls(party)
+    warm = party.get("warm_session")
+    next_game = (party.get("warming") or warm or {}).get("game")
+    upcoming = (
+        controls(party, warm["id"])
+        if warm and warm != session and warm["game"] == next_game
+        else None
+    )
+    playlist = party.get("playlist")
+    if playlist:
+        playlist = dict(
+            playlist,
+            entries=[
+                dict(e, game=game_id(e["game"])) for e in playlist.get("entries", [])
+            ],
+        )
+    active = party.get("active_session")
+    public_session = dict(active, game=game_id(active["game"])) if active else None
     games = []
     for game in party.get("library", []):
-        if game["id"] in ("lobby", "gamenight-lobby"):
+        if game["id"] in ("lobby", "gamenight-lobby", "godot-lobby") or any(g["id"] == game_id(game["id"]) for g in games):
             continue
         games.append(
             {
@@ -73,7 +101,10 @@ def snapshot(host, receipt=None):
             "controls": c,
             "agent_receipt": receipt,
             "acknowledged": receipt["id"] if receipt and receipt.get("ok") else None,
-            "next": (party.get("warm_session") or {}).get("game"),
+            "next": game_id(next_game) if next_game else None,
+            "next_controls": upcoming,
+            "playlist": playlist,
+            "session": public_session,
         },
     }
 
@@ -88,11 +119,11 @@ def execute(host, selection):
         raise ValueError("Playlist editing is not supported by this experimental relay")
     command = selection.get("command")
     if not command:
-        game = (
-            "mineclonia-prototype"
-            if selection["game"] == "mineclonia"
-            else selection["game"]
-        )
+        game = selection["game"]
+        if game == "mineclonia" and not any(
+            g["id"] == game for g in party.get("library", [])
+        ):
+            game = "mineclonia-prototype"
         if not any(g["id"] == game for g in party.get("library", [])):
             raise ValueError("Game is not on this host")
         host.request({"type": "queue_next", "game": game})
@@ -110,21 +141,27 @@ def execute(host, selection):
                 }
             time.sleep(0.1)
         raise TimeoutError("Host did not confirm the queue change")
-    c = controls(party)
+    c = controls(party, command.get("instance"))
     if (
         not c
         or selection["game"] != c["game"]
         or command.get("instance") != c["instance"]
     ):
-        raise ValueError("The running game changed")
+        raise ValueError("The selected game changed")
     if command.get("expected_revision") != c["revision"]:
         raise ValueError("Settings changed; try again")
     if command.get("action") not in ("set", "undo", "keep"):
         raise ValueError("This game does not expose that action")
+    selected_session = next(
+        s
+        for s in (party.get("active_session"), party.get("warm_session"))
+        if s and s["id"] == c["instance"]
+    )
+    daemon_game = selected_session["game"]
     accepted = host.request(
         {
             "type": "control_settings",
-            "game": c["game"],
+            "game": daemon_game,
             "session": c["instance"],
             "expected_revision": c["revision"],
             "player_id": selection["seat"]["player"],
@@ -135,7 +172,7 @@ def execute(host, selection):
     )
     if accepted != {
         "type": "settings_accepted",
-        "game": c["game"],
+        "game": daemon_game,
         "session": c["instance"],
         "revision": c["revision"] + 1,
     }:
@@ -143,7 +180,7 @@ def execute(host, selection):
     deadline = time.monotonic() + 5
     while time.monotonic() < deadline:
         p = host.status()
-        after = controls(p)
+        after = controls(p, c["instance"])
         if not after or after["instance"] != c["instance"]:
             raise ValueError("The game changed before confirmation")
         if after["revision"] == c["revision"] + 1:

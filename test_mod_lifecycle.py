@@ -48,6 +48,46 @@ class ModRecovery(unittest.TestCase):
             self.assertFalse(result["ok"])
             self.assertIn("failed engine test", result["message"])
 
+    def test_generated_failure_is_available_for_a_repair_request(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            a = self.adapter(Path(tmp))
+            a.mod.request["values"] = {"title": "Broken", "code": "invalid Lua"}
+            a.mod.future.set_exception(RuntimeError("syntax error"))
+            a.mod.tick()
+            import modding
+
+            failed = modding.sdk_context(a.root)["failed"]
+            self.assertEqual(failed["program"]["code"], "invalid Lua")
+            self.assertIn("syntax error", failed["error"])
+
+    def test_generated_join_error_restores_checkpoint_before_success_receipt(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            a = self.adapter(root)
+            (root / "world/gamenight").mkdir(parents=True)
+            (root / "world/save").write_text("bad candidate")
+            (root / "world/gamenight/status.json").write_text(
+                json.dumps({"generated_mod": {"error": "join failed"}})
+            )
+            checkpoint = root / "checkpoints/test"
+            checkpoint.mkdir(parents=True)
+            (checkpoint / "save").write_text("saved inventory")
+            marker = a.directory / "mod-install.json"
+            marker.write_text("{}")
+            a.server = Mock()
+            a.dispose = Mock()
+            a.receive = Mock()
+            a.mod.restart = True
+            a.mod.recovery = ({"type": "prepare"}, True, checkpoint, marker)
+            a.mod.tick()
+            self.assertEqual((root / "world/save").read_text(), "saved inventory")
+            self.assertFalse(marker.exists())
+            self.assertTrue(a.resume_when_ready)
+            self.assertFalse(
+                json.loads((a.directory / "mod-result.json").read_text())["ok"]
+            )
+            a.receive.assert_called_once()
+
     def test_departed_player_cancels_install_even_after_test_passes(self):
         with tempfile.TemporaryDirectory() as tmp:
             a = self.adapter(Path(tmp))
@@ -58,6 +98,21 @@ class ModRecovery(unittest.TestCase):
             result = json.loads((a.directory / "mod-result.json").read_text())
             self.assertFalse(result["ok"])
             self.assertIn("Player left", result["message"])
+
+    def test_checkpoint_restore_io_failure_is_not_hidden_as_a_stale_status(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            a = self.adapter(root)
+            (root / "world/gamenight").mkdir(parents=True)
+            (root / "world/gamenight/status.json").write_text(
+                json.dumps({"generated_mod": {"error": "join failed"}})
+            )
+            a.mod.restart = True
+            with patch.object(
+                a.mod, "recover_restart", side_effect=OSError("disk full")
+            ):
+                with self.assertRaisesRegex(OSError, "disk full"):
+                    a.mod.tick()
 
     def test_interrupted_install_restores_checkpoint_and_retains_failed_world(self):
         with tempfile.TemporaryDirectory() as tmp:
