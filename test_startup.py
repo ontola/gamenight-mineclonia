@@ -10,10 +10,12 @@ from managed import Adapter
 class StartupTests(unittest.TestCase):
     def make_adapter(self, root):
         with patch("managed.Server") as server:
-            server.return_value.start_steps.return_value = iter([
-                "Starting world and loading game assets",
-                "Finding safe starting ground",
-            ])
+            server.return_value.start_steps.return_value = iter(
+                [
+                    "Starting world and loading game assets",
+                    "Finding safe starting ground",
+                ]
+            )
             adapter = Adapter(root, Mock())
         adapter.views = Mock(children=[], frames=[])
         adapter.mod.tick = Mock()
@@ -27,17 +29,25 @@ class StartupTests(unittest.TestCase):
             adapter = self.make_adapter(Path(tmp))
             self.prepare(adapter)
             adapter.views.launch.assert_not_called()
-            adapter.send.assert_any_call({
-                "type": "progress", "session": "test", "percent": 0,
-                "label": "Starting world and loading game assets",
-            })
+            adapter.send.assert_any_call(
+                {
+                    "type": "progress",
+                    "session": "test",
+                    "percent": 0,
+                    "label": "Starting world and loading game assets",
+                }
+            )
             adapter.tick()
             adapter.tick()
             adapter.views.launch.assert_not_called()
-            adapter.send.assert_any_call({
-                "type": "progress", "session": "test", "percent": 0,
-                "label": "Finding safe starting ground",
-            })
+            adapter.send.assert_any_call(
+                {
+                    "type": "progress",
+                    "session": "test",
+                    "percent": 0,
+                    "label": "Finding safe starting ground",
+                }
+            )
             with patch.object(adapter, "world_ready", return_value=False):
                 adapter.tick()
             adapter.views.launch.assert_called_once()

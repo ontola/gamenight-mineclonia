@@ -199,18 +199,26 @@ class Adapter:
             raise RuntimeError(msg["message"])
 
     def _report_world_loading(self):
-        self.send({
-            "type": "progress", "session": self.session, "percent": 0,
-            "label": self._startup_stage,
-        })
+        self.send(
+            {
+                "type": "progress",
+                "session": self.session,
+                "percent": 0,
+                "label": self._startup_stage,
+            }
+        )
         self._progress_at = time.monotonic()
 
     def _launch_views(self):
         self.started = time.monotonic()
-        self.send({
-            "type": "progress", "session": self.session, "percent": 50,
-            "label": f"World ready. Loading {len(self.seats)} player view(s)",
-        })
+        self.send(
+            {
+                "type": "progress",
+                "session": self.session,
+                "percent": 50,
+                "label": f"World ready. Loading {len(self.seats)} player view(s)",
+            }
+        )
         self.views.launch(self.seats, self.accounts)
 
     def flush(self):
@@ -247,7 +255,9 @@ class Adapter:
             else:
                 changed = stage != self._startup_stage
                 self._startup_stage = stage
-                if self.session and (changed or time.monotonic() - self._progress_at > 5):
+                if self.session and (
+                    changed or time.monotonic() - self._progress_at > 5
+                ):
                     self._report_world_loading()
                 return
         self.server.check()
