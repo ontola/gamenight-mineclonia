@@ -14,6 +14,12 @@ pins the engine source, Mineclonia archive, and embedded Python runtime.
 
 - Menus use D-pad/left-stick focus, A selection, B back, and a visible focus border.
 - Inventory uses slot focus, A pick/place, X split/place one, Y quick transfer.
+- LB opens the recipe book. In the book LB/RB change page, X cycles alternate
+  recipes and Y prepares the selected recipe. A on the focused result crafts it.
+  Materials and a nearby crafting table (for larger recipes) are still required;
+  furnace recipes explain that they need their own workstation.
+- Menu hints wrap for split-screen. LB/RB change a focused dropdown or tab;
+  B closes the menu and Back returns to the GameNight lobby.
 - New players share verified dry ground; existing player positions are preserved.
 - Installed game files and saved worlds are separate. The package includes Python.
 - Windows x64: 1–4 local players, with one independently controlled engine view per player.
@@ -35,7 +41,8 @@ engine and game source references are recorded in every package's `BUILD.json`.
 
 GameNight profile names appear above characters and in each viewport. Profile clothing
 colors, personal skin colors and pixel-art faces carry into the character skin; the
-viewport badge retains the full face artwork. Changes from the lobby or phone update
+cube face crops around the eyes for readable features, while the viewport badge
+retains the full face and hat artwork. Changes from the lobby or phone update
 connected players, including while paused, without restarting the world.
 
 Profiles are matched by `occupant.player_id`, never by player-list order. Missing or

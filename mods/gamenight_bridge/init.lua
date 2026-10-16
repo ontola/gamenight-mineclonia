@@ -1,3 +1,4 @@
+dofile(core.get_modpath("gamenight_bridge") .. "/crafting.lua")
 -- Local-only mailbox in this isolated world's directory. No remote evaluation.
 -- Use Mineclonia's multiplicative physics API so sprint, potions and equipment
 -- retain their factors. Removing OUR factor restores those effects, too.

@@ -22,6 +22,7 @@ jobs:
       - name: Test adapter
         run: |
           python3 -m unittest discover
+          luajit test_crafting.lua mods/gamenight_bridge/crafting.lua
           luajit test_profiles.lua mods/gamenight_bridge/profiles.lua
           luajit test_safe_spawn.lua mods/gamenight_bridge/safe_spawn.lua
       - uses: actions/cache@v4

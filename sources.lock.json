@@ -1,7 +1,7 @@
 {
   "engine": {
     "repository": "https://github.com/ontola/luanti.git",
-    "revision": "ef9cf300315b03613051af0507091df2e70a3fc7"
+    "revision": "578b61ea57685bb2e4833c4ee7b071a00bdae21d"
   },
   "mineclonia": {
     "version": "0.123.1",

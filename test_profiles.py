@@ -79,6 +79,24 @@ class Profiles(unittest.TestCase):
             face = face_pixels(json.dumps(dict(v=1, w=size, h=size, px=cells)), skin)
             self.assertEqual(face[28 * 48 + 24], (171, 205, 239))
 
+    def test_cube_face_centres_eyes_and_crops_hat_without_changing_badge(self):
+        for player in sample_players():
+            skin = rgb(player["skin_color"])
+            face = face_pixels(player["avatar"], skin)
+            original = list(face)
+            pixels = skin_pixels(face, skin, rgb(player["color"]))
+            front = [
+                pixels[(48 + y) * 384 + 48 + x] for y in range(48) for x in range(48)
+            ]
+            eyes = [
+                (i % 48, i // 48) for i, c in enumerate(front) if c == (255, 255, 255)
+            ]
+            self.assertTrue(eyes)
+            self.assertAlmostEqual(sum(x for x, _ in eyes) / len(eyes), 23.5, delta=3)
+            self.assertAlmostEqual(sum(y for _, y in eyes) / len(eyes), 23.5, delta=3)
+            self.assertEqual(face, original)  # badge still has full hat
+            self.assertTrue(all(front))  # cropped corners remain skin-filled
+
     def test_sparse_seats_use_player_ids_not_array_order(self):
         players = sample_players()
         result = appearances(seats([3, 1]), list(reversed(players)))

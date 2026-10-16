@@ -145,11 +145,12 @@ def skin_pixels(face, skin, color):
     for x, y in ((0, 16),):
         rect(x, y, 16, 16, (42, 51, 67))
         rect(x, y + 13, 16, 3, (28, 31, 39))
-    # Face artwork is anchored to the shared head centre, not its painted bounds.
-    # Fit the 32px head region to the cube; the badge retains all headwear.
+    # Crop around the canonical eye line rather than fitting the full avatar.
+    # The 20px square centres the eyes at (26, 27), keeping features readable
+    # on a cube. Hats may be clipped here; the viewport badge keeps all artwork.
     for y in range(48):
         for x in range(48):
-            sx, sy = 8 + x * 32 // 48, 8 + y * 32 // 48
+            sx, sy = 16 + x * 20 // 48, 17 + y * 20 // 48
             if face[sy * 48 + sx]:
                 out[(8 * scale + y) * size + 8 * scale + x] = face[sy * 48 + sx]
     return out
