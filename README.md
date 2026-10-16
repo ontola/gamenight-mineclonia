@@ -56,6 +56,15 @@ Preview account. Upstream chat/death messages may show internal account names.
 ## Verification
 
 Run `python -m unittest discover`. Engine navigation tests live in the fork.
+
+World startup stays responsive to the host. The adapter reports the current
+loading stage, keeps processing roster changes and cancellation, and launches
+only the latest requested player views after the world is ready. A cold world
+has up to 180 seconds to load its assets and find safe starting ground; player
+views then have their own 180-second readiness deadline. Neither timeout
+replaces or deletes the saved world. The stage that timed out is recorded in
+the launcher error log. `test_startup.py` covers cancellation and replacement
+of a session while its world is loading.
 `playtest.py` uses a separate fresh world and real clients with scripted host
 frames. It is not evidence of physical controller usability.
 

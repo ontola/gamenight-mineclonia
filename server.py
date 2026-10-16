@@ -48,6 +48,11 @@ class Server:
             marker.unlink()
 
     def start(self):
+        for _stage in self.start_steps():
+            time.sleep(0.1)
+
+    def start_steps(self):
+        """Advance startup without blocking host messages or cancellation."""
         if self.process is not None:
             self.check()
             return
@@ -108,7 +113,8 @@ class Server:
                 stderr=log,
             )
         (folder / "server.pid").write_text(str(self.process.pid), encoding="utf8")
-        deadline = time.monotonic() + 90
+        deadline = time.monotonic() + 180
+        stage = "Starting world and loading game assets"
         while time.monotonic() < deadline:
             if self.process.poll() is not None:
                 raise RuntimeError(
@@ -119,6 +125,7 @@ class Server:
                 f"{time.monotonic_ns()} 1 0 0 0 0 0 0 0 0", encoding="utf8"
             )
             if status.exists() and status.stat().st_mtime >= started:
+                stage = "Finding safe starting ground"
                 try:
                     state = json.loads(status.read_text(encoding="utf8"))
                 except (OSError, json.JSONDecodeError):
@@ -131,9 +138,12 @@ class Server:
                         f"{time.monotonic_ns()} 0 0 0 0 0 0 0 0 0", encoding="utf8"
                     )
                     return
-            time.sleep(0.1)
+            yield stage
         self.stop()
-        raise TimeoutError("World did not become ready")
+        raise TimeoutError(
+            f"Mineclonia took more than 180 seconds: {stage.lower()}. "
+            "See managed/server-output.log."
+        )
 
     def check(self):
         if not self.process or self.process.poll() is not None:

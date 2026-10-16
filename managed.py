@@ -42,11 +42,11 @@ class Adapter:
         self.started = 0
         self.prepare = None
         self.mod = ModSession(self)
-        try:
-            self.server.start()
-        except BaseException:
-            self.close()
-            raise
+        # Keep receiving host messages while the world boots. A cold startup
+        # must remain visible in the lobby and cancellable through dispose.
+        self._startup = self.server.start_steps()
+        self._startup_stage = "Starting world and loading game assets"
+        self._progress_at = 0.0
 
     @property
     def children(self):
@@ -73,6 +73,10 @@ class Adapter:
         )
 
     def close(self):
+        startup = getattr(self, "_startup", None)
+        if startup is not None:
+            startup.close()
+            self._startup = None
         try:
             try:
                 self.settings.close()
@@ -135,15 +139,10 @@ class Adapter:
                     "instant_join": False,
                 }
             )
-            self.send(
-                {
-                    "type": "progress",
-                    "session": self.session,
-                    "percent": 0,
-                    "label": f"Loading {len(self.seats)} player view(s)",
-                }
-            )
-            self.views.launch(self.seats, self.accounts)
+            if getattr(self, "_startup", None) is None:
+                self._launch_views()
+            else:
+                self._report_world_loading()
         elif kind == "party_updated" and msg.get("session") == self.session:
             updates = {seat["index"]: seat for seat in local_seats(msg["seats"])}
             seats = [
@@ -199,8 +198,24 @@ class Adapter:
                 return
             raise RuntimeError(msg["message"])
 
+    def _report_world_loading(self):
+        self.send({
+            "type": "progress", "session": self.session, "percent": 0,
+            "label": self._startup_stage,
+        })
+        self._progress_at = time.monotonic()
+
+    def _launch_views(self):
+        self.started = time.monotonic()
+        self.send({
+            "type": "progress", "session": self.session, "percent": 50,
+            "label": f"World ready. Loading {len(self.seats)} player view(s)",
+        })
+        self.views.launch(self.seats, self.accounts)
+
     def flush(self):
-        publish(self.server_frame, self.active)
+        if getattr(self, "_startup", None) is None:
+            publish(self.server_frame, self.active)
         pads = routed(
             self.seats,
             self.controllers if time.monotonic() - self.received <= 0.25 else [],
@@ -221,6 +236,20 @@ class Adapter:
         )
 
     def tick(self):
+        startup = getattr(self, "_startup", None)
+        if startup is not None:
+            try:
+                stage = next(startup)
+            except StopIteration:
+                self._startup = None
+                if self.session:
+                    self._launch_views()
+            else:
+                changed = stage != self._startup_stage
+                self._startup_stage = stage
+                if self.session and (changed or time.monotonic() - self._progress_at > 5):
+                    self._report_world_loading()
+                return
         self.server.check()
         self.settings.tick(blocked=self.mod.request is not None)
         self.mod.tick()
