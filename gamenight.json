@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ontola/gamenight/main/catalog/schema.json",
+  "id": "mineclonia",
+  "title": "Mineclonia",
+  "tagline": "Build, mine and explore with 1–4 local players in an experimental voxel sandbox.",
+  "developer": "Mineclonia contributors · GameNight integration by Ontola",
+  "players": {
+    "min": 1,
+    "max": 4,
+    "best": 2
+  },
+  "price": "free",
+  "tags": [
+    "sandbox",
+    "coop",
+    "crafting",
+    "splitscreen"
+  ],
+  "integration": {
+    "level": "integrated",
+    "protocol": 1
+  },
+  "requirements": {
+    "disk_mb": 300,
+    "ram_mb": 4096,
+    "cpu": "Modern quad-core; one game view per local player and a shared server",
+    "gpu": "OpenGL 3.3-capable GPU; graphics load increases with more local views"
+  },
+  "links": {
+    "homepage": "https://codeberg.org/mineclonia/mineclonia",
+    "source": "https://github.com/ontola/gamenight-mineclonia"
+  }
+}
