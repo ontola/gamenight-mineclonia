@@ -9,7 +9,7 @@ This is not a single-process split-screen renderer or a certified GameNight game
 
 The patched runtime is installed under the prototype root on this development PC.
 Connect two controllers and close the old diagnostic clients. Keep the isolated
-world server running, then run from `examples/mineclonia`:
+world server running, then run from the repository root:
 
 ```powershell
 python probe_controllers.py
@@ -50,13 +50,13 @@ unzip. The pinned upstream buildbot downloads the LLVM MinGW toolchain and nativ
 libraries and validates their archive hashes. Allow several GB of build space.
 
 ```sh
-bash examples/mineclonia/engine/build-windows.sh "$HOME/.cache/gamenight/luanti-couch-new"
+bash engine/build-windows.sh "$HOME/.cache/gamenight/luanti-couch-new"
 ```
 
 On Windows, install the generated `build/build/luanti-5.17.0-win64.zip`:
 
 ```powershell
-python examples/mineclonia/engine/install.py PATH_TO_BUILD_ZIP
+python engine/install.py PATH_TO_BUILD_ZIP
 ```
 
 The installer refuses to overwrite an existing controller-engine directory. The
@@ -105,9 +105,9 @@ rejection, disconnect and changed instance IDs after reconnect. Python tests
 check saved seats, missing devices and ambiguous mappings. Run them with:
 
 ```sh
-c++ -std=c++17 -I LUANTI_SOURCE/irr/include examples/mineclonia/engine/test_binding.cpp -o /tmp/test-binding
+c++ -std=c++17 -I LUANTI_SOURCE/irr/include engine/test_binding.cpp -o /tmp/test-binding
 /tmp/test-binding
-python -m unittest discover -s examples/mineclonia -p 'test_*.py'
+python -m unittest discover
 ```
 
 Physical test still required: move and look with both controllers at once; dig,

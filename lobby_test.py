@@ -41,7 +41,7 @@ def main():
     folder = a.root / "managed"
     folder.mkdir(exist_ok=True)
     daemon = a.daemon_exe or a.runtime / "bin/gamenight-daemon.exe"
-    lobby = a.lobby_exe or a.runtime / "bin/lobby.exe"
+    lobby = a.lobby_exe or a.runtime / "lobbies/game-room/GameRoom.exe"
     game_exe = (
         a.package / "Mineclonia.exe"
         if a.package
@@ -71,15 +71,15 @@ def main():
             },
         },
         {
-            "id": "lobby",
-            "title": "Clubhouse",
+            "id": "game-room",
+            "title": "Game Room",
             "min_players": 1,
-            "max_players": 4,
-            "players": "1–4",
+            "max_players": 8,
+            "players": "1–8",
             "launch": {
                 "command": str(lobby),
-                "cwd": str(a.runtime / "lobby"),
-                "env": {"BEVY_ASSET_ROOT": str(a.runtime / "lobby")},
+                "cwd": str(lobby.parent),
+                "env": {"GAMENIGHT_LOBBY_API": "1"},
             },
         },
     ]
@@ -95,7 +95,7 @@ def main():
         )
     if not a.first_game:
         a.first_game = shelf[0]["id"]
-    lobby_id = "lobby"
+    lobby_id = "game-room"
     config = folder / "selected-lobby.json"
     registrations = folder / "local-games.json"
     if a.godot:
@@ -117,15 +117,15 @@ def main():
         preference = (
             json.loads(config.read_text()) if config.is_file() else {"id": lobby_id}
         )
-        if preference.get("id") == "lobby" and lobby.is_file():
-            lobby_id = "lobby"
+        if preference.get("id") == "game-room" and lobby.is_file():
+            lobby_id = "game-room"
         else:
             shelf[-1] = replacement
             config.write_text(json.dumps({"id": lobby_id}))
     catalog = a.gamenight_source / "catalog/games"
     for path in sorted(catalog.glob("*.json")):
         entry = json.loads(path.read_text(encoding="utf8"))
-        if entry["id"] in ("lobby", "demo-game", shelf[0]["id"]):
+        if entry["id"] in ("lobby", "game-room", "demo-game", shelf[0]["id"]):
             continue
         players = entry["players"]
         shelf.append(

@@ -1,8 +1,12 @@
 # Mineclonia for GameNight
 
-This repository owns the GameNight adapter, live-settings mod, package builder
-and tests for one to four local players on Windows. Its history was extracted from
-`ontola/gamenight/examples/mineclonia`.
+Mineclonia is a GameNight catalog game (`catalog/games/mineclonia.json` in
+[ontola/gamenight](https://github.com/ontola/gamenight)); its integration level
+is `integrated` and its Windows release is experimental. This repository owns the
+GameNight adapter, live-settings mod, package builder and tests for one to four
+local players on Windows. Its history was extracted from the
+former `ontola/gamenight/examples/mineclonia` copy, which has been removed;
+this repository is the only source.
 
 The native engine changes are maintained in
 [ontola/luanti](https://github.com/ontola/luanti/tree/gamenight-couch).
@@ -125,7 +129,7 @@ playtest is not certification of a new release package.
 
 # Mineclonia couch prototype
 
-This is an isolated experiment, not a catalog game. A patched Luanti 5.17.0
+This section predates the catalog listing and the packaged release. A patched Luanti 5.17.0
 Windows build adds isolated controller input and one to four borderless views. The engine
 build and routing checks pass; the user confirmed independent controller input in both standalone views.
 See [controller setup and controls](engine/README.md).
@@ -249,7 +253,7 @@ rewind world progress. Physics Undo and Keep remain separate.
 
 The generated-node startup check passes. The complete live install/reconnect
 flow still needs a playtest; do not advertise arbitrary mod generation or store
-certification. World saves are not settings presets. No catalog entry is added.
+certification. World saves are not settings presets.
 
 
 ## Experimental room relay
@@ -276,7 +280,8 @@ The ordinary desktop discovery bridge does not advertise this capability yet.
 
 Run `python -m unittest test_relay` for boundary validation. The private session
 agent handles AI models, accounts and the phone preview; none of that belongs
-in this public game adapter. No game listing is created by this experiment.
+in this public game adapter. The room relay does not create a game listing; the
+catalog entry lives in ontola/gamenight.
 
 
 ## Unified lobby session
@@ -294,7 +299,7 @@ capture. The cloud/account/voice service remains outside this public adapter.
 `GAMENIGHT_LINKS_URL` lets the native lobby poll a loopback profile bridge while
 `GAMENIGHT_JOIN_URL` remains reachable from phones.
 
-Run `python -m unittest discover -s examples/mineclonia -p 'test_*.py'` for host
+Run `python -m unittest discover` for host
 routing, one-to-four-player launch boundaries, mod validation failure and checkpoint
 recovery. Fixtures are not evidence of physical controller operation. The earlier
 three live lifecycle cycles and independent controller test predate this unified
