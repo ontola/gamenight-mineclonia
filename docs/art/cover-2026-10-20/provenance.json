@@ -1,0 +1,21 @@
+{
+  "game": "mineclonia",
+  "generated_on": "2026-10-20",
+  "generator": "Built-in image_gen",
+  "use": "Illustrated promotional cover, not a gameplay screenshot",
+  "prompt": "Create a beautiful portrait 3:4 illustrated cover for the open-source voxel building game Mineclonia. The exact title 'MINECLONIA' appears at the top in large original cream geometric letters, readable at thumbnail size. Use the supplied real gameplay screenshot only as reference for the cubic pixel-textured landscape and block building materials. A warm sunlit grassy block hillside with cubic trees and a small wooden house being built. Two cheerful block-shaped adventurers in green and ochre clothing cooperate: one places a timber cube at the house, the other carries a blue pixelated pickaxe toward a cave revealing coal-speckled stone blocks. The terrain forms a clear cutaway from bright green meadow above to cool shaded stone cavern below. Distant block mountains, blue sky, flat rectangular clouds, warm golden sunlight, beautiful coherent pixel textures, inviting shared adventure, carefully composed depth and strong clear silhouettes. Premium detailed voxel illustration, all geometry cubic. Full bleed 3:4 artwork, generous title margins. No interface, badges, other text or watermark.",
+  "reference": "reference.jpg",
+  "master": "cover-source.png",
+  "runtime": "../../../assets/gamenight/cover.png",
+  "export": {
+    "width": 360,
+    "height": 480,
+    "format": "indexed PNG",
+    "max_bytes": 262144,
+    "colors": 256,
+    "command": "magick cover-source.png -resize 360x480! -strip -dither FloydSteinberg -colors 256 -define png:compression-level=9 PNG8:cover.png"
+  },
+  "capture": "Actual Windows Luanti renderer, Mineclonia test world, two scripted GameNight clients; staged building scene. Fresh isolated world on Mancave. No physical controller acceptance claim.",
+  "source_revision": "1f1c5bf458ec022062ddcd1d8db1176105987a63",
+  "review": "Actual game rendered and inspected; generated master and final 360x480 cover visually reviewed. Promotional illustration, not gameplay."
+}
