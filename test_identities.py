@@ -83,9 +83,13 @@ class ProfileKeyTests(unittest.TestCase):
     def test_profile_keeps_its_account_on_later_nights(self):
         with tempfile.TemporaryDirectory() as temp:
             root = Path(temp)
-            first = accounts(root, [seat(0, "night1")], [player("night1", "Joep", JOEP)])
+            first = accounts(
+                root, [seat(0, "night1")], [player("night1", "Joep", JOEP)]
+            )
             # A new party: a new player id, the same profile key.
-            again = accounts(root, [seat(2, "night2")], [player("night2", "Joep", JOEP)])
+            again = accounts(
+                root, [seat(2, "night2")], [player("night2", "Joep", JOEP)]
+            )
             self.assertEqual(first[0], again[2])
             guest = accounts(root, [seat(0, "night3")], [player("night3", "Joep")])
             self.assertNotEqual(guest[0], first[0])
@@ -116,9 +120,7 @@ class ProfileKeyTests(unittest.TestCase):
             names.write_text(
                 json.dumps({got[0]: {"name": "Joep"}, got[1]: {"name": "Sam"}})
             )
-            later = accounts(
-                root, [seat(1, "n1")], [player("n1", "Joep", JOEP)]
-            )
+            later = accounts(root, [seat(1, "n1")], [player("n1", "Joep", JOEP)])
             self.assertEqual(later[1], got[0])
             # Claimed: someone else called Joep later gets a new account.
             other = accounts(root, [seat(0, "n2")], [player("n2", "Joep", SAM)])
