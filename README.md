@@ -53,7 +53,7 @@ Profiles are matched by `occupant.player_id`, never by player-list order. Missin
 malformed artwork gets a friendly fallback. The adapter follows the v1 and legacy
 `gamenight-protocol` avatar formats and shared head anchors. Generated PNG textures
 use only embedded local pixels. Armor and invisibility keep their Mineclonia layers.
-World inventories and positions follow the profile ID across seat changes. On the
+World inventories and positions follow the player's GameNight profile, through its per-game `profile_key`, across seat changes and later nights. Guests without a profile keep an account for that party only. An account saved before profile keys existed is taken over once: by the same player in the same party, or else by the one profile whose name matches the last session's player name for that account. On the
 first launch after upgrading, each joined profile claims its seat's old Couch1–Couch4
 account once. Join the seats you previously used for that first launch. Afterwards,
 that account stays with the profile wherever they sit. New people using a claimed

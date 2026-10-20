@@ -122,7 +122,7 @@ class Adapter:
             seats = local_seats(msg["seats"])
             if not seats:
                 seats = [{"index": 0, "occupant": {"kind": "empty"}}]
-            accounts = identities.accounts(self.root, seats)
+            accounts = identities.accounts(self.root, seats, msg.get("players", []))
             self.dispose()
             self.prepare = dict(msg)
             self.players = msg.get("players", [])
@@ -154,12 +154,13 @@ class Adapter:
             ]
             # Never let a replacement profile control another person's account.
             # Empty seats stay neutral; their view is retained until reprepare.
+            players = msg.get("players", self.players)
             changed = any(
-                identities.player_id(seat) is not None
-                and identities.player_id(seat) != identities.player_id(old)
+                identities.identity(seat, players) is not None
+                and identities.identity(seat, players)
+                != identities.identity(old, self.players)
                 for seat, old in zip(seats, self.seats)
             )
-            players = msg.get("players", self.players)
             if changed:
                 active = self.active
                 self.receive(dict(self.prepare, seats=seats, players=players))
