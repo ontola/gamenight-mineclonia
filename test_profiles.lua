@@ -25,16 +25,16 @@ local profiles=dofile(arg[1])
 parsed={Couch4={name='Dev',color='#123456',skin='[png:AAAA',face='[png:BBBB'}}
 profiles.poll()
 assert(player.props.nametag=='#123456Dev')
-assert(ids==3 and profiles.describe(player).skin_applied)
+assert(ids==2 and profiles.describe(player).skin_applied)
 assert(mcl_player.players[player].textures[2]=='armor')
 profiles.poll();assert(#changes==0) -- unchanged file does not resend textures/HUD
 file_text='second';parsed.Couch4.name='New name';parsed.Couch4.color='#654321';parsed.Couch4.skin='[png:CCCC'
 profiles.poll()
-assert(ids==3 and #changes==4 and profiles.describe(player).name=='New name')
+assert(ids==2 and #changes==3 and profiles.describe(player).name=='New name')
 assert(player.props.nametag=='#654321New name')
 file_text='bad';parsed={Couch4={name='x',color='red',skin='file.png',face='bad'}}
 profiles.poll();assert(player.props.nametag=='#654321New name')
-leaves[1](player);joins[1](player);assert(ids==6)
+leaves[1](player);joins[1](player);assert(ids==4)
 print('Profile bridge: name, HUD updates, validation, reconnect, armor preservation passed')
 
 -- A paused reconnect must apply the profile without waiting for core.after,
@@ -53,3 +53,12 @@ assert(profiles.describe(player).name == "New player")
 assert(profiles.describe(player).hud and profiles.describe(player).skin_applied)
 assert(profiles.seat(account) == 3)
 print("Paused profile reconnect and generated account passed")
+
+-- Announcements name the player, never the technical account.
+assert(profiles.display("\27(T@awards)@1 has made the advancement\27E " .. account) == "\27(T@awards)@1 has made the advancement\27E New player")
+assert(profiles.display("*** " .. account .. " joined the game.") == "*** New player joined the game.")
+assert(profiles.display("GN_ffffffffffffffff left") == "GN_ffffffffffffffff left") -- unknown account stays
+parsed = {Couch2={name="A@b=c",color="#112233",skin="[png:DDDD",face="[png:EEEE"}}
+file_text = "escaped"; profiles.poll()
+assert(profiles.display("Couch2 died") == "Abc died" and profiles.display("Couch22") == "Couch22")
+print("Announcement names passed")

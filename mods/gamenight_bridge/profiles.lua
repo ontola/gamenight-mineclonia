@@ -13,17 +13,13 @@ local function apply(player)
     -- Animation owns nametag alpha (sneaking hides it). Embed the accent in the
     -- text rather than repeatedly overriding its visibility/color properties.
     player:set_properties({nametag = core.colorize(profile.color, profile.name)})
-    local background = "[fill:" .. math.min(388, math.max(128, #profile.name*9+76)) .. "x56:#151b25d9"
     local ids = huds[name]
     if ids then
-        player:hud_change(ids.background, "text", background)
         player:hud_change(ids.face, "text", profile.face)
         player:hud_change(ids.name, "text", profile.name)
         player:hud_change(ids.name, "number", tonumber(profile.color:sub(2),16))
     else
         huds[name] = {
-            background = player:hud_add({type="image",position={x=1,y=0},offset={x=-8,y=8},
-                alignment={x=-1,y=1},scale={x=1,y=1},text=background,z_index=9}),
             face = player:hud_add({type="image",position={x=1,y=0},offset={x=-12,y=12},
                 alignment={x=-1,y=1},scale={x=1,y=1},text=profile.face,z_index=10}),
             name = player:hud_add({type="text",position={x=1,y=0},offset={x=-68,y=36},
@@ -55,6 +51,22 @@ function M.poll()
     end
     profiles, last_json = value, text
     for _,player in ipairs(core.get_connected_players()) do apply(player) end
+end
+-- Account names (GN_<hash>, Couch1-4) are technical; announcements such as
+-- advancements, deaths and joins show the player's GameNight name instead.
+local function display_name(account)
+    local p = profiles[account]
+    -- Translation arguments escape "@" and "="; keep names plain text.
+    return p and (p.name:gsub("[%c@=]", "")) or account
+end
+function M.display(text)
+    if type(text) ~= "string" then return text end
+    return (text:gsub("%f[%w_]GN_%x+%f[^%w_]", display_name):gsub("%f[%w]Couch[1-4]%f[^%w]", display_name))
+end
+local send_all, send_player = core.chat_send_all, core.chat_send_player
+if send_all then core.chat_send_all = function(text, ...) return send_all(M.display(text), ...) end end
+if send_player then
+    core.chat_send_player = function(to, text, ...) return send_player(to, M.display(text), ...) end
 end
 function M.seat(name)
     M.poll()
