@@ -170,6 +170,26 @@ class Adapter:
             self.players = players
             self.prepare.update(seats=seats, players=players)
             profiles.publish(self.root, self.seats, players, self.accounts)
+        elif kind == "players_updated" and msg.get("session") == self.session:
+            # Same people in the same seats with a new name, face or profile
+            # (picked up in the lobby): the world keeps running. A new profile
+            # moves that seat to the profile's own account, as a roster
+            # update would.
+            updates = {
+                p.get("id"): p for p in msg.get("players", []) if isinstance(p, dict)
+            }
+            players = [
+                updates.pop(p.get("id"), p) if isinstance(p, dict) else p
+                for p in self.players
+            ] + list(updates.values())
+            self.receive(
+                {
+                    "type": "party_updated",
+                    "session": self.session,
+                    "seats": self.seats,
+                    "players": players,
+                }
+            )
         elif (
             kind in ("start", "resume", "pause", "dispose")
             and msg.get("session") == self.session

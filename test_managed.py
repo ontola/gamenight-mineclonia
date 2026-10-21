@@ -1,4 +1,5 @@
 import unittest
+from unittest import mock
 from managed import routed, Adapter
 
 
@@ -11,6 +12,35 @@ class Routing(unittest.TestCase):
         )
         with self.assertRaises(RuntimeError):
             adapter.receive({"type": "error", "message": "invalid launch token"})
+
+    def test_rename_updates_appearance_without_reprepare(self):
+        adapter = Adapter.__new__(Adapter)
+        seat = {
+            "index": 0,
+            "controller": "ordinal:0",
+            "occupant": {"kind": "local", "player_id": "a"},
+        }
+        adapter.session, adapter.seats, adapter.root = "s1", [seat], None
+        adapter.players = [{"id": "a", "name": "Rocket"}]
+        adapter.prepare = {
+            "type": "prepare",
+            "session": "s1",
+            "seats": [seat],
+            "players": adapter.players,
+        }
+        adapter.accounts = ["Couch1"]
+        with mock.patch("managed.profiles.publish") as publish:
+            adapter.receive(
+                {
+                    "type": "players_updated",
+                    "session": "s1",
+                    "players": [{"id": "a", "name": "Joep", "avatar": "face"}],
+                }
+            )
+        self.assertEqual(adapter.session, "s1")
+        self.assertEqual(adapter.players[0]["name"], "Joep")
+        publish.assert_called_once()
+        self.assertEqual(publish.call_args.args[2][0]["avatar"], "face")
 
     def seat(self, token, kind="local"):
         return {"controller": token, "occupant": {"kind": kind}}
