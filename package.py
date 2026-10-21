@@ -31,6 +31,7 @@ RUNTIME_MODULES = (
     "session_state.py",
     "settings.py",
     "views.py",
+    "window_layout.py",
 )
 
 

@@ -15,6 +15,23 @@ def local_seats(seats):
     return sorted(result, key=lambda s: s["index"])
 
 
+def couch_order(seats, players):
+    """Seats left to right as the players sit on the couch (`players[].couch`,
+    chosen in the lobby). Without it (older hosts), seat order."""
+    place = {
+        p.get("id"): p["couch"]
+        for p in players
+        if isinstance(p, dict) and type(p.get("couch")) is int
+    }
+    return sorted(
+        seats,
+        key=lambda s: (
+            place.get(s.get("occupant", {}).get("player_id"), 1000),
+            s["index"],
+        ),
+    )
+
+
 def routed(seats, controllers):
     """Never interpret host tokens as SDL indexes, and never borrow a pad."""
     by_token = {p["controller"]: p for p in controllers}

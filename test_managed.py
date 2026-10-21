@@ -72,6 +72,7 @@ class Routing(unittest.TestCase):
             "players": adapter.players,
         }
         adapter.accounts = ["Couch1"]
+        adapter.views = mock.Mock()
         with mock.patch("managed.profiles.publish") as publish:
             adapter.receive(
                 {
@@ -84,6 +85,67 @@ class Routing(unittest.TestCase):
         self.assertEqual(adapter.players[0]["name"], "Joep")
         publish.assert_called_once()
         self.assertEqual(publish.call_args.args[2][0]["avatar"], "face")
+
+    def test_views_open_in_couch_order_and_trade_places_live(self):
+        from views import ViewGroup
+
+        seats = [
+            {
+                "index": i,
+                "controller": f"ordinal:{i}",
+                "occupant": {"kind": "local", "player_id": p},
+            }
+            for i, p in enumerate("abc")
+        ]
+        players = [
+            {"id": "a", "couch": 2},
+            {"id": "b", "couch": 0},
+            {"id": "c", "couch": 1},
+        ]
+        adapter = Adapter.__new__(Adapter)
+        adapter.session, adapter.root = "s1", None
+        adapter.seats, adapter.players = list(seats), players
+        adapter.accounts = {0: "Couch1", 1: "Couch2", 2: "Couch3"}
+        adapter.views = ViewGroup.__new__(ViewGroup)
+        adapter.views.children, adapter.views.slots, adapter.views.wanted = [], [], None
+        adapter.send = lambda message: None
+
+        def launch(seats, accounts):
+            adapter.views.children = [mock.Mock(pid=100 + s["index"]) for s in seats]
+            adapter.views.slots = list(range(len(seats)))
+
+        with mock.patch.object(adapter.views, "launch", side_effect=launch):
+            adapter._launch_views()
+        # Leftmost on the couch gets the leftmost view.
+        self.assertEqual(
+            [s["occupant"]["player_id"] for s in adapter.seats], ["b", "c", "a"]
+        )
+
+        adapter.prepare = {
+            "type": "prepare",
+            "session": "s1",
+            "seats": adapter.seats,
+            "players": players,
+        }
+        with (
+            mock.patch("managed.profiles.publish"),
+            mock.patch("views.sys.platform", "win32"),
+            mock.patch("views.window_layout.trade", return_value=True) as trade,
+        ):
+            adapter.receive(
+                {
+                    "type": "players_updated",
+                    "session": "s1",
+                    "players": [
+                        {"id": "a", "couch": 0},
+                        {"id": "b", "couch": 1},
+                        {"id": "c", "couch": 2},
+                    ],
+                }
+            )
+        self.assertEqual(adapter.session, "s1", "nobody reconnects")
+        trade.assert_called_once_with([101, 102, 100], [0, 1, 2], [1, 2, 0])
+        self.assertEqual(adapter.views.slots, [1, 2, 0])
 
     def seat(self, token, kind="local"):
         return {"controller": token, "occupant": {"kind": kind}}

@@ -29,6 +29,7 @@ pins the engine source, Mineclonia archive, and embedded Python runtime.
 - Windows x64: 1–4 local players, with one independently controlled engine view per player.
 - Solo fills the screen; two players share side-by-side views; three use a large left view and two stacked right views; four use a 2×2 grid.
 - Choose the player count in the lobby before launch. Adding or removing a viewport requires preparing the game again.
+- Views follow the couch: the leftmost player on the couch (`players[].couch`, set in the lobby's Start menu under Couch position) gets the left view. Moving on the couch during a match makes the views trade places on screen (`window_layout.py`); nobody reconnects and the world keeps running.
 - Four views run four clients and one server. Physical-controller feel and performance on lower-powered PCs still need hands-on testing.
 - [Download releases](https://github.com/ontola/gamenight-mineclonia/releases/latest): about 55 MB, about 116 MB installed. The release is experimental.
 

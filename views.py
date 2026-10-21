@@ -3,8 +3,10 @@
 import os
 import re
 import subprocess
+import sys
 import time
 from input_frames import publish
+import window_layout
 from runtime import engine_path, connection
 
 
@@ -15,6 +17,11 @@ class ViewGroup:
         self.directory.mkdir(parents=True, exist_ok=True)
         self.children = []
         self.frames = []
+        # Where on screen each view sits: slot k is the engine's k-th tile.
+        # Views open in couch order, then trade tiles when players move.
+        self.slots = []
+        self.wanted = None
+        self._tried = 0.0
 
     def launch(self, seats, accounts):
         info = connection(self.root)
@@ -92,6 +99,25 @@ class ViewGroup:
             (self.directory / "view-pids.txt").write_text(
                 " ".join(str(c.pid) for c in self.children), encoding="utf8"
             )
+            self.slots.append(view)
+
+    def arrange(self, slots):
+        """Put view i in tile slots[i], live. Windows still opening are moved
+        as soon as they exist (see `retry`)."""
+        if len(slots) != len(self.children) or sorted(slots) != sorted(self.slots):
+            return
+        self.wanted = None if slots == self.slots else list(slots)
+        self._tried = 0.0
+        self.retry()
+
+    def retry(self):
+        if self.wanted is None or time.monotonic() - self._tried < 0.5:
+            return
+        self._tried = time.monotonic()
+        if sys.platform != "win32" or window_layout.trade(
+            [c.pid for c in self.children], self.slots, self.wanted
+        ):
+            self.slots, self.wanted = self.wanted, None
 
     def close(self):
         errors = []
@@ -116,6 +142,8 @@ class ViewGroup:
                 errors.append(error)
         self.children.clear()
         self.frames.clear()
+        self.slots.clear()
+        self.wanted = None
         (self.directory / "view-pids.txt").write_text("", encoding="ascii")
         if errors:
             raise RuntimeError("Could not terminate a player view") from errors[0]

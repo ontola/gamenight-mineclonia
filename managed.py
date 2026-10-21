@@ -13,7 +13,7 @@ import socket
 import time
 import profiles
 import identities
-from input_frames import local_seats, routed, publish
+from input_frames import couch_order, local_seats, routed, publish
 from views import ViewGroup
 from session_state import SessionState
 from mod_session import ModSession
@@ -141,7 +141,8 @@ class Adapter:
         elif kind == "prepare":
             if self.mod.request and self.mod.request.get("instance") != msg["session"]:
                 self.mod.result(False, "Game instance changed during mod validation")
-            seats = local_seats(msg["seats"])
+            # Views open left to right in couch order.
+            seats = couch_order(local_seats(msg["seats"]), msg.get("players", []))
             if not seats:
                 seats = [{"index": 0, "occupant": {"kind": "empty"}}]
             accounts = identities.accounts(self.root, seats, msg.get("players", []))
@@ -192,6 +193,7 @@ class Adapter:
             self.players = players
             self.prepare.update(seats=seats, players=players)
             profiles.publish(self.root, self.seats, players, self.accounts)
+            self._arrange()
         elif kind == "players_updated" and msg.get("session") == self.session:
             # Same people in the same seats with a new name, face or profile
             # (picked up in the lobby): the world keeps running. A new profile
@@ -249,6 +251,12 @@ class Adapter:
                 return
             raise RuntimeError(msg["message"])
 
+    def _arrange(self):
+        """Players moved on the couch (lobby Start menu): the views trade
+        places on screen, without reconnecting anyone."""
+        order = [seat["index"] for seat in couch_order(self.seats, self.players)]
+        self.views.arrange([order.index(seat["index"]) for seat in self.seats])
+
     def _report_world_loading(self):
         self.send(
             {
@@ -270,6 +278,8 @@ class Adapter:
                 "label": f"World ready. Loading {len(self.seats)} player view(s)",
             }
         )
+        # Someone may have moved on the couch while the world loaded.
+        self.seats = couch_order(self.seats, self.players)
         self.views.launch(self.seats, self.accounts)
 
     def flush(self):
@@ -340,6 +350,7 @@ class Adapter:
                     self._report_world_loading()
                 return
         self.server.check()
+        self.views.retry()
         self.settings.tick(blocked=self.mod.request is not None)
         self.mod.tick()
         if any(c.poll() is not None for c in self.children):
