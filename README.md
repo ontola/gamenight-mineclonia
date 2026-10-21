@@ -54,6 +54,12 @@ Crystals"). Requests cap at 640 per item. Ordinary chat passes through
 untouched; nothing is sent outside the world. `luajit test_assistant.lua
 mods/gamenight_bridge/assistant.lua` checks parsing and lookup.
 
+The same requests also arrive from the GameNight app and the session assistant
+(typed or spoken): the adapter declares `declare_commands` with examples, and
+answers each `game_command` from a seated player through the bridge mailbox
+(`assistant` action) with the in-game reply. Hosts that predate plain-text
+requests refuse the declaration; the world plays on without them.
+
 ## Player profiles
 
 GameNight profile names appear above characters and in each viewport. Profile clothing

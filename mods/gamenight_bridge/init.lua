@@ -125,6 +125,22 @@ local function run(request)
     local result = {ok = false, id = request.id}
     if request.action == "status" then
         result.ok = true
+    elseif request.action == "assistant" then
+        -- A typed or spoken request from the GameNight app, for one player.
+        -- Same parser as chat; it never changes the live-rule revision.
+        local v = type(request.values) == "table" and request.values or {}
+        if type(v.player) ~= "string" or not core.get_player_by_name(v.player)
+            or type(v.text) ~= "string" or #v.text > 500 then
+            result.error = "That player is not in the world right now."
+        else
+            local handled, reply, given = assistant.handle(v.player, v.text, profiles.display)
+            result.ok = given == true
+            result.message = reply
+            if not handled then result.error = "Not understood. Try: geef me 10 brood." end
+        end
+        result.state = snapshot()
+        store:set_string(key, core.write_json({request = core.write_json(request), response = result}))
+        return result
     elseif request.expected_revision ~= state.revision then
         result.error = "state changed; read status and retry with a new id"
     elseif request.action == "set" then

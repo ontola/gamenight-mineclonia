@@ -254,7 +254,8 @@ local function items()
 end
 
 --- Fulfil a request from `name`. Returns true when the text was a request
--- (so chat does not show it twice), plus the reply that was sent.
+-- (so chat does not show it twice), the reply that was sent, and whether
+-- everything asked for was given.
 function M.handle(name, message, display)
     local names = {}
     for _, p in ipairs(core.get_connected_players()) do
@@ -317,10 +318,10 @@ function M.handle(name, message, display)
     end
     if request.target ~= "me" and #parts > 0 then
         core.chat_send_all(core.colorize("#ad6cfa", reply))
-        return true, reply
+        return true, reply, #missing == 0
     end
     core.chat_send_player(name, core.colorize("#ad6cfa", reply))
-    return true, reply
+    return true, reply, #parts > 0 and #missing == 0
 end
 
 return M

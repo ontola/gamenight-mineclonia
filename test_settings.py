@@ -26,7 +26,9 @@ class SettingsTests(unittest.TestCase):
         adapter.settings = self.settings
         adapter.send = Mock()
         adapter.receive({"type": "welcome"})
-        specs = adapter.send.call_args.args[0]["settings"]
+        sent = [c.args[0] for c in adapter.send.call_args_list]
+        specs = sent[0]["settings"]
+        self.assertEqual(sent[1]["type"], "declare_commands")
         self.assertEqual([s["default"] for s in specs], [60, 120])
         adapter.receive({"type": "setting_changed", "key": "gravity", "value": 125})
         self.assertEqual(self.settings.pending, {"gravity": 1.25})

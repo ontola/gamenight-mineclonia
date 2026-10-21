@@ -13,6 +13,49 @@ class Routing(unittest.TestCase):
         with self.assertRaises(RuntimeError):
             adapter.receive({"type": "error", "message": "invalid launch token"})
 
+    def test_old_hosts_refusing_plain_text_requests_do_not_close_world(self):
+        adapter = Adapter.__new__(Adapter)
+        adapter.receive(
+            {
+                "type": "error",
+                "message": "bad message: unknown variant `declare_commands`, expected one of",
+            }
+        )
+
+    def test_plain_text_requests_run_for_the_asking_player_only(self):
+        from session_state import SessionState
+
+        adapter = Adapter.__new__(Adapter)
+        adapter.root, adapter.session, adapter.state = None, "s1", SessionState.PLAYING
+        adapter.seats = [{"index": 1, "occupant": {"kind": "local", "player_id": "a"}}]
+        adapter.accounts = {1: "GN_0123456789abcdef"}
+        reply = {"ok": True, "message": "Alsjeblieft: 10× End Crystal."}
+        with mock.patch("managed.command", return_value=reply) as run:
+            answer = adapter.game_command(
+                {"id": "r1", "player_id": "a", "text": "geef me 10 End Crystal"}
+            )
+        run.assert_called_once_with(
+            None,
+            "assistant",
+            {"player": "GN_0123456789abcdef", "text": "geef me 10 End Crystal"},
+        )
+        self.assertEqual(
+            answer,
+            {
+                "type": "command_result",
+                "id": "r1",
+                "ok": True,
+                "message": reply["message"],
+            },
+        )
+        with mock.patch("managed.command") as run:
+            answer = adapter.game_command({"id": "r2", "player_id": "b", "text": "x"})
+        run.assert_not_called()
+        self.assertFalse(answer["ok"])
+        with mock.patch("managed.command", side_effect=RuntimeError("busy")):
+            answer = adapter.game_command({"id": "r3", "player_id": "a", "text": "x"})
+        self.assertFalse(answer["ok"])
+
     def test_rename_updates_appearance_without_reprepare(self):
         adapter = Adapter.__new__(Adapter)
         seat = {

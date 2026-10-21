@@ -24,6 +24,25 @@ from runtime import prepare_data
 from prototype import command, read_json
 
 
+# Plain-text requests the world understands, for the GameNight app and the
+# session assistant. Item names are Mineclonia's English names.
+COMMANDS = {
+    "type": "declare_commands",
+    "description": (
+        "Give items to the player who asks, to everyone, or to a named player. "
+        "Write one request in Dutch or English with the count and Mineclonia's "
+        "English item name. Several items can be joined with commas and 'en'."
+    ),
+    "examples": [
+        "geef me 10 End Crystal",
+        "geef me 10 Bread, 3 Golden Apple en 1 Bow",
+        "geef iedereen 5 Torch",
+        "geef Anna 2 stacks Oak Log",
+        "give me 1 Diamond Pickaxe",
+    ],
+}
+
+
 class Adapter:
     def __init__(self, root, send):
         self.root, self.send = root, send
@@ -111,6 +130,9 @@ class Adapter:
         kind = msg.get("type")
         if kind == "welcome":
             self.send({"type": "declare_settings", "settings": self.settings.specs()})
+            self.send(COMMANDS)
+        elif kind == "game_command":
+            self.send(self.game_command(msg))
         elif kind == "setting_changed":
             self.settings.change(msg.get("key"), msg.get("value"))
         elif kind == "controller_frame":
@@ -214,6 +236,14 @@ class Adapter:
             if msg["message"] in (
                 "stale participation session",
                 "ready for unknown or non-preparing session",
+            ) or (
+                # Hosts older than plain-text requests refuse the declaration;
+                # the world plays on without them.
+                msg["message"].startswith("bad message")
+                and (
+                    "declare_commands" in msg["message"]
+                    or "command_result" in msg["message"]
+                )
             ):
                 print("Superseded lifecycle notification:", msg["message"], flush=True)
                 return
@@ -263,6 +293,34 @@ class Adapter:
             and player.get("profile", {}).get("skin_applied")
             for player in players
         )
+
+    def game_command(self, msg):
+        """Run a plain-text request ("geef me 10 End Crystal") for one seated
+        player through the world's chat assistant, and answer the host."""
+        answer = {"type": "command_result", "id": msg.get("id", ""), "ok": False}
+        account = next(
+            (
+                self.accounts.get(seat["index"])
+                for seat in self.seats
+                if seat.get("occupant", {}).get("player_id") == msg.get("player_id")
+            ),
+            None,
+        )
+        if not self.session or not self.ready or account is None:
+            return {**answer, "message": "Join the running Mineclonia world first."}
+        try:
+            response = command(
+                self.root,
+                "assistant",
+                {"player": account, "text": str(msg.get("text", ""))[:500]},
+            )
+        except (RuntimeError, TimeoutError, OSError):
+            return {**answer, "message": "The world is busy. Try again in a moment."}
+        return {
+            **answer,
+            "ok": bool(response.get("ok")),
+            "message": response.get("message") or response.get("error") or "Done.",
+        }
 
     def tick(self):
         startup = getattr(self, "_startup", None)
