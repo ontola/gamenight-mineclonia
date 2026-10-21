@@ -41,6 +41,19 @@ The adapter is MIT licensed. Engine patches retain Luanti's LGPL-2.1-or-later;
 Mineclonia and Python retain their bundled upstream licenses. Corresponding
 engine and game source references are recorded in every package's `BUILD.json`.
 
+## Ask for items in chat
+
+Open chat (T) and type a plain request, in Dutch or English: "geef me 10 crystal",
+"geef me 10 brood, 3 gouden appels en een boog", "geef iedereen 5 fakkels",
+"geef Anna 2 stacks hout", "give me a diamond pickaxe". The bridge mod
+(`mods/gamenight_bridge/assistant.lua`) finds the closest item by its English
+name, with a small Dutch word list for common materials, tools and food, and puts
+the items in the inventory (anything that does not fit drops next to the player).
+A loose match names close alternatives ("End Crystal; or try Prismarine
+Crystals"). Requests cap at 640 per item. Ordinary chat passes through
+untouched; nothing is sent outside the world. `luajit test_assistant.lua
+mods/gamenight_bridge/assistant.lua` checks parsing and lookup.
+
 ## Player profiles
 
 GameNight profile names appear above characters and in each viewport. Profile clothing

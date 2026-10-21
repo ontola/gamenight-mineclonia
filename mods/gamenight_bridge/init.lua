@@ -6,6 +6,11 @@ dofile(core.get_modpath("gamenight_bridge") .. "/crafting.lua")
 local safe_spawn = dofile(core.get_modpath("gamenight_bridge") .. "/safe_spawn.lua")
 local profiles = dofile(core.get_modpath("gamenight_bridge") .. "/profiles.lua")
 safe_spawn.seat = profiles.seat
+local assistant = dofile(core.get_modpath("gamenight_bridge") .. "/assistant.lua")
+-- "geef me 10 crystal" in chat gives the items; other chat passes through.
+core.register_on_chat_message(function(name, message)
+    return (assistant.handle(name, message, profiles.display))
+end)
 local store = core.get_mod_storage()
 local saved = store:get_string("state")
 local state = (saved ~= "" and core.parse_json(saved)) or {

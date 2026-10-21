@@ -25,6 +25,7 @@ jobs:
           luajit test_crafting.lua mods/gamenight_bridge/crafting.lua
           luajit test_profiles.lua mods/gamenight_bridge/profiles.lua
           luajit test_safe_spawn.lua mods/gamenight_bridge/safe_spawn.lua
+          luajit test_assistant.lua mods/gamenight_bridge/assistant.lua
       - uses: actions/cache@v4
         with:
           path: ${{ runner.temp }}/mineclonia-components
