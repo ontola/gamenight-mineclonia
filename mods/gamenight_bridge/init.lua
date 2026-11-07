@@ -69,7 +69,7 @@ local function apply_world(changed)
     if changed.time_speed ~= nil then core.settings:set("time_speed", tostring(state.values.time_speed)) end
 end
 core.register_node("gamenight_bridge:bounce_pad", {
-    description = "GameNight bounce pad",
+    description = "Gamepad Party bounce pad",
     tiles = {"default_steel_block.png^[colorize:#ad6cfa:150"},
     groups = {cracky=1, pickaxey=1}, _mcl_hardness=1, _mcl_blast_resistance=1,
 })
@@ -184,7 +184,7 @@ local function run(request)
         for _, player in ipairs(core.get_connected_players()) do
             local name = player:get_player_name()
             if name:match("^Couch[1-4]$") or (#name == 19 and name:match("^GN_%x+$")) or name == "Preview" then
-                core.kick_player(name, "Reconnecting GameNight view")
+                core.kick_player(name, "Reconnecting Gamepad Party view")
             end
         end
         result.ok = true
@@ -211,7 +211,7 @@ local last_poll = 0
 local function poll()
     local now = core.get_us_time()
     if shutdown_after and now >= shutdown_after then
-        core.request_shutdown("GameNight prototype saved", false, 0)
+        core.request_shutdown("Gamepad Party prototype saved", false, 0)
         shutdown_after = nil
     end
     if now - last_poll < 200000 then return end

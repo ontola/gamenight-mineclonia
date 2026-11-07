@@ -392,7 +392,7 @@ def main():
     a.root = a.root.resolve()
     a.root.mkdir(parents=True, exist_ok=True)
     if not os.environ.get("GAMENIGHT_TOKEN"):
-        raise SystemExit("Launch through the GameNight test shelf, not directly.")
+        raise SystemExit("Launch through the Gamepad Party test shelf, not directly.")
     host, port = os.environ["GAMENIGHT_ADDR"].rsplit(":", 1)
     with singleton(a.root), socket.create_connection((host, int(port))) as sock:
         if a.installed:

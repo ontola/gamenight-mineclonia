@@ -45,7 +45,7 @@ frame-time spikes; this is not a locked-60-FPS result. Keep the experimental lab
 ## Fixed background frame cap
 
 The previous engine treated all but the Windows-focused view as background and
-capped them at 30 FPS. Every active GameNight viewport now uses the foreground cap;
+capped them at 30 FPS. Every active Gamepad Party viewport now uses the foreground cap;
 paused hidden views keep the background cap. On the same two-player fixture:
 
 | Engine | Stationary mean FPS | Camera-pan mean FPS |

@@ -14,7 +14,7 @@ Other Mineclonia media retains its upstream attribution and license:
 https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1/LEGAL.md
 https://codeberg.org/mineclonia/mineclonia/src/tag/0.123.1/CREDITS.md
 
-The GameNight preview edits, crops and catalog stills are provided under
+The Gamepad Party preview edits, crops and catalog stills are provided under
 CC BY-SA 4.0, subject to the upstream media's applicable licenses.
 Changes: staged starting positions and loadouts in a scratch world, selected
 real gameplay moments, landscape crop, resizing and compression. No fabricated

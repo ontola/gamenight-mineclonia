@@ -27,7 +27,7 @@ def main():
         )
         return 0
     if not os.environ.get("GAMENIGHT_TOKEN"):
-        raise RuntimeError("Start Mineclonia from the GameNight game library.")
+        raise RuntimeError("Start Mineclonia from the Gamepad Party game library.")
     root = (
         args.data_dir or Path(os.environ["LOCALAPPDATA"]) / "GameNight/games/mineclonia"
     )

@@ -1,4 +1,4 @@
-"""Real engine test with a scripted GameNight adapter; no hardware-input claims."""
+"""Real engine test with a scripted Gamepad Party adapter; no hardware-input claims."""
 
 import argparse
 import json
@@ -25,7 +25,7 @@ def main():
     p.add_argument(
         "--profiles",
         action="store_true",
-        help="Use synthetic GameNight profile fixtures",
+        help="Use synthetic Gamepad Party profile fixtures",
     )
     p.add_argument("--players", type=int, choices=range(1, 5), default=2)
     a = p.parse_args()

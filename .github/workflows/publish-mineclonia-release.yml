@@ -50,7 +50,7 @@ jobs:
           github-token: ${{ github.token }}
       - uses: actions/checkout@v4
         with:
-          repository: ontola/gamenight
+          repository: ontola/gamepad-party
           ref: c99e7a2353e0d277925a5916e4a82386845e3210
           path: publisher
           sparse-checkout: scripts/gamenight-publish.py

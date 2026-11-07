@@ -1,4 +1,4 @@
-"""Observed GameNight lifecycle, shared by the phone relay and local launch tools."""
+"""Observed Gamepad Party lifecycle, shared by the phone relay and local launch tools."""
 
 import hashlib
 import json

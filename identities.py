@@ -25,7 +25,7 @@ def player_id(seat):
         return None
     value = occupant.get("player_id")
     if not isinstance(value, str) or not value or len(value) > 128:
-        raise ValueError("A local player needs a stable GameNight profile ID")
+        raise ValueError("A local player needs a stable Gamepad Party profile ID")
     return value
 
 

@@ -9,7 +9,7 @@ permissions:
 jobs:
   upload:
     if: vars.GAMENIGHT_PUBLISH_ENABLED == 'true'
-    uses: ontola/gamenight/.github/workflows/publish-game.yml@main
+    uses: ontola/gamepad-party/.github/workflows/publish-game.yml@main
     secrets: inherit
     with:
       artifact: mineclonia-windows-candidate

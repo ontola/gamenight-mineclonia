@@ -1,4 +1,4 @@
-"""Expose the prototype's bounded physics controls through GameNight settings."""
+"""Expose the prototype's bounded physics controls through Gamepad Party settings."""
 
 import time
 from concurrent.futures import ThreadPoolExecutor

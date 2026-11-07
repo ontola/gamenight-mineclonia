@@ -34,7 +34,7 @@ local function accept(found)
     core.settings:set("static_spawnpoint", core.pos_to_string({x=found[1].x,y=found[1].y+1,z=found[1].z}))
     M.positions = found
     M.ready = true
-    core.log("action", "[GameNight] Dry shared spawn: " .. core.pos_to_string(found[1]))
+    core.log("action", "[Gamepad Party] Dry shared spawn: " .. core.pos_to_string(found[1]))
 end
 local centers = {{0,0},{64,0},{-64,0},{0,64},{0,-64},{128,128},{-128,-128},{256,0},{0,256}}
 -- Random seeds can put the entire initial neighbourhood in an ocean.
@@ -60,11 +60,11 @@ local function search()
     until not center or height
     if not center then
         M.error = "No dry starting area found. Preserve this world and choose another seed."
-        core.log("error", "[GameNight] " .. M.error)
+        core.log("error", "[Gamepad Party] " .. M.error)
         return
     end
     local x,z = center[1],center[2]
-    core.log("action", "[GameNight] Checking dry spawn near " .. x .. "," .. height .. "," .. z)
+    core.log("action", "[Gamepad Party] Checking dry spawn near " .. x .. "," .. height .. "," .. z)
     local lo,hi = {x=x-4,y=height-8,z=z-4}, {x=x+4,y=height+4,z=z+4}
     core.emerge_area(lo,hi,function(_,_,remaining)
         if remaining ~= 0 or M.ready then return end

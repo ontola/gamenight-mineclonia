@@ -3,7 +3,7 @@
 Two Windows clients share one local world. Each owns one SDL controller path.
 The patch keeps movement and camera input active in both views without grabbing
 the shared mouse. The launcher places the views side by side, borderless.
-This is not a single-process split-screen renderer or a certified GameNight game.
+This is not a single-process split-screen renderer or a certified Gamepad Party game.
 
 ## Try it
 
@@ -37,7 +37,7 @@ the pair. The shared world server keeps running.
 | Start / Back | Local pause menu | Close menu |
 
 These bindings are implemented but have not yet passed a physical playtest.
-Start/Back is the local engine menu, not GameNight's lobby toggle.
+Start/Back is the local engine menu, not Gamepad Party's lobby toggle.
 
 ## Build from source
 
@@ -65,8 +65,8 @@ checks the executable hash; this is local build evidence, not remote certificati
 
 ## Real lobby test (Windows prototype)
 
-`lobby_test.py` starts a separate GameNight daemon on port 17942, with the installed
-GameNight lobby and only Mineclonia on its temporary shelf. It does not publish a
+`lobby_test.py` starts a separate Gamepad Party daemon on port 17942, with the installed
+Gamepad Party lobby and only Mineclonia on its temporary shelf. It does not publish a
 catalog entry. Use `engine/install.py --name controller-engine-managed` for the
 managed build. The adapter starts its own server using that executable and
 `GAMENIGHT_CONTROLLER_FRAME=<root>/managed/server.frame`; the world and server.conf
@@ -75,7 +75,7 @@ are the same isolated prototype files. Do not start a separate server. Copy the 
 
 The adapter receives Prepare/Start/Pause/Resume/Dispose over the real protocol.
 Each view reads only its assigned host seat token. Native SDL pad input is disabled
-in managed mode. Back belongs to the resident GameNight lobby; Start opens Luanti's
+in managed mode. Back belongs to the resident Gamepad Party lobby; Start opens Luanti's
 own menu. Both views hide and mute on Pause; the patched world server skips
 simulation updates entirely while keeping connections and the local settings
 mailbox alive. A dedicated callback polls only that mailbox while paused. Resume reveals both views. Input expires after 250 ms without a
@@ -93,7 +93,7 @@ python lobby_test.py
 ```
 
 Join with A on each controller, select Mineclonia at the TV, play, then press Back.
-The GameNight lobby should appear. Release Back, wait one second, and press it again
+The Gamepad Party lobby should appear. Release Back, wait one second, and press it again
 to resume. Start should still open the in-game menu. Check that each physical
 controller owns the same seat in the lobby and game.
 
@@ -124,11 +124,11 @@ remain separate manual checks.
 Managed Windows views share their process IDs through `GAMENIGHT_COUCH_GROUP`.
 They cover their monitor halves without borders and stay above the taskbar only
 while one of those two game windows owns foreground focus. Alt-Tab to another
-app releases that position; GameNight's pause hides both views. The updated
+app releases that position; Gamepad Party's pause hides both views. The updated
 binary builds, but taskbar coverage still needs confirmation on the TV.
 
 Known limits: Windows only, two seats, no on-screen keyboard, player 2 audio muted.
 There is no automatic pause just because another desktop app gains focus.
-GameNight names, skin and face artwork are not yet applied to Mineclonia models.
+Gamepad Party names, skin and face artwork are not yet applied to Mineclonia models.
 Two game processes use more GPU and memory than a shared renderer. None of these
 limits is represented as a verified store integration capability.

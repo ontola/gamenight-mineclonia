@@ -28,7 +28,7 @@ def generate(values):
     # identifiers, Lua source or free-form strings cross the execution boundary.
     return """local strength = %s
 core.register_node("gamenight_custom:bounce_pad", {
-    description = "GameNight bounce pad",
+    description = "Gamepad Party bounce pad",
     tiles = {"default_steel_block.png^[colorize:#ad6cfa:180"},
     groups = {cracky=1, pickaxey=1}, _mcl_hardness=1, _mcl_blast_resistance=1,
 })

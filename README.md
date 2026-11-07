@@ -1,11 +1,11 @@
-# Mineclonia for GameNight
+# Mineclonia for Gamepad Party
 
-Mineclonia is a GameNight catalog game (`catalog/games/mineclonia.json` in
-[ontola/gamenight](https://github.com/ontola/gamenight)); its integration level
+Mineclonia is a Gamepad Party catalog game (`catalog/games/mineclonia.json` in
+[ontola/gamepad-party](https://github.com/ontola/gamepad-party)); its integration level
 is `integrated` and its Windows release is experimental. This repository owns the
-GameNight adapter, live-settings mod, package builder and tests for one to four
+Gamepad Party adapter, live-settings mod, package builder and tests for one to four
 local players on Windows. Its history was extracted from the
-former `ontola/gamenight/examples/mineclonia` copy, which has been removed;
+former `ontola/gamepad-party/examples/mineclonia` copy, which has been removed;
 this repository is the only source.
 
 The native engine changes are maintained in
@@ -23,7 +23,7 @@ pins the engine source, Mineclonia archive, and embedded Python runtime.
   Materials and a nearby crafting table (for larger recipes) are still required;
   furnace recipes explain that they need their own workstation.
 - Menu hints wrap for split-screen. LB/RB change a focused dropdown or tab;
-  B closes the menu and Back returns to the GameNight lobby.
+  B closes the menu and Back returns to the Gamepad Party lobby.
 - New players share verified dry ground; existing player positions are preserved.
 - Installed game files and saved worlds are separate. The package includes Python.
 - Windows x64: 1–4 local players, with one independently controlled engine view per player.
@@ -55,7 +55,7 @@ Crystals"). Requests cap at 640 per item. Ordinary chat passes through
 untouched; nothing is sent outside the world. `luajit test_assistant.lua
 mods/gamenight_bridge/assistant.lua` checks parsing and lookup.
 
-The same requests also arrive from the GameNight app and the session assistant
+The same requests also arrive from the Gamepad Party app and the session assistant
 (typed or spoken): the adapter declares `declare_commands` with examples, and
 answers each `game_command` from a seated player through the bridge mailbox
 (`assistant` action) with the in-game reply. Hosts that predate plain-text
@@ -63,7 +63,7 @@ requests refuse the declaration; the world plays on without them.
 
 ## Player profiles
 
-GameNight profile names appear above characters and in each viewport. Profile clothing
+Gamepad Party profile names appear above characters and in each viewport. Profile clothing
 colors, personal skin colors and pixel-art faces carry into the character skin; the
 cube face crops around the eyes for readable features, while the viewport badge
 retains the full face and hat artwork. Changes from the lobby or phone update
@@ -73,7 +73,7 @@ Profiles are matched by `occupant.player_id`, never by player-list order. Missin
 malformed artwork gets a friendly fallback. The adapter follows the v1 and legacy
 `gamenight-protocol` avatar formats and shared head anchors. Generated PNG textures
 use only embedded local pixels. Armor and invisibility keep their Mineclonia layers.
-World inventories and positions follow the player's GameNight profile, through its per-game `profile_key`, across seat changes and later nights. Guests without a profile keep an account for that party only. An account saved before profile keys existed is taken over once: by the same player in the same party, or else by the one profile whose name matches the last session's player name for that account. On the
+World inventories and positions follow the player's Gamepad Party profile, through its per-game `profile_key`, across seat changes and later nights. Guests without a profile keep an account for that party only. An account saved before profile keys existed is taken over once: by the same player in the same party, or else by the one profile whose name matches the last session's player name for that account. On the
 first launch after upgrading, each joined profile claims its seat's old Couch1–Couch4
 account once. Join the seats you previously used for that first launch. Afterwards,
 that account stays with the profile wherever they sit. New people using a claimed
@@ -123,9 +123,9 @@ Use a separate test world and pass the extracted package directory:
 python lobby_test.py --package E:/gamenight-host/mineclonia-release-candidate-1 --root E:/gamenight-host/mineclonia-controller-playtest --gamenight-source ../gamenight-public
 ```
 
-This uses the installed GameNight Preview runtime by default. Pass `--runtime`
+This uses the installed Gamepad Party Preview runtime by default. Pass `--runtime`
 for another runtime. The test launcher refuses a port already used by another
-test host. The candidate skips Luanti's standalone title screen when GameNight
+test host. The candidate skips Luanti's standalone title screen when Gamepad Party
 launches it; its in-game menus use the new directional focus navigation.
 
 ## Runtime ownership
@@ -239,7 +239,7 @@ controls and assistant discovery use this same contract:
 | Day/night speed | 0–240 | Game seconds per real second; 0 freezes, 72 is normal |
 | Bounce pads | 0–3 | Live strength; 0 disables the effect |
 
-Movement uses `playerphysics.add_physics_factor` with GameNight's own ID, so it
+Movement uses `playerphysics.add_physics_factor` with Gamepad Party's own ID, so it
 composes with equipment and potion effects. Joining players receive active rules.
 A single request can change several controls atomically. Undo restores just those
 controls, including the previous clock when time was explicitly changed. Keep
@@ -278,7 +278,7 @@ certification. World saves are not settings presets.
 
 ## Experimental room relay
 
-`relay.py` connects this isolated world to a local GameNight cloud preview. It
+`relay.py` connects this isolated world to a local Gamepad Party cloud preview. It
 uses `--daemon-port 17942` to publish the real lobby seats, opaque player IDs,
 controller-binding revisions and active/warm session ID. A phone remains linked
 to its actual lobby player, not a separate diagnostic Couch1 account. World
@@ -295,13 +295,13 @@ a settings change.
 The adapter rejects expired requests, absent players, different worlds, missing
 revisions, unsupported keys and invalid values before writing the mailbox. Lua
 checks bounds and revision again and deduplicates IDs durably. This is a prototype
-extension, not a declaration that all GameNight SDKs support these controls.
+extension, not a declaration that all Gamepad Party SDKs support these controls.
 The ordinary desktop discovery bridge does not advertise this capability yet.
 
 Run `python -m unittest test_relay` for boundary validation. The private session
 agent handles AI models, accounts and the phone preview; none of that belongs
 in this public game adapter. The room relay does not create a game listing; the
-catalog entry lives in ontola/gamenight.
+catalog entry lives in ontola/gamepad-party.
 
 
 ## Unified lobby session
